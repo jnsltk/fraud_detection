@@ -3,8 +3,8 @@ CREATE SCHEMA IF NOT EXISTS transactions;
 
 -- Create table
 CREATE TABLE IF NOT EXISTS transactions.transaction_details (
-    transaction_id SERIAL PRIMARY KEY, 
-    customer_id INT NOT NULL,
+    transaction_id VARCHAR(20) PRIMARY KEY, 
+    customer_id VARCHAR(20) NOT NULL,
     card_number VARCHAR(20) NOT NULL, 
     timestamp TIMESTAMP NOT NULL,
     merchant_category VARCHAR(50),
