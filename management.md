@@ -27,3 +27,29 @@ In the event of conflicts, we will attempt to resolve them through communication
 
 ### Tasks
 All team members will be looking for more datasets and try to train dummy models to get more insight on the existing ideas until the next meeting at **2024-11-15**.
+
+# Meeting two (2024-11-15):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+- In this meeting we decided to go with the Fraud Detection idea.
+- We decided to use Django for the backend and Vue.js for the frontend.
+- We decided to use Postgres for the database and having it running on one of the team member's VPS (This is to be changed later on). Later one we will use the Cloud VM for the database.
+- We discussed how we will use Git and GitLab to version the code and model. We discussed how we may use  tags for versioning the code that results in different stable models.
+- We discussed using Docker to containarise our code.
+
+### Tasks
+
+- **Victoria and Omid**: They will be working on writing the Assignment 1 report.
+- **Yingchao**: He will be working on connecting to the Hosted Postgres database.
+- **Janos**: He will be setting up the VPS for the database and create project infrastructure for the front-end
+- **Henrik**: He will be working on developing a model to test the idea.
+
+**Note**: Everyone will also learn and study technologies including Django, and Kubernetes
+**Note**: These tasks are to be done by **2024-11-22**
