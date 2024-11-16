@@ -5,8 +5,8 @@
 import csv
 import json
 
-input_file = 'C:/Users/VidaStone/Downloads/archive/synthetic_fraud_data_1.csv'
-output_file = 'C:/Users/VidaStone/Downloads/archive/synthetic_fraud_data_1_formatted.csv'
+input_file = 'input_file'
+output_file = 'output_file'
 
 # Function: Replace single quotes with double quotes to ensure the data is in JSON format
 def convert_to_json_format(data):

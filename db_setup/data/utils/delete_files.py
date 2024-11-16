@@ -15,7 +15,7 @@ def delete_files_with_prefix(directory, prefix):
                 print(f"Error deleting {file_path}: {e}")
 
 
-folder_path = 'C:/Users/VidaStone/Downloads/Transactions'
-prefix = 'synthetic_fraud_data_' # Files containing the prefix
+folder_path = 'folder_path'
+prefix = 'prefix_words' # Files containing the prefix
 
 delete_files_with_prefix(folder_path, prefix) # Call the function to delete files
