@@ -1,4 +1,4 @@
-# Delete multiple files
+# Delete multiple files for quick delete
 
 import os
 
