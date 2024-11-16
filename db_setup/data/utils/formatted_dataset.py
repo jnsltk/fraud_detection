@@ -5,8 +5,8 @@
 import csv
 import json
 
-input_file = 'input_file_path' # Input file path
-output_file = 'output_file_path' # Output file path
+input_file = 'C:/Users/VidaStone/Downloads/archive/synthetic_fraud_data_1.csv'
+output_file = 'C:/Users/VidaStone/Downloads/archive/synthetic_fraud_data_1_formatted.csv'
 
 # Function: Replace single quotes with double quotes to ensure the data is in JSON format
 def convert_to_json_format(data):
@@ -48,4 +48,4 @@ with open(input_file, 'r', newline='', encoding='utf-8') as infile, \
             # Write the processed row to the output file
             writer.writerow(row)
 
-print("CSV file has been processed, duplicates removed and saved.")
+print(f"File {input_file}.csv has been processed.")

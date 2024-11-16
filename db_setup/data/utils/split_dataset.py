@@ -19,6 +19,7 @@ def split_csv(input_file, output_prefix, rows_per_file):
                     writer = csv.writer(outfile)
                     writer.writerow(header)  # Write the header
                     writer.writerows(rows)
+                print(f"File {output_prefix}_{file_count}.csv has been written.")
                 file_count += 1
                 rows = []  # Reset row data
         
@@ -28,10 +29,13 @@ def split_csv(input_file, output_prefix, rows_per_file):
                 writer = csv.writer(outfile)
                 writer.writerow(header)
                 writer.writerows(rows)
+            print(f"File {output_prefix}_{file_count}.csv has been written.")
+            
+    print("All files have been successfully split and saved.")
 
-input_file = 'input_file_path' # Input file path
-output_file = 'output_file_path' # Output file path
-row_number = 100000 # Each new file will contain number of rows of data
+input_file = 'C:/Users/VidaStone/Downloads/archive/synthetic_fraud_data_1.csv'
+output_file = 'C:/Users/VidaStone/Downloads/Transactions/synthetic_fraud_data_1'
+row_number = 10000 # Each new file will contain number of rows of data
 
 # Call the function to split the file
 split_csv(input_file, output_file, row_number)
