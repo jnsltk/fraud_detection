@@ -1,7 +1,6 @@
 # Split data into multiple files
 
 import csv
-import os
 
 def split_csv(input_file, output_prefix, rows_per_file):
     with open(input_file, 'r') as infile:
@@ -30,8 +29,8 @@ def split_csv(input_file, output_prefix, rows_per_file):
                 writer.writerow(header)
                 writer.writerows(rows)
 
-input_file = os.path.join('..', '..', '..', '..', 'file_path') # Input file path
-output_file = os.path.join('..', '..', '..', '..', 'file_path') # Output file path
+input_file = 'input_file_path' # Input file path
+output_file = 'output_file_path' # Output file path
 row_number = 100000 # Each new file will contain number of rows of data
 
 # Call the function to split the file
