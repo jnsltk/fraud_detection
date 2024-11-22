@@ -20,7 +20,7 @@ Comments: Ensure to add adequate code documentation, especially for those functi
 On-demand meetings: Knowledge sharing can mostly be achieved through our regular in-person meetings. For special implementations of some new ideas, on-demand meetings can be scheduled to discuss these ideas. This is a great way to keep the entire team up to date on new ideas and the progress made by each team member.
 
 ### Communication
-Our communication channel of choice is Discord, where we will share advice and progress updates. We will complement this with regular in-person meetings, to ensure that no vital information is left out. Scheduled meetings will occur twice a week on Mondays and Thursdays. Discord will be used as a means of scheduling extra meetings as needed. 
+Our communication channel of choice is Discord, where we will share advice and progress updates. We will complement this with regular in-person meetings, to ensure that no vital information is left out. Scheduled meetings will occur twice a week on Tuesdays and Fridays. Discord will be used as a means of scheduling extra meetings as needed. 
 
 ### Conflicts
 In the event of conflicts, we will attempt to resolve them through communication and discussion. We will try to understand the conflict from both sides and come up with a solution. If a resolution cannot be achieved, we will vote to make decisions, based on the principle of majority rule and minority compliance. If conflicts arise between team members and cannot be resolved internally through communication, we will seek assistance from the teacher or TA.
@@ -53,3 +53,43 @@ All team members will be looking for more datasets and try to train dummy models
 
 **Note**: Everyone will also learn and study technologies including Django, and Kubernetes
 **Note**: These tasks are to be done by **2024-11-22**
+
+# Meeting Three (2024-11-19):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+
+- In this meeting we discussed strategies for data versioning. We came up with the idea of using ids for versioning the dataset that we have. This allows us to choose the same dataset for model training. We also decided to have a column saying which model versiion prdeicted a particular row as fraud or not fraud. In that case, we can use the same dataset when we do dynamic training.
+- We also discussed data validation and decided to use tensorflow for data validation.
+- We also decided to unpack the feature velocity_last_hour which has a `JSON` format to their own features.
+- We decided to use tags for versioning the code that results in different stable models.
+- We discussed what tasks needed to be doen for this sprint which ends on `2024-11-29`.
+
+### Tasks
+
+- **Henrik**: He will be working on deployment of our app on the cloud. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/5)
+- **Omid**: He will be working on versioing code that creates the model. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7). He will also work on setting up the webiste homepage, register page, login page, and admin page. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7).
+- **Janos**: He will be working on data versioning and unpacking `JSON`format data.
+- **Victoria**: She will be working on data validation in the ML pipeline.
+- **Yingchao**: He will be working on feature engineering, to see which features are the most useful and related.
+
+# Meeting Four (2024-11-22):
+
+### Atendees    
+- Janos
+- Omid
+- Henrik
+- Victoria  
+- Yingchao
+
+### Meeting Agenda
+- We discussed what free clooud services we can use. We want to use Oracle cloud, but we are a bit confused about the `Always Free tier` ones. Herik will do some more research and choose the cloud provider he deems the best for our purpose.
+- We discussed model versioning and how to train the model for each code change that affects the model.
+
+**Notes**: Theteam is to complete the tasks that we came up with on the previous meeting by **2024-11-29**
