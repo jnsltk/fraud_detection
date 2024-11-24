@@ -155,4 +155,5 @@ dependencies:
   - pip:
       - currencyconverter==0.17.34
       - psycopg==3.2.3
+      - great_expectations==1.2.4
 prefix: /opt/anaconda3/envs/prj
