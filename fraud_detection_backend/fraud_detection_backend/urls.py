@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from detector import views as detector_views
+from db_importer import views as db_importer_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('detector.urls'))
+    path('api/', detector_views.test, name='test'),
+    path('api/import_data', db_importer_views.import_csv_to_db, name='import_csv_to_db'),
 ]
