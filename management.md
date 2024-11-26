@@ -74,7 +74,7 @@ All team members will be looking for more datasets and try to train dummy models
 ### Tasks
 
 - **Henrik**: He will be working on deployment of our app on the cloud. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/5)
-- **Omid**: He will be working on versioing code that creates the model. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7). He will also work on setting up the webiste homepage, register page, login page, and admin page. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7).
+- **Omid**: He will be working on versioing code that creates the model. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7). He will also work on setting up the webiste homepage, register page, and login page. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7).
 - **Janos**: He will be working on data versioning and unpacking `JSON`format data. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/10)
 - **Victoria**: She will be working on data validation in the ML pipeline. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/9)
 - **Yingchao**: He will be working on feature engineering, to see which features are the most useful and related. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/8)
@@ -92,4 +92,22 @@ All team members will be looking for more datasets and try to train dummy models
 - We discussed what free clooud services we can use. We want to use Oracle cloud, but we are a bit confused about the `Always Free tier` ones. Herik will do some more research and choose the cloud provider he deems the best for our purpose.
 - We discussed model versioning and how to train the model for each code change that affects the model.
 
-**Notes**: Theteam is to complete the tasks that we came up with on the previous meeting by **2024-11-29**
+**Notes**: The team is to complete the tasks that we came up with on the previous meeting by **2024-11-29**
+
+# Meeting Five (2024-11-26):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+- The team decided to not use vue at all for development of the front-end. The team will be using Django template to create the front-end., as the front-end will be simple.
+- The team discussed feature enginnerring and how the cleaned data does not need to be saved on the database, but we rather have not usefult features removed as a part of feature engineering and pre-processing.
+
+**Notes**: The team is to complete the tasks that we came up with on the previous meeting by **2024-11-29**
+
+### Tasks
+- Janos and Omid will break down the tasks needed for the development of the front-end and the back-end and will implement some those tasks by **2024-12-06**
