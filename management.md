@@ -75,9 +75,9 @@ All team members will be looking for more datasets and try to train dummy models
 
 - **Henrik**: He will be working on deployment of our app on the cloud. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/5)
 - **Omid**: He will be working on versioing code that creates the model. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7). He will also work on setting up the webiste homepage, register page, login page, and admin page. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7).
-- **Janos**: He will be working on data versioning and unpacking `JSON`format data.
-- **Victoria**: She will be working on data validation in the ML pipeline.
-- **Yingchao**: He will be working on feature engineering, to see which features are the most useful and related.
+- **Janos**: He will be working on data versioning and unpacking `JSON`format data. Here is the issue [link] (https://git.chalmers.se/courses/dit826/2024/group1/-/issues/10)
+- **Victoria**: She will be working on data validation in the ML pipeline. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/9)
+- **Yingchao**: He will be working on feature engineering, to see which features are the most useful and related. Here is the issue [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/8)
 
 # Meeting Four (2024-11-22):
 
