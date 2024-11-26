@@ -1,0 +1,51 @@
+# Stages
+stages:
+    - build
+    - test
+    - versioning
+    - deploy
+
+version_new_model:
+    # Use docker runner
+    tags:
+        - docker
+    # Use the latest version of Ubuntu as the base image
+    image: ubuntu:latest
+    # This job is part of the versioning stage
+    stage: versioning
+    rules:
+        # This job runs only for merge requests and if the target brach is main
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+          # A new model is detected if changes are made to the db_setup or ML_pipeline folders
+          changes:
+              - db_setup/**
+              - ML_pipeline/**
+        - when: never
+    # Install required tools
+    before_script:
+        - apt-get update && apt-get install -y curl jq
+    script:
+        - |
+          echo "New model detected"
+          echo "Current model version: ${LATEST_MODEL_VERSION}"
+          # Extract the current model version
+          V=$(echo "${LATEST_MODEL_VERSION}" | cut -d. -f1) # Extract V from LATEST_MODEL_VERSION
+          NEW_VERSION=$((V + 1)).0
+          # Update the variable via the GitLab API
+          curl --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+               --request PUT \
+               --form "value=${NEW_VERSION}" \
+               "https://git.chalmers.se/api/v4/projects/${CI_PROJECT_ID}/variables/LATEST_MODEL_VERSION"
+          # Confirm that the new version was updated
+          UPDATED_VERSION=$(curl --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+                                 "https://git.chalmers.se/api/v4/projects/${CI_PROJECT_ID}/variables/LATEST_MODEL_VERSION" | jq -r '.value')
+          echo "Updated model version: ${UPDATED_VERSION}"
+          # Create and push the new tag
+          echo "Creating new tag"
+          curl --request POST \
+               --header "PRIVATE-TOKEN: ${GITLAB_ACCESS_TOKEN}" \
+               --url "https://git.chalmers.se/api/v4/projects/${CI_PROJECT_ID}/repository/tags" \
+               --data "tag_name=${UPDATED_VERSION}" \
+               --data "ref=${CI_COMMIT_BRANCH}" \
+               --data "message=New model version: ${UPDATED_VERSION}"
+
