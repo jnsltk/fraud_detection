@@ -20,7 +20,7 @@ DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 engine = create_engine(DATABASE_URL)
 
 # Load data from the database
-query = "SELECT * FROM detector_transaction LIMIT 10"
+query = "SELECT * FROM detector_transaction"
 df = pd.read_sql(query, engine)
 
 # Handle missing values
