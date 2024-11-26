@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -8,8 +9,7 @@ from db_importer.forms import CSVUploadForm
 from db_importer.services.csv_handler import process_csv
 from detector.models import Transaction
 
-# Disable CSRF validation until that's set up properly
-@csrf_exempt
+@login_required
 @require_http_methods(['GET', 'POST'])
 def import_csv_to_db(request):
     if request.method == 'POST':

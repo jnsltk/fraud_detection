@@ -27,4 +27,5 @@ urlpatterns = [
     path('import_data/', include('db_importer.urls')),
     path('core/', include('core.urls')),
     path('', RedirectView.as_view(url='core/')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
