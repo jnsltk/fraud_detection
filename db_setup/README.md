@@ -25,7 +25,9 @@ psql -U postgres -f sql/create_user_db.sql
 ```
 > NOTE: The password in the script has been removed, so before running the script, make sure to replace the password with the correct one.
 
-After that run the following command to create the schema:
+(DEPRECATED) After that run the following command to create the schema:
+
+> ⚠️ This step is no longer needed, as the database is managed by the Django ORM.
 
 ```bash
 psql -U fraud_db_user -d fraud_db -f create_schema.sql
