@@ -1,0 +1,37 @@
+FROM continuumio/miniconda3:latest
+
+# Ensures immediate prints to stdout
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# --------------------- SETUP ENVIRONMENT -------------------- #
+
+ENV DB_NAME=fraud_db
+ENV DB_USER=fraud_db_user
+ENV DB_HOST=79.139.60.91
+ENV DB_PORT=5432
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y postgresql && \
+    apt-get clean
+
+# ------------------------ SETUP CONDA ----------------------- #
+
+COPY environment.yml /app/environment_raw.yml
+
+# Fix for platform dependent package - TODO: remove when fixed
+RUN grep -v "libgfortran" environment_raw.yml > environment.yml
+RUN conda env create -f environment.yml
+
+# --------------------- SETUP FOR RUNNING -------------------- #
+
+COPY ./fraud_detection /app
+
+# Useful if adding further run commands
+SHELL ["conda", "run", "-n", "prj", "/bin/bash", "-c"]
+
+CMD ["conda", "run", "-n", "prj", "./run.sh"]
+
+EXPOSE 8000
