@@ -92,11 +92,18 @@ fluent_datasources:
           transaction_sample.csv:
             id: 6e750242-3f90-4db8-b2c9-786ad3fe5ec4
             partitioner:
+              regex: .*\.csv
+              param_names: []
+          dataset_sample.csv:
+            id: e699b2b3-b09e-4121-b55c-2383f0770a90
+            partitioner:
               regex: dataset_sample.csv
               param_names: []
-    base_directory: prototypes/data
-  default_pandas_datasource:
-    type: pandas
-    id: aa8f0a13-a50f-442e-b6d1-c3d2ef7e927c
+          dataset_sample.csv_1732888202:
+            id: 3b67ee98-0708-458d-bf0d-0e7b42b5530e
+            partitioner:
+              regex: dataset_sample.csv
+              param_names: []
+    base_directory: /tmp
 analytics_enabled:
 data_context_id: 4cbddcfb-b092-444e-b93e-aa4410e34f6f

@@ -7,27 +7,76 @@ from logging import exception
 from matplotlib.cbook import flatten
 
 from detector.models import Transaction
-
+import subprocess
+import os
 
 def process_csv(input_file):
-    data = TextIOWrapper(input_file, encoding='utf-8')
-    reader = csv.DictReader(data)
-    data_to_insert = []
+    # ------------------------------ Data Validation ----------------------------- #
+    # Save the uploaded file temporarily for validation
+    temp_file_path = "/tmp/uploaded_file.csv"
+    with open(temp_file_path, "w", encoding="utf-8") as temp_file:
+        data = TextIOWrapper(input_file, encoding="utf-8")
+        temp_file.write(data.read())
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(current_dir, "../../../"))
+    try:
+        # Validate the file using the Great Expectations script
+        validation_script = os.path.join(
+            project_root, "great_expectations", "scripts", "validate_data.py"
+        )
+        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
 
-    # Skip first row containing headers
-    # next(reader, None)
+        # Check whether the file exists
+        if not os.path.isfile(temp_file_path):
+            raise FileNotFoundError(f"File not saved correctly: {temp_file_path}")
 
-    # Stop pycharm from complaining with type hinting
-    row: dict
-    for row in reader:
-        velocity = flatten_velocity(row, 'velocity_last_hour')
-        row.update(velocity)
-        try:
-            data_to_insert.append(Transaction(**row))
-        except Exception as e:
-            print(f"Error processing row {row}: {e}")
+        print("Start data validation......")
 
-    Transaction.objects.bulk_create(data_to_insert)
+        result = subprocess.run(
+            [anaconda_python, validation_script, temp_file_path],
+            capture_output=True,
+            text=True,
+        )
+
+        # Check the validation result
+        if result.returncode != 0:
+            print(result.stderr)
+            print("Validation failed!")
+            return {"status": "error", "message": "Validation failed. Please check the CSV format and try again."}
+        else:
+            print(result.stdout)
+            print("Validation succeeded!")
+
+        # ------------------------------ Data Insertion ------------------------------ #
+        with open(temp_file_path, "r", encoding="utf-8") as temp_file:
+            reader = csv.DictReader(temp_file)
+            data_to_insert = []
+
+            # Skip first row containing headers
+            # next(reader, None)
+
+            # Stop pycharm from complaining with type hinting
+            row: dict
+            for row in reader:
+                velocity = flatten_velocity(row, 'velocity_last_hour')
+                row.update(velocity)
+                try:
+                    data_to_insert.append(Transaction(**row))
+                except Exception as e:
+                    print(f"Error processing row {row}: {e}")
+
+            #Transaction.objects.bulk_create(data_to_insert)
+        return {"status": "success", "message": "File processed successfully!"}
+    
+    except Exception as e:
+        print(f"Error during validation: {e}")
+        return {"status": "error", "message": f"An error occurred during validation: {str(e)}"}
+    finally:
+        # Clean up the temporary file
+        if os.path.isfile(temp_file_path):
+            os.remove(temp_file_path)
+            
+
 
 def flatten_velocity(row, fieldname):
     json_string = row[fieldname]
