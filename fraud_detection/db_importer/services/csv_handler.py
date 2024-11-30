@@ -10,13 +10,8 @@ from detector.models import Transaction
 import subprocess
 import os
 
-def process_csv(input_file):
-    # ------------------------------ Data Validation ----------------------------- #
-    # Save the uploaded file temporarily for validation
-    temp_file_path = "/tmp/uploaded_file.csv"
-    with open(temp_file_path, "w", encoding="utf-8") as temp_file:
-        data = TextIOWrapper(input_file, encoding="utf-8")
-        temp_file.write(data.read())
+# ------------------------------ Data Validation ----------------------------- #
+def validate_csv_data(temp_file_path):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(current_dir, "../../../"))
     try:
@@ -37,7 +32,6 @@ def process_csv(input_file):
             capture_output=True,
             text=True,
         )
-
         try:
              # Parse the result
             output = json.loads(result.stdout)
@@ -64,8 +58,25 @@ def process_csv(input_file):
 
         else:            
             print(f"\033[1;92mValidation succeeded!\033[0m") # Log the successful result in green
+            return {"status": "success", "message": "Validation succeeded!"}
+    except Exception as e:
+        print(f"Error during validation: {e}")
+        return {"status": "error", "message": f"An error occurred during validation: {str(e)}"}
+    
 
-        # ------------------------------ Data Insertion ------------------------------ #
+# ------------------------------ Data Insertion ------------------------------ #
+def process_csv(input_file):
+    # Save the uploaded file temporarily for validation
+    temp_file_path = "/tmp/uploaded_file.csv"
+
+    with open(temp_file_path, "w", encoding="utf-8") as temp_file:
+        data = TextIOWrapper(input_file, encoding="utf-8")
+        temp_file.write(data.read())
+    try:
+        validation_result = validate_csv_data(temp_file_path)
+        if validation_result["status"] != "success":
+            return validation_result
+        
         with open(temp_file_path, "r", encoding="utf-8") as temp_file:
             reader = csv.DictReader(temp_file)
             data_to_insert = []
@@ -85,10 +96,9 @@ def process_csv(input_file):
 
             #Transaction.objects.bulk_create(data_to_insert)
         return {"status": "success", "message": "File processed successfully!"}
-    
     except Exception as e:
-        print(f"Error during validation: {e}")
-        return {"status": "error", "message": f"An error occurred during validation: {str(e)}"}
+        print(f"Error during processing: {e}")
+        return {"status": "error", "message": f"An error occurred during processing: {str(e)}"}
     finally:
         # Clean up the temporary file
         if os.path.isfile(temp_file_path):
