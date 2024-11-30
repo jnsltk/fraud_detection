@@ -1,7 +1,11 @@
-{% extends "base_generic.html" %}
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block breadcrumbs %}
+<span class="block text-sm text-neutral-500">Dashboard / Home</span>
+{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
+<div class="max-w-3xl mx-8">
     <!-- Welcome Section -->
     <div class="bg-white shadow-md rounded-lg p-6 my-4">
         <h1 class="text-3xl font-bold text-blue-900 mb-4">Welcome</h1>

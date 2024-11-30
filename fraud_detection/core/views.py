@@ -5,4 +5,4 @@ def index(request):
         'message': "hellooo"
     }
 
-    return render(request, 'index.html', context=context)
+    return render(request, 'core/index.html', context=context)
