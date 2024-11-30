@@ -16,7 +16,7 @@ class Command(BaseCommand):
             project_root, "great_expectations", "scripts", "validate_data.py"
         )
         # Change the working directory to the project root
-        os.chdir(project_root)  # Set the working directory explicitly
+        os.chdir(project_root)  
 
         # Run the validation script using subprocess
         try:

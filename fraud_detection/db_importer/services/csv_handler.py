@@ -38,14 +38,32 @@ def process_csv(input_file):
             text=True,
         )
 
-        # Check the validation result
+        try:
+             # Parse the result
+            output = json.loads(result.stdout)
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
+            print(f"Raw output: {repr(result.stdout)}")
+            return {"status": "error", "message": "Validation script returned invalid or empty output."}
+
+        # # Check the validation result
         if result.returncode != 0:
-            print(result.stderr)
-            print("Validation failed!")
-            return {"status": "error", "message": "Validation failed. Please check the CSV format and try again."}
-        else:
-            print(result.stdout)
-            print("Validation succeeded!")
+            failure_details = "\n".join([
+                f"\t- Expectation: {failure['expectation']} on column '{failure['column']}', "
+                f"Unexpected Count: {failure['unexpected_count']}, "
+                f"Unexpected Percent: {failure['unexpected_percent']}%, "
+                f"Sample Unexpected: {failure['partial_unexpected_list']}"
+                for failure in output.get("failures", [])
+            ])
+            print(f"\033[1;91mData validation failed! Failure details as below:\033[0m") # Log the failure result in red
+            print(f"\033[1;91m{failure_details}\033[0m") # Log the failure details in red
+            return {
+                "status": "error",
+                "message": f"{output['message']}\nFailures:\n{repr(result.stdout)}"
+            }
+
+        else:            
+            print(f"\033[1;92mValidation succeeded!\033[0m") # Log the successful result in green
 
         # ------------------------------ Data Insertion ------------------------------ #
         with open(temp_file_path, "r", encoding="utf-8") as temp_file:

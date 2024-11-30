@@ -1,4 +1,4 @@
-import time
+import json
 import great_expectations as gx
 import os
 import sys
@@ -63,11 +63,26 @@ def main():
 
         # Log validation results
         if results["success"]:
-            print("Validation completed: succeeded!")
+            # Success path outputs consistent JSON
+            print(json.dumps({"status": "success", "message": "Validation succeeded!"}))
             sys.exit(0)  # Exit with success
         else:
-            print("Validation completed: failed!")
-            print(results)
+            failed_expectations = [
+                {
+                    "expectation": result["expectation_config"]["type"],  # Expectation type
+                    "column": result["expectation_config"]["kwargs"].get("column"),  # Column name
+                    "unexpected_count": result["result"].get("unexpected_count"),  # Count of unexpected values
+                    "unexpected_percent": result["result"].get("unexpected_percent"),  # Percentage of unexpected values
+                    "partial_unexpected_list": result["result"].get("partial_unexpected_list")  # Sample of unexpected values
+                }
+                for result in results["results"] if not result["success"]
+            ]
+
+            print(json.dumps({
+                "status": "error",
+                "message": "Validation failed. See details.",
+                "failures": failed_expectations
+            }))
             sys.exit(1)  # Exit with failure
 
     except Exception as e:
@@ -76,7 +91,7 @@ def main():
     finally:
         if os.path.isfile(temp_file_path):
             os.remove(temp_file_path)
-            print(f"Temporary file removed: {temp_file_path}")
+            # print(f"Temporary file removed: {temp_file_path}")
 
 if __name__ == "__main__":
     main()
