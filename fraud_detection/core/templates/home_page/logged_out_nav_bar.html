@@ -1,0 +1,22 @@
+<div class="flex items-center justify-between px-4 py-2 bg-blue-800 text-white">
+    <h1 class="text-lg font-bold">Fraud Detection</h1>
+    <div class="space-x-4">
+        <!-- About Us Button -->
+        <button 
+            hx-get="/about-us/" 
+            hx-target="#main-content" 
+            hx-swap="innerHTML"
+            class="px-4 py-2 bg-amber-500 rounded hover:bg-blue-900 transition-colors">
+            About Us
+        </button>
+
+        <!-- Log In Button -->
+        <button 
+            hx-get="/login/" 
+            hx-target="#main-content" 
+            hx-swap="innerHTML"
+            class="px-4 py-2 bg-amber-500 rounded hover:bg-blue-900 transition-colors">
+            Log In
+        </button>
+    </div>
+</div>
