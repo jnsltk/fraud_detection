@@ -76,7 +76,7 @@ def process_csv(input_file):
         validation_result = validate_csv_data(temp_file_path)
         if validation_result["status"] != "success":
             return validation_result
-        
+        print("Start inserting...")
         with open(temp_file_path, "r", encoding="utf-8") as temp_file:
             reader = csv.DictReader(temp_file)
             data_to_insert = []
@@ -94,7 +94,7 @@ def process_csv(input_file):
                 except Exception as e:
                     print(f"Error processing row {row}: {e}")
 
-            #Transaction.objects.bulk_create(data_to_insert)
+            Transaction.objects.bulk_create(data_to_insert)
         return {"status": "success", "message": "File processed successfully!"}
     except Exception as e:
         print(f"Error during processing: {e}")
