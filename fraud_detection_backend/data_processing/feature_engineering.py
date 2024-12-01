@@ -47,6 +47,10 @@ df[numeric_cols] = scaler.fit_transform(df[numeric_cols])  # Apply StandardScale
 # Process high-risk merchants
 df['high_risk_merchant'] = df['high_risk_merchant'].astype(int)  # Convert to integer
 
+# Convert the binary feature to Boolean type
+binary_cols = [col for col in df.columns if df[col].nunique() == 2 and sorted(df[col].unique()) == [0, 1]]
+df[binary_cols] = df[binary_cols].astype(bool)
+
 # Drop unnecessary columns. We can adjust features that need to be dropped
 df = df.drop(columns=['transaction_id', 'customer_id', 'timestamp', 'card_number', 'device_fingerprint', 'ip_address'])  # Drop columns not needed for modeling
 
@@ -56,5 +60,5 @@ y = df['is_fraud']  # Target variable (fraud or not)
 
 
 # Save the processed data to a CSV file if someone would like to view the precessed data 
-# output_file = 'file_path/processed_transactions.csv'
-# df.to_csv(output_file, index=False, mode='w')
+output_file = 'D:/project/Python/dit826/data/archive/processed_transactions.csv'
+df.to_csv(output_file, index=False, mode='w')
