@@ -60,5 +60,5 @@ y = df['is_fraud']  # Target variable (fraud or not)
 
 
 # Save the processed data to a CSV file if someone would like to view the precessed data 
-output_file = 'D:/project/Python/dit826/data/archive/processed_transactions.csv'
-df.to_csv(output_file, index=False, mode='w')
+# output_file = 'filepath/processed_transactions.csv'
+# df.to_csv(output_file, index=False, mode='w')
