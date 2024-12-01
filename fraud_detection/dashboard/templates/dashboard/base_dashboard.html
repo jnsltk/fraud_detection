@@ -39,11 +39,11 @@
             <ul class="flex-grow space-y-4 -mx-4 text-white font-bold">
                 <li><a href="{% url 'dashboard/index' %}"
                        class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Home</a></li>
-                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md">Manage Models</a></li>
-                <li><a href="{% url 'import_csv_to_db' %}" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md">Upload
+                <li><a href="{% url 'dashboard/manage_models' %}" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Manage Models</a></li>
+                <li><a href="{% url 'import_csv_to_db' %}" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Upload
                     Data</a></li>
-                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md">Usage Statistics</a></li>
-                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md">Settings</a></li>
+                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Usage Statistics</a></li>
+                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Settings</a></li>
             </ul>
         {% endblock %}
         {% if user.is_authenticated %}
@@ -51,7 +51,7 @@
                 <form id="logout-form" method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit"
-                            class="text-amber-500 font-bold hover:text-blue-200/80 transition duration-150 mt-2">
+                            class="text-amber-500 font-bold hover:text-red-500 transition duration-150 mt-2">
                         Logout
                     </button>
                 </form>
@@ -61,7 +61,7 @@
 
     <div class="flex-grow overflow-auto">
         <!-- Top bar -->
-        <div class="px-8 py-10 items-center justify-between hidden md:flex">
+        <div class="px-8 py-7 items-center justify-between hidden md:flex">
             {% block breadcrumbs %}
             {% endblock %}
             <div class="flex items-center gap-5">
