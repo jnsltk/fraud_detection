@@ -1,5 +1,21 @@
 {% extends "dashboard/base_dashboard.html" %}
 
 {% block breadcrumbs %}
-<span class="block text-sm text-neutral-500">Dashboard / Manage Models</span>
+    <span class="block text-sm text-neutral-500">Dashboard / Manage Models</span>
+{% endblock %}
+
+{% block content %}
+    <div class="max-w-3xl mx-8">
+        <div class="mb-8 items-center justify-between hidden md:flex">
+            <span class="block text-4xl font-bold">Manage models</span>
+            <button class="bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition transition-duration-150">Train new model</button>
+        </div>
+        <p class="mb-10">As the site administrator, you can select which pre-trained model should be used in production, as well as
+            train new models
+            on any of the available datasets. If you’d like to upload a new dataset, select the ‘Upload Data’ option
+            from the sidebar.</p>
+        <div class="bg-white shadow-xl rounded-xl border p-8">
+            <img class="rounded-lg " src="https://i.cbc.ca/1.5359228.1577206958!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_940/smudge-the-viral-cat.jpg" alt="Graph showing model prediction accuracy over time">
+        </div>
+    </div>
 {% endblock %}
