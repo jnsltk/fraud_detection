@@ -17,7 +17,7 @@ def validate_csv_data(temp_file_path):
     try:
         # Validate the file using the Great Expectations script
         validation_script = os.path.join(
-            project_root, "great_expectations", "scripts", "validate_data.py"
+            project_root, "gx", "scripts", "validate_data.py"
         )
         anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
 
