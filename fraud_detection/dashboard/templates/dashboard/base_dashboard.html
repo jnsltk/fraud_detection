@@ -6,7 +6,23 @@
         <title>Fraud Detection Dashboard</title>
     {% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+          rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    {% block custom_script %}
+    {% endblock %}
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'monospace'],
+                },
+            }
+        }
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuToggle = document.getElementById('menu-toggle');
@@ -39,11 +55,16 @@
             <ul class="flex-grow space-y-4 -mx-4 text-white font-bold">
                 <li><a href="{% url 'dashboard/index' %}"
                        class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Home</a></li>
-                <li><a href="{% url 'dashboard/manage_models' %}" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Manage Models</a></li>
-                <li><a href="{% url 'import_csv_to_db' %}" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Upload
+                <li><a href="{% url 'dashboard/manage_models' %}"
+                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Manage Models</a>
+                </li>
+                <li><a href="{% url 'import_csv_to_db' %}"
+                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Upload
                     Data</a></li>
-                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Usage Statistics</a></li>
-                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Settings</a></li>
+                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Usage
+                    Statistics</a></li>
+                <li><a href=""
+                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Settings</a></li>
             </ul>
         {% endblock %}
         {% if user.is_authenticated %}
