@@ -1,11 +1,10 @@
 <div class="flex items-center justify-between px-4 py-2 bg-[#102c89] text-white">
-    <h1 class="text-lg font-bold hover:cursor-pointer hover:text-[#586BAC]">Fraud Detection</h1>
+    <h1 hx-get="/core/" hx-target="#root" class="text-lg font-bold hover:cursor-pointer hover:text-[#586BAC]">Fraud Detection</h1>
     <div class="space-x-4">
         <!-- About Us Button -->
         <button 
-            hx-get="/about-us/" 
-            hx-target="#main-content" 
-            hx-swap="innerHTML"
+            hx-get="/core/register/"
+            hx-target="#root"
             class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
             Sign Up
         </button>
@@ -13,8 +12,6 @@
         <!-- Log In Button -->
         <button 
             hx-get="/login/" 
-            hx-target="#main-content" 
-            hx-swap="innerHTML"
             class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
             Sign In
         </button>
