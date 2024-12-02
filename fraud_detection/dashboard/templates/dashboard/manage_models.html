@@ -6,9 +6,9 @@
 
 {% block content %}
     <div class="max-w-3xl mx-8">
-        <div class="mb-8 items-center justify-between hidden md:flex">
-            <span class="block text-4xl font-bold">Manage models</span>
-            <button class="bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition transition-duration-150">
+        <div class="mb-8 mt-8 md:mt-0 items-center justify-between flex">
+            <span class="block text-2xl md:text-4xl font-bold">Manage models</span>
+            <button class="text-nowrap bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition transition-duration-150">
                 Train new model
             </button>
         </div>
@@ -17,23 +17,23 @@
             train new models
             on any of the available datasets. If you’d like to upload a new dataset, select the ‘Upload Data’ option
             from the sidebar.</p>
-        <div class="bg-white shadow-xl rounded-xl border p-8 mb-12">
+        <div class="bg-white shadow-xl rounded-xl border p-8 mb-12 min-w-min text-nowrap">
             <table class="table-auto w-full mb-4">
                 <thead>
                 <tr>
-                    <th class="pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
+                    <th class="pr-[min(12px)] pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
                         Version
                     </th>
-                    <th class="pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
+                    <th class="pr-[min(12px)] pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
                         Date created
                     </th>
-                    <th class="pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
+                    <th class="pr-[min(12px)] pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
                         Created by
                     </th>
-                    <th class="pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
+                    <th class="pr-[min(12px)] pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
                         Dataset size
                     </th>
-                    <th class="pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
+                    <th class="pr-[min(12px)] pb-3 font-normal uppercase text-neutral-500 text-sm tracking-wider border-b border-neutral-600 text-left">
                         Score
                     </th>
                     <th class="pb-3 border-b border-neutral-600"></th>
@@ -43,12 +43,12 @@
                 <tbody>
                 {% for model in models %}
                 <tr>
-                    <td class="py-3 font-mono border-b border-neutral-600 text-left">{{ model.version }}</td>
-                    <td class="py-3 font-mono border-b border-neutral-600 text-left">{{ model.date_created }}</td>
-                    <td class="py-3 font-mono border-b border-neutral-600 text-left">{{ model.created_by }}</td>
-                    <td class="py-3 font-mono border-b border-neutral-600 text-left">{{ model.dataset_size }}</td>
-                    <td class="py-3 font-mono border-b border-neutral-600 text-left">{{ model.score }}</td>
-                    <td class="py-3 border-b border-neutral-600">
+                    <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.version }}</td>
+                    <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.date_created }}</td>
+                    <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.created_by }}</td>
+                    <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.dataset_size }}</td>
+                    <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.score }}</td>
+                    <td class="pr-[min(12px)] py-3 border-b border-neutral-600">
                         {% if model.deployed %}
                             <button class="bg-stone-300 rounded-xl px-3 py-1 shadow-lg border border-stone-400/50 border-2 text-xs text-neutral-500 font-bold cursor-default">
                                 Deployed
@@ -59,7 +59,7 @@
                             </button>
                         {% endif %}
                     </td>
-                    <td class="py-3 border-b border-neutral-600">
+                    <td class="pr-[min(12px)] py-3 border-b border-neutral-600">
                         <div class="cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="21" height="21"
                                  viewBox="0,0,256,256">
