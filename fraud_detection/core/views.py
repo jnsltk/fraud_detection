@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_POST
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+from django.contrib.auth.models import User
 from .form import RegisterForm
+
 
 @require_GET
 def home_page(request):
@@ -15,6 +21,5 @@ def get_register_form(request):
 def post_register_form(request):
     form = RegisterForm(request.POST)
     if form.is_valid():
-        print(form.cleaned_data)
-        return redirect('home')
+        return redirect('index')
     return render(request, 'registration/registration_form.html', {'form': form})
