@@ -28,7 +28,11 @@ def manage_models(request):
             print(start_date, end_date)
             # simulate model training time
             time.sleep(5)
-        return HttpResponseRedirect(reverse('dashboard/train_model_success'))
+            context = {
+                'desc': 'Success!',
+                'message': 'Congratulations! You\'ve just trained a new model! Click \'Deploy\' if you want to use it.'
+            }
+        return render(request, 'dashboard/train_model_result.html', context=context)
     else:
         context = {}
         # Define dummy data for now
@@ -58,5 +62,5 @@ def cancel_model_form(request):
     return HttpResponse(
         """<div id="dialog"></div>"""
     )
-def train_model_success(request):
-    return render(request, 'dashboard/train_model_success.html')
+def train_model_result(request):
+    return render(request, 'dashboard/train_model_result.html')
