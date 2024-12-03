@@ -28,4 +28,5 @@ urlpatterns = [
     path('core/', include('core.urls')),
     path('', RedirectView.as_view(url='core/')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('dashboard/', include('dashboard.urls')),
 ]

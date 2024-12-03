@@ -32,7 +32,7 @@
                     </form>
                 </li>
             {% else %}
-                <li><a href="{% url 'login' %}?next={{ request.path }}" class="text-white underline hover:text-blue-300 transition duration-150 block py-2 px-4">
+                <li><a href="{% url 'login' %}?next=/dashboard/" class="text-white underline hover:text-blue-300 transition duration-150 block py-2 px-4">
                     Login
                 </a></li>
             {% endif %}
