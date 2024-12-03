@@ -6,6 +6,7 @@
         <title>Fraud Detection Dashboard</title>
     {% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
@@ -87,7 +88,8 @@
             {% endblock %}
             <div class="flex items-center gap-5">
                 <span class="block font-bold">{{ user.first_name }} {{ user.last_name }}</span>
-                <img src="" class="bg-blue-900 h-12 w-12 rounded-full border-4 border-amber-500 object cover">
+                <img alt="User profile picture" src="https://thispersondoesnotexist.com/"
+                     class="bg-blue-900 h-12 w-12 rounded-full border-4 border-amber-500 object cover">
             </div>
         </div>
 
