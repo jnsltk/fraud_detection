@@ -37,10 +37,32 @@ load_dotenv()
 SHOW_PLOTS = os.getenv('SHOW_PLOTS') in TRUE_STRINGS
 VERBOSE_TRAINING = os.getenv('VERBOSE_TRAINING') in TRUE_STRINGS
 
-# ------------------------- FUNCTIONS ------------------------ #
+# ------------------------- PUBLIC FUNCTIONS ------------------------ #
 
 
-def train(training: np.ndarray) -> keras.Model:
+def create(df: pd.DataFrame) -> ModelOutput:
+    # note - random_state is the seed for shuffling
+    df_train, df_test = train_test_split(df, test_size=0.3, random_state=42)
+
+    # Create training and testing arrays
+    training = np.array(df_train, dtype='float32')
+    testing = np.array(df_test, dtype='float32')
+
+    model = _train(training)
+    test_result = _test(testing, model)
+
+    return ModelOutput(model=model, test_result=test_result)
+
+
+def predict(df: pd.DataFrame, model: keras.Model):
+    input = np.array(df, dtype='float32')
+    return model.predict(input, verbose=False)[0][0]
+
+
+# ------------------------- PRIVATE FUNCTIONS ------------------------ #
+
+
+def _train(training: np.ndarray) -> keras.Model:
 
     # Prepare the training dataset
     X_train = training[:, :-1]
@@ -74,18 +96,7 @@ def train(training: np.ndarray) -> keras.Model:
     return model
 
 
-def plot(y_test, predictions):
-    # use seaborn library to plot the confusion matrix
-    matrix = confusion_matrix(y_test, predictions)
-
-    sns.heatmap(matrix, annot=True, fmt='d')
-    plt.xlabel('Predicted labels')
-    plt.ylabel('True labels')
-    plt.title('Confusion Matrix')
-    plt.show()
-
-
-def test(testing: np.ndarray, model: keras.Model) -> dict:
+def _test(testing: np.ndarray, model: keras.Model) -> dict:
     # Prepare the testing dataset
     X_test = testing[:, :-1]
     y_test = testing[:, -1:]
@@ -98,21 +109,18 @@ def test(testing: np.ndarray, model: keras.Model) -> dict:
     predicted_classes = (y_pred > 0.5).astype(int)
 
     if SHOW_PLOTS:
-        plot(y_test, predicted_classes)
+        _plot(y_test, predicted_classes)
 
     target_names = ["Class {}".format(i) for i in range(2)]
     return classification_report(y_test, predicted_classes, target_names=target_names, output_dict=True)
 
 
-def create(df: pd.DataFrame) -> ModelOutput:
-    # note - random_state is the seed for shuffling
-    df_train, df_test = train_test_split(df, test_size=0.3, random_state=42)
+def _plot(y_test, predictions):
+    # use seaborn library to plot the confusion matrix
+    matrix = confusion_matrix(y_test, predictions)
 
-    # Create training and testing arrays
-    training = np.array(df_train, dtype='float32')
-    testing = np.array(df_test, dtype='float32')
-
-    model = train(training)
-    test_result = test(testing, model)
-
-    return ModelOutput(model=model, test_result=test_result)
+    sns.heatmap(matrix, annot=True, fmt='d')
+    plt.xlabel('Predicted labels')
+    plt.ylabel('True labels')
+    plt.title('Confusion Matrix')
+    plt.show()

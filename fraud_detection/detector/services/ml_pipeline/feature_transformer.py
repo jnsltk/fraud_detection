@@ -1,12 +1,47 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import numpy as np
 import os
 from currency_converter import CurrencyConverter, ECB_URL
 import urllib.request  # for obtaining currency data
 from dotenv import load_dotenv
+import data_loader
+from datetime import datetime
+from dataclasses import dataclass
 
-# =========================== SETUP ========================== #
+# ========================== CLASSES ========================= #
+
+
+@dataclass
+class Stat:
+    mean: float
+    std: float
+
+
+# =========================== CONSTANTS ========================== #
+
+UNKNOWN = 'unknown'
+UNKNOWN_IN_TRAINING_PERCENTAGE = 0.1
+
+USED_FEATURES = [
+    'merchant_category',
+    'amount',
+    'currency',
+    'country',
+    'card_type',
+    'card_present',
+    'device',
+    'channel',
+    'distance_from_home',
+    'transaction_hour',
+    'weekend_transaction',
+]
+
+CAT_COLS = ['merchant_category', 'currency', 'country', 'card_type', 'device', 'channel']
+
+NUM_COLS = ['amount', 'euros']
+
+# =========================== SETUP EURO ========================== #
 
 load_dotenv()
 
@@ -27,7 +62,25 @@ c = CurrencyConverter('data/eurofxref-hist.zip', fallback_on_missing_rate=True, 
 # ====================== HELPER METHODS ====================== #
 
 
-def to_eur(row):
+def _one_hot_encode(df: pd.DataFrame, col: str) -> pd.DataFrame:
+
+    # loads all categories from the database, and adds unknown
+    categories = data_loader.get_unique(col) + [UNKNOWN]
+    encoder = OneHotEncoder(categories=[categories], drop='first', handle_unknown='infrequent_if_exist')
+
+    encoder.fit(df[[col]])
+    encoded = encoder.transform(df[[col]])
+    encoded_df = pd.DataFrame(encoded.toarray(), columns=[f'{col}_{cat}' for cat in categories[1:]])
+    df = pd.concat([df, encoded_df], axis=1)
+
+    df.drop(columns=[col], inplace=True)
+    return df
+
+
+# ======================== PUBLIC METHODS ======================= #
+
+
+def row_to_eur(row):
     ''' Takes row of [amount, timestamp, currency] and returns the amount in EUR '''
 
     if row[2] == 'NGN':  # note - the ECB does not have NGN for some reason
@@ -36,23 +89,54 @@ def to_eur(row):
         return c.convert(row[0], row[2], date=row[1])
 
 
-# ======================== MAIN METHOD ======================= #
+# TODO - add end date
+def transform_single(input: dict, stats: list[Stat]) -> pd.DataFrame:
+
+    # ---------------- CREATE EURO CONVERSION DATA --------------- #
+
+    timestamp = datetime.now()
+    amount_cols = np.array([input['amount'], timestamp, input['currency']])  # used for euros conversion
+
+    # ----------------- SELECT SUBSET OF COLUMNS ----------------- #
+
+    df = pd.DataFrame([input])[USED_FEATURES].copy()
+
+    # ------------------------ ADD COLUMNS ----------------------- #
+
+    df['euros'] = np.array(row_to_eur(amount_cols))
+
+    # ---------------------- MISSING VALUES ---------------------- #
+
+    if df.select_dtypes(include=[np.number]).isnull().values.any():
+        raise ValueError('Missing values in numerical columns')
+
+    for col in df.select_dtypes(include=[object]).columns:
+        df[col] = df[col].fillna(UNKNOWN)  # Fill missing values for categorical features with 'unknown'
+
+    # ---------------- ENCODE CATEGORICAL FEATURES --------------- #
+
+    for col in CAT_COLS:
+        df = _one_hot_encode(df, col)
+
+    # ------------------- STANDARDISE FEATURES ------------------- #
+
+    for col in NUM_COLS:
+        df[col] = (df[col] - stats[col].mean) / stats[col].std
+
+    return df
 
 
-def transform(df) -> pd.DataFrame:
+# TODO - add end date
+def transform_df(df: pd.DataFrame) -> pd.DataFrame:
     amount_cols = np.array(df[['amount', 'timestamp', 'currency']])  # used for euros conversion
 
     # ----------------- SELECT SUBSET OF COLUMNS ----------------- #
 
-    df = df[[
-        'merchant_category', 'amount', 'currency', 'card_present', 'device', 'channel', 'distance_from_home',
-        'transaction_hour', 'weekend_transaction', 'is_fraud'
-    ]].copy()
+    df = df[USED_FEATURES + ['is_fraud']].copy()
 
     # ------------------------ ADD COLUMNS ----------------------- #
 
-    euros = np.array([to_eur(row) for row in amount_cols])
-    df['euros'] = euros
+    df['euros'] = np.array([row_to_eur(row) for row in amount_cols])
 
     # ---------------------- MISSING VALUES ---------------------- #
 
@@ -60,45 +144,26 @@ def transform(df) -> pd.DataFrame:
         df[col] = df[col].fillna(df[col].mean())  # Fill missing values for numerical features with mean
 
     for col in df.select_dtypes(include=[object]).columns:
-        df[col] = df[col].fillna('Unknown')  # Fill missing values for categorical features with 'Unknown'
+        df[col] = df[col].fillna(UNKNOWN)  # Fill missing values for categorical features with 'unknown'
 
     # ---------------- ENCODE CATEGORICAL FEATURES --------------- #
 
-    cat_cols = np.array([
-        'merchant_category', 'merchant_type', 'merchant', 'currency', 'country', 'city', 'city_size', 'card_type',
-        'device', 'channel'
-    ])
-    chosen_cat_cols = np.intersect1d(cat_cols, np.array(df.columns))
+    unknowns_amt = int(UNKNOWN_IN_TRAINING_PERCENTAGE * len(df))
 
-    # One-hot encode categorical features
-    df = pd.get_dummies(df, columns=chosen_cat_cols, drop_first=True, prefix=chosen_cat_cols)
+    for col in CAT_COLS:
+        # sets some values to unknown to learn to handle unknown values
+        unknowns_idxs = np.random.choice(df.index, unknowns_amt, replace=False)
+        df.loc[unknowns_idxs, col] = UNKNOWN
+
+        df = _one_hot_encode(df, col)
 
     # ------------------- STANDARDISE FEATURES ------------------- #
 
-    scaler = StandardScaler()
-    numeric_cols = [
-        'amount', 'v_num_transactions', 'v_total_amount', 'v_unique_merchants', 'v_unique_countries', 'v_total_amount',
-        'v_max_single_amount', 'euros'
-    ]
-    chosen_numeric_cols = np.intersect1d(numeric_cols, np.array(df.columns))
-
-    # Apply StandardScaler to numerical columns
-    df[chosen_numeric_cols] = scaler.fit_transform(df[chosen_numeric_cols])
-
-    # -------------------- CONVERT DATA TYPES -------------------- #
-
-    # Process high-risk merchants
-    #df['high_risk_merchant'] = df['high_risk_merchant'].astype(int)  # Convert to integer
-
-    # Convert the binary feature to Boolean type
-    binary_cols = [col for col in df.columns if df[col].nunique() == 2 and sorted(df[col].unique()) == [0, 1]]
-    df[binary_cols] = df[binary_cols].astype(bool)
+    df[NUM_COLS] = StandardScaler().fit_transform(df[NUM_COLS])
 
     # ----------------- OTHER ------------------- #
 
     df['is_fraud'] = df.pop('is_fraud')  # Move is_fraud to the last column
-
-    # print(df.columns)
 
     return df
 
@@ -111,14 +176,8 @@ if __name__ == '__main__':
     df = pd.read_csv(input_file)
 
     # Transform the data
-    df = transform(df)
+    df = transform_df(df)
 
     # Save the processed data to a CSV file if someone would like to view the precessed data
     output_file = 'data/processed_transactions.csv'
     df.to_csv(output_file, index=False, mode='w')
-
-# TODO!
-enabled_features = [
-    'merchant_category', 'merchant_type', 'country', 'currency', 'city_size', 'amount', 'distance_from_home',
-    'transaction_hour', 'weekend_transaction', 'high_risk_merchant', 'card_type'
-]

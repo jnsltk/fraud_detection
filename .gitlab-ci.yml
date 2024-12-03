@@ -55,7 +55,7 @@ version_new_model:
       # A new model is detected if changes are made to the db_setup or ML_pipeline folders
       changes:
         - db_setup/**
-        - ML_pipeline/**
+        - fraud_detection/detector/services/ml_pipeline/**
     - when: never
   # Install required tools
   before_script:
