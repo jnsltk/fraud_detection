@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now  # Import now for default timestamps
 
 class Transaction(models.Model):
     transaction_id = models.CharField(max_length=20, primary_key=True)
@@ -29,3 +30,4 @@ class Transaction(models.Model):
     v_unique_countries = models.DecimalField(max_digits=50, decimal_places=0, null=True, blank=True)
     v_max_single_amount = models.DecimalField(max_digits=50, decimal_places=20, null=True, blank=True)
     is_fraud = models.BooleanField()
+    version_date = models.DateTimeField(default=now) # Field for versioning
