@@ -8,6 +8,9 @@ import model
 import json
 import os
 from dotenv import load_dotenv
+import shap
+import matplotlib.pyplot as plt  # Import matplotlib for data visualisation
+import explainer
 
 # -------------------- SETUP FEATURE FLAGS ------------------- #
 
@@ -21,7 +24,7 @@ USE_LOCAL_MODEL = os.getenv('USE_LOCAL_MODEL') in ('TRUE', 'True', 'true', '1')
 class Prediction:
     probability: float
     is_fraud: bool
-    explanation: str
+    reasons: list[str]
 
 
 class Predictor:
@@ -31,16 +34,24 @@ class Predictor:
     def predict(self, input: dict) -> Prediction:
         ''' Throws ValueError '''
 
-        df = feature_transformer.transform_single(input, self._col_data)
+        # Prepares the data
+        res = feature_transformer.transform_single(input, self._col_data)
+        input['euros'] = res.euros
 
-        probability = model.predict(df, self.model)
+        # Makes the prediction
+        probability = model.predict(res.df, self.model)
         is_fraud = probability > 0.5
-        explanation = f'Probability of fraud: {probability}'
-        return Prediction(probability=probability, is_fraud=is_fraud, explanation=explanation)
+
+        # Explains the prediction
+        reasons = explainer.explain(self.explainer, res.df, is_fraud, input)
+
+        # Returns the prediction
+        return Prediction(probability=probability, is_fraud=is_fraud, reasons=reasons)
 
 
     def __init__(self, model_id: str):
         self._load_model(model_id)
+        self._setup_explainer()
 
     # ------------------------- PRIVATE ------------------------- #
 
@@ -52,10 +63,14 @@ class Predictor:
             with open('data/metadata.json', 'r') as f:
                 self._col_data: dict[str, list[str] | dict[str, float]] = json.load(f)
 
-            self.trained_date_start = '2021-10-01'
-            self.trained_date_end = '2021-10-01'
+            self.trained_date_start = None
+            self.trained_date_end = None
         else:
             raise NotImplementedError('Remote model loading not implemented yet :(')
+
+
+    def _setup_explainer(self) -> None:
+        self.explainer = explainer.create(self.model, self._col_data, self.trained_date_start, self.trained_date_end)
 
 
 if __name__ == '__main__':
@@ -68,4 +83,7 @@ if __name__ == '__main__':
     for i in range(len(df)):
         row = df.iloc[i]
         prediction = predictor.predict(row.to_dict())
-        print(f'{i}th chance of fraud is: {prediction.probability:.4f} with oracle:  {row['is_fraud']}')
+
+        print(f'\n{i} - chance: {prediction.probability:.4f} ; oracle: {row['is_fraud']}')
+        for reason in prediction.reasons:
+            print(reason)

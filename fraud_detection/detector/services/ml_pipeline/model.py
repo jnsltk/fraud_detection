@@ -8,6 +8,7 @@ import seaborn as sns
 from dataclasses import dataclass
 import os
 from dotenv import load_dotenv
+import shap
 
 # sklearn
 from sklearn.model_selection import train_test_split
@@ -31,11 +32,9 @@ class ModelOutput:
 
 # --------------------------- SETUP -------------------------- #
 
-TRUE_STRINGS = ('TRUE', 'True', 'true', '1')
 load_dotenv()
-
-SHOW_PLOTS = os.getenv('SHOW_PLOTS') in TRUE_STRINGS
-VERBOSE = os.getenv('VERBOSE') in TRUE_STRINGS
+SHOW_PLOTS = os.getenv('SHOW_PLOTS') in ('TRUE', 'True', 'true', '1')
+VERBOSE = os.getenv('VERBOSE') in ('TRUE', 'True', 'true', '1')
 
 # ------------------------- PUBLIC FUNCTIONS ------------------------ #
 
@@ -54,7 +53,7 @@ def create(df: pd.DataFrame) -> ModelOutput:
     return ModelOutput(model=model, test_result=test_result)
 
 
-def predict(df: pd.DataFrame, model: keras.Model):
+def predict(df: pd.DataFrame, model: keras.Model) -> float:
     input = np.array(df, dtype='float32')
     return model.predict(input, verbose=False)[0][0]
 

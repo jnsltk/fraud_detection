@@ -12,7 +12,13 @@ from dataclasses import dataclass
 
 
 @dataclass
-class TransformationResult:
+class TransformSingleResult:
+    df: pd.DataFrame
+    euros: float
+
+
+@dataclass
+class TransformDfResult:
     df: pd.DataFrame
     categories: dict[str, list]
     stats: dict[str, dict[str, float]]
@@ -30,7 +36,8 @@ USED_FEATURES = [
 ]
 
 CAT_COLS = ['merchant_category', 'currency', 'country', 'card_type', 'device', 'channel']
-NUM_COLS = ['amount', 'euros']
+NUM_COLS = ['amount', 'transaction_hour', 'euros']
+BOOL_COLS = ['card_present', 'distance_from_home', 'weekend_transaction']
 
 # =========================== SETUP ENV FLAGS ========================== #
 
@@ -62,14 +69,15 @@ def row_to_eur(row, euro_mean: float | None) -> float:
 
 
 # TODO - add end date
-def transform_single(input: dict, col_data: dict[str, any]) -> pd.DataFrame:
+def transform_single(input: dict, col_data: dict[str, any]) -> TransformSingleResult:
     ''' Throws ValueError if the input is invalid '''
 
     df = pd.DataFrame([input])
 
     # Adds euros column
     amount_cols = [input['amount'], datetime.now(), input['currency']]
-    df['euros'] = np.array(row_to_eur(amount_cols, euro_mean=col_data['euros']['mean']))
+    euro = row_to_eur(amount_cols, euro_mean=col_data['euros']['mean'])
+    df['euros'] = [euro]
 
     # Selects feature subset & Sorts columns
     df = df[USED_FEATURES].copy()
@@ -92,11 +100,11 @@ def transform_single(input: dict, col_data: dict[str, any]) -> pd.DataFrame:
         df[col] = (df[col] - col_data[col]['mean']) / col_data[col]['std']
 
     # Returns the transformed dataframe
-    return df
+    return TransformSingleResult(df, euros=euro)
 
 
-# TODO - add end date
-def transform_df(df: pd.DataFrame) -> TransformationResult:
+# Note - col_data will be passed if model is already trained, and the function is used for SHAP
+def transform_df(df: pd.DataFrame, col_data: dict[str:any] = None) -> TransformDfResult:
 
     # Adds euros column, inspired by ChatGPT
     df['euros'] = [
@@ -123,9 +131,13 @@ def transform_df(df: pd.DataFrame) -> TransformationResult:
         unknowns_idxs = np.random.choice(df.index, unknowns_amt, replace=False)
         df.loc[unknowns_idxs, col] = UNKNOWN
 
-        # Creates list of categories with unknown and all unique values
-        # Note! - Do not remove, as an unknown column is not guaranteed otherwise
-        categories[col] = sorted({UNKNOWN, *df[col].unique()})
+        if col_data is None:
+
+            # Creates list of categories with unknown and all unique values
+            # Note! - Do not remove, as an unknown column is not guaranteed otherwise
+            categories[col] = sorted({UNKNOWN, *df[col].unique()})
+        else:
+            categories[col] = col_data[col]
 
         # One-hot encodes column
         df = _one_hot_encode(df, col, categories[col])
@@ -133,14 +145,16 @@ def transform_df(df: pd.DataFrame) -> TransformationResult:
     # Standardises numerical features
     stats = {}
     for col in NUM_COLS:
-        stats[col] = {'mean': df[col].mean(), 'std': df[col].std()}
+        # Note - ses pre-calculated, more accurate stats for mean and std if available
+        stats[col] = {'mean': df[col].mean(), 'std': df[col].std()} if col_data is None else col_data[col]
+
         df[col] = (df[col] - stats[col]['mean']) / stats[col]['std']
 
     # Move is_fraud to the last column
     df['is_fraud'] = df.pop('is_fraud')
 
     # Returns the result of the transformation
-    return TransformationResult(df, categories, stats)
+    return TransformDfResult(df, categories, stats)
 
 
 # ====================== PRIVATE METHODS ====================== #
@@ -168,7 +182,7 @@ def _one_hot_encode(df: pd.DataFrame, col: str, categories: list) -> pd.DataFram
 
     # Encodes the column
     encoded = encoder.transform(df[[col]])
-    columns = [f'{col}_{cat}' for cat in categories]
+    columns = [f'{col}={cat}' for cat in categories]
     encoded_df = pd.DataFrame(encoded.toarray(), columns=columns)
 
     # Replaces original column with encoded columns
@@ -182,6 +196,11 @@ def _one_hot_encode(df: pd.DataFrame, col: str, categories: list) -> pd.DataFram
 # ============================ OTHER =========================== #
 
 c = _setup_currency_converter()
+
+if set(USED_FEATURES) != set(CAT_COLS + NUM_COLS + BOOL_COLS):
+    raise ValueError('USED_FEATURES does not match the feature columns')
+
+# =========================== START ========================== #
 
 if __name__ == '__main__':
     # Load the data

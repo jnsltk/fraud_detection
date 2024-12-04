@@ -21,18 +21,27 @@ DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 
 
 # Note - Uses sqlalchemy for database connection so that can be run independently from Django
-def load_data(sample_size: int = 20000) -> pd.DataFrame:
-    ''' Randomly sample data from the database '''
+def load_data(sample_size: int = 20000, start=None, end=None) -> pd.DataFrame:
+    ''' Randomly sample data from the database, throws ValueError if no data found '''
 
     engine = create_engine(DATABASE_URL)
 
     query = text('''
         SELECT setseed(0.37);
-        SELECT * FROM detector_transaction ORDER BY RANDOM() LIMIT :sample_size;
+
+        SELECT * 
+        FROM detector_transaction 
+        ORDER BY RANDOM()
+        LIMIT :sample_size;
     ''')
+    # WHERE (:start IS NULL OR version_date >= :start)
+    #     OR (:end IS NULL OR version_date <= :end)
 
     with engine.connect() as connection:
-        df = pd.read_sql(query, connection, params={'sample_size': sample_size})
+        df = pd.read_sql(query, connection, params={'sample_size': sample_size, 'start': start, 'end': end})
+
+    if df.empty:
+        raise ValueError('No data found')
 
     return df
 

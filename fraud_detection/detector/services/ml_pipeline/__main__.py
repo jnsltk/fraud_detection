@@ -18,7 +18,7 @@ SAVE_MODEL_FILE = os.getenv("SAVE_MODEL_FILE") in ['TRUE', 'True', 'true', '1']
 
 def make_model() -> None:
     df = data_loader.load_data()
-    res = feature_transformer.transform_df(df)
+    res = feature_transformer.transform_df(df, col_data=None)
 
     # Combines stats and categories dictionaries
     metadata = res.stats | res.categories
@@ -33,6 +33,8 @@ def make_model() -> None:
 
         with open('data/metadata.json', 'w') as f:
             json.dump(metadata, f, indent=4)
+
+        print('Saved model and metadata locally to data/')
 
 
 def make_predictor(model_id: str) -> Predictor:
