@@ -1,48 +1,37 @@
 {% extends "core/base_generic.html" %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-8 mt-10">
-    {% if form.errors %}
-    <div class="mb-4 text-red-700 bg-red-100 border border-red-400 p-3 rounded-md">
-        <p>Your username and password didn't match. Please try again.</p>
-    </div>
-    {% endif %}
 
-    {% if next %}
-        {% if user.is_authenticated %}
-        <div class="mb-4 text-yellow-700 bg-yellow-100 border border-yellow-400 p-3 rounded-md">
-            <p>Your account doesn't have access to this page. To proceed,
-            please login with an account that has access.</p>
-        </div>
-        {% else %}
-        <div class="mb-4 text-yellow-700 bg-yellow-100 border border-yellow-400 p-3 rounded-md">
-            <p>Please login to see this page.</p>
-        </div>
-        {% endif %}
-    {% endif %}
+{% include "home_page/nav_bar.html" %}
 
-    <form method="post" action="{% url 'login' %}">
+<div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white">
+    <h1 class="text-4xl font-bold text-center mb-4 ml-10">Welcome back to Fraud Detection</h1>
+    <form action="{% url 'core/post_login' %}" method="post" class="flex flex-col items-center space-y-6">
         {% csrf_token %}
-
-        <div class="space-y-4">
-            <div>
-                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.username.label }}</label>
-                <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default_if_none:'' }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        {% for field in form %}
+            <div class="flex flex-col items-start w-full">
+                <!-- Label (white text) -->
+                <label for="{{ field.id_for_label }}" class="text-lg font-medium text-white">
+                    {{ field.label }}:
+                </label>
+                <input
+                    id="{{ field.id_for_label }}"
+                    name="{{ field.name }}"
+                    type="{{ field.field.widget.input_type }}"
+                    value="{{ field.value|default:'' }}"
+                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black"
+                />
+                <!-- Display Validation Errors -->
+                {% if field.errors %}
+                    <p class="text-red-600 text-sm">{{ field.errors|join:", " }}</p>
+                {% endif %}
             </div>
-
-            <div>
-                <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.password.label }}</label>
-                <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" value="{{ form.password.value|default_if_none:'' }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-            </div>
-        </div>
-
-        <div class="flex items-center justify-between mt-6">
-            <button type="submit" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Log In
-            </button>
-            <input type="hidden" name="next" value="{{ next }}">
-            <a href="{% url 'password_reset' %}" class="text-sm text-blue-600 hover:underline">Lost password?</a>
-        </div>
+        {% endfor %}
+        {% if error_message %}<p class="text-red-600 text-lg"><strong>{{ error_message }}</strong></p>{% endif %}
+        <button type="submit" class="px-4 py-2 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
+            Sign in
+        </button>
     </form>
 </div>
+
 {% endblock %}
