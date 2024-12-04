@@ -1,0 +1,19 @@
+{% extends "dashboard/manage_models.html" %}
+
+{% block dialog %}
+    <div class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+
+    <div id="dialog"
+         class="fixed top-8 left-8 right-8 md:top-40 md:left-56 md:right-56 bg-white shadow-xl rounded-xl border py-12 px-16 mb-12 min-w-min text-nowrap">
+        <span class="block text-2xl md:text-4xl font-bold mb-6">{{ desc }}</span>
+        <p class="mb-8">{{ message }}</p>
+            <div class="flex gap-4 w-full justify-end">
+                <a href="{% url 'dashboard/manage_models' %}"
+                        class="text-nowrap bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition duration-150">
+                    Done
+                </a>
+            </div>
+    </div>
+</div>
+{% endblock %}
