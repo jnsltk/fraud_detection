@@ -5,7 +5,17 @@ import data_loader
 import feature_transformer
 import keras
 import model
+import json
+import os
+from dotenv import load_dotenv
 
+# -------------------- SETUP FEATURE FLAGS ------------------- #
+
+load_dotenv()
+
+USE_LOCAL_MODEL = os.getenv('USE_LOCAL_MODEL') in ('TRUE', 'True', 'true', '1')
+
+# -------------------------- CLASSES ------------------------- #
 
 @dataclass
 class Prediction:
@@ -19,7 +29,9 @@ class Predictor:
     # -------------------------- PUBLIC -------------------------- #
 
     def predict(self, input: dict) -> Prediction:
-        df = feature_transformer.transform_single(input, self.stats, self.categories)
+        ''' Throws ValueError '''
+
+        df = feature_transformer.transform_single(input, self._col_data)
 
         probability = model.predict(df, self.model)
         is_fraud = probability > 0.5
@@ -29,45 +41,26 @@ class Predictor:
 
     def __init__(self, model_id: str):
         self._load_model(model_id)
-        self._load_data_stats()
-        self._load_categories()
 
     # ------------------------- PRIVATE ------------------------- #
 
     def _load_model(self, model_id: str) -> None:
-        # temporarily load the model from local file
-        self.model: keras.Model = load_model('data/model.keras')
 
-        self.trained_date_start = '2021-10-01'
-        self.trained_date_end = '2021-10-01'
+        if USE_LOCAL_MODEL:
+            self.model: keras.Model = load_model('data/model.keras')
 
+            with open('data/metadata.json', 'r') as f:
+                self._col_data: dict[str, list[str] | dict[str, float]] = json.load(f)
 
-    def _load_data_stats(self) -> None:
-        df = data_loader.get_all()
-        amount_cols = np.array(df[['amount', 'timestamp', 'currency']])
-
-        df['euros'] = [feature_transformer.row_to_eur(row, None) for row in amount_cols]
-
-        self.stats = {}
-
-        for col in feature_transformer.NUM_COLS:
-            mean = df[col].mean()
-            std = df[col].std()
-
-            self.stats[col] = feature_transformer.Stat(mean=mean, std=std)
-
-
-    def _load_categories(self) -> None:
-        self.categories = {}
-
-        for col in feature_transformer.CAT_COLS:
-            self.categories[col] = data_loader.get_unique(col, feature_transformer.CAT_COLS) + [feature_transformer.UNKNOWN]
+            self.trained_date_start = '2021-10-01'
+            self.trained_date_end = '2021-10-01'
+        else:
+            raise NotImplementedError('Remote model loading not implemented yet :(')
 
 
 if __name__ == '__main__':
 
     df = data_loader.load_data(sample_size=10)
-    df.drop(columns=['is_fraud'], inplace=True)
 
     predictor = Predictor(model_id='1')
     print('Made predictor')

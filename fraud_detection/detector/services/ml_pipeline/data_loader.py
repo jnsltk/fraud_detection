@@ -20,6 +20,7 @@ DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 # ------------------------ METHODS ----------------------- #
 
 
+# Note - Uses sqlalchemy for database connection so that can be run independently from Django
 def load_data(sample_size: int = 20000) -> pd.DataFrame:
     ''' Randomly sample data from the database '''
 
@@ -32,43 +33,6 @@ def load_data(sample_size: int = 20000) -> pd.DataFrame:
 
     with engine.connect() as connection:
         df = pd.read_sql(query, connection, params={'sample_size': sample_size})
-
-    return df
-
-
-def get_unique(column: str, const_valid_list: list) -> list:
-    ''' 
-        NOTE - The list should contain all possible values for the column parameter. 
-            It is used to limit possible inputs against SQL injection.
-    '''
-
-    # Input validation
-    if column not in const_valid_list:
-        raise ValueError(f'Invalid column name {column}')
-
-    # Setup connection and query
-    engine = create_engine(DATABASE_URL)
-    query = f'''
-        SELECT DISTINCT {column} FROM detector_transaction;
-    '''
-
-    # Execute query
-    with engine.connect() as connection:
-        df = pd.read_sql(query, connection)
-
-    # Return the list of unique values
-    return df[column].tolist()
-
-
-def get_all() -> pd.DataFrame:
-    engine = create_engine(DATABASE_URL)
-
-    query = text('''
-        SELECT * FROM detector_transaction;
-    ''')
-
-    with engine.connect() as connection:
-        df = pd.read_sql(query, connection)
 
     return df
 

@@ -5,8 +5,9 @@ import tester
 import model
 import os
 from predictor import Predictor
+import json
 
-# ---------------------- SETUP ENV FLAGS --------------------- #
+# ---------------------- SETUP FEATURE FLAGS --------------------- #
 
 load_dotenv()
 
@@ -15,17 +16,23 @@ SAVE_MODEL_FILE = os.getenv("SAVE_MODEL_FILE") in ['TRUE', 'True', 'true', '1']
 # --------------------- PUBLIC FUNCTIONS --------------------- #
 
 
-def make_model():
+def make_model() -> None:
     df = data_loader.load_data()
-    df = feature_transformer.transform_df(df)
-    tester.test(df)  # throws if any test fails
-    model_output = model.create(df)
+    res = feature_transformer.transform_df(df)
 
-    print(model_output.test_result)
+    # Combines stats and categories dictionaries
+    metadata = res.stats | res.categories
 
-    # save model locally?
+    # Note - Throws if any test fails, but they should not unless bugs
+    tester.test(res.df)
+
+    model_output = model.create(res.df)
+
     if SAVE_MODEL_FILE:
         model_output.model.save('data/model.keras')
+
+        with open('data/metadata.json', 'w') as f:
+            json.dump(metadata, f, indent=4)
 
 
 def make_predictor(model_id: str) -> Predictor:

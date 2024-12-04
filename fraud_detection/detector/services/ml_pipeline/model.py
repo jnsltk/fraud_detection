@@ -35,7 +35,7 @@ TRUE_STRINGS = ('TRUE', 'True', 'true', '1')
 load_dotenv()
 
 SHOW_PLOTS = os.getenv('SHOW_PLOTS') in TRUE_STRINGS
-VERBOSE_TRAINING = os.getenv('VERBOSE_TRAINING') in TRUE_STRINGS
+VERBOSE = os.getenv('VERBOSE') in TRUE_STRINGS
 
 # ------------------------- PUBLIC FUNCTIONS ------------------------ #
 
@@ -91,7 +91,7 @@ def _train(training: np.ndarray) -> keras.Model:
               epochs=15,
               batch_size=128,
               class_weight=class_weights_dict,
-              verbose=VERBOSE_TRAINING)
+              verbose=VERBOSE)
 
     return model
 
@@ -101,9 +101,6 @@ def _test(testing: np.ndarray, model: keras.Model) -> dict:
     X_test = testing[:, :-1]
     y_test = testing[:, -1:]
 
-    # Evaluate the model
-    test_loss, test_acc = model.evaluate(X_test, y_test, verbose=False)
-
     y_pred = model.predict(X_test, verbose=False)
     predicted_classes = (y_pred > 0.5).astype(int)
 
@@ -111,7 +108,11 @@ def _test(testing: np.ndarray, model: keras.Model) -> dict:
         _plot(y_test, predicted_classes)
 
     target_names = ["Class {}".format(i) for i in range(2)]
-    return classification_report(y_test, predicted_classes, target_names=target_names, output_dict=True)
+    return classification_report(y_test,
+                                 predicted_classes,
+                                 target_names=target_names,
+                                 output_dict=True,
+                                 zero_division=0)
 
 
 def _plot(y_test, predictions):

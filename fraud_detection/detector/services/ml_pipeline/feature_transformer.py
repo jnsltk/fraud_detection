@@ -1,11 +1,10 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 import os
 from currency_converter import CurrencyConverter, ECB_URL
 import urllib.request  # for obtaining currency data
 from dotenv import load_dotenv
-import data_loader
 from datetime import datetime
 from dataclasses import dataclass
 
@@ -13,9 +12,10 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Stat:
-    mean: float
-    std: float
+class TransformationResult:
+    df: pd.DataFrame
+    categories: dict[str, list]
+    stats: dict[str, dict[str, float]]
 
 
 # =========================== CONSTANTS ========================== #
@@ -44,11 +44,11 @@ SKIP_EUR_DOWNLOAD = os.getenv('SKIP_EUR_DOWNLOAD') in ('TRUE', 'True', 'true', '
 def row_to_eur(row, euro_mean: float | None) -> float:
     ''' Takes row of [amount, timestamp, currency] and returns the amount in EUR '''
 
-    # note - the user is instructed to convert to EUR if the currency is not in the list
+    # Note - The user is instructed to convert to EUR if the currency is not in the list
     if row[2] == OTHER:
         return row[0]
 
-    # note - the ECB does not have NGN for some reason
+    # Note - The ecb does not have ngn for some reason
     if row[2] == 'NGN':
         return row[0] * 0.00057
 
@@ -62,46 +62,46 @@ def row_to_eur(row, euro_mean: float | None) -> float:
 
 
 # TODO - add end date
-def transform_single(input: dict, stats: list[Stat], categories_dict: dict[list]) -> pd.DataFrame:
+def transform_single(input: dict, col_data: dict[str, any]) -> pd.DataFrame:
+    ''' Throws ValueError if the input is invalid '''
+
     df = pd.DataFrame([input])
 
     # Adds euros column
-    timestamp = datetime.now()
-    amount_cols = np.array([input['amount'], timestamp, input['currency']])  # used for euros conversion
-    df['euros'] = np.array(row_to_eur(amount_cols, stats['euros'].mean))
+    amount_cols = [input['amount'], datetime.now(), input['currency']]
+    df['euros'] = np.array(row_to_eur(amount_cols, euro_mean=col_data['euros']['mean']))
 
-    # Selects feature subset & sorts columns
+    # Selects feature subset & Sorts columns
     df = df[USED_FEATURES].copy()
 
     # Handles missing numerical values
     if df.select_dtypes(include=[np.number]).isnull().values.any():
         raise ValueError('Missing values in numerical columns')
 
-    # Fills missing categorical values with UNKNOWN
-    for col in df.select_dtypes(include=[object]).columns:
-        df[col] = df[col].fillna(UNKNOWN)
-
     # One-hot encodes categorical features
     for col in CAT_COLS:
-        if df[col].values[0] not in categories_dict[col]:
+
+        # If input value is unseen by the model, replace with unknown
+        if df[col].values[0] not in col_data[col]:
             df[col].values[0] = UNKNOWN
 
-        df = _one_hot_encode(df, col, categories_dict[col])
+        df = _one_hot_encode(df, col, col_data[col])
 
     # Standardises numerical features
     for col in NUM_COLS:
-        df[col] = (df[col] - stats[col].mean) / stats[col].std
+        df[col] = (df[col] - col_data[col]['mean']) / col_data[col]['std']
 
     # Returns the transformed dataframe
     return df
 
 
 # TODO - add end date
-def transform_df(df: pd.DataFrame) -> pd.DataFrame:
+def transform_df(df: pd.DataFrame) -> TransformationResult:
 
-    # Adds euros column
-    amount_cols = np.array(df[['amount', 'timestamp', 'currency']])  # used for euros conversion
-    df['euros'] = np.array([row_to_eur(row, None) for row in amount_cols])
+    # Adds euros column, inspired by ChatGPT
+    df['euros'] = [
+        row_to_eur(row, euro_mean=None) for row in df[['amount', 'timestamp', 'currency']].itertuples(index=False)
+    ]
 
     # Selects feature subset & sorts columns
     df = df[USED_FEATURES + ['is_fraud']].copy()
@@ -116,26 +116,31 @@ def transform_df(df: pd.DataFrame) -> pd.DataFrame:
 
     # One-hot encodes categorical features
     unknowns_amt = int(UNKNOWN_IN_TRAINING_PERCENTAGE * len(df))
+    categories = {}
     for col in CAT_COLS:
 
         # Sets some values to unknown to learn to handle unknown values
         unknowns_idxs = np.random.choice(df.index, unknowns_amt, replace=False)
         df.loc[unknowns_idxs, col] = UNKNOWN
 
-        # Loads all unique categories from the database, and adds unknown
-        categories = data_loader.get_unique(col, CAT_COLS) + [UNKNOWN]
+        # Creates list of categories with unknown and all unique values
+        # Note! - Do not remove, as an unknown column is not guaranteed otherwise
+        categories[col] = sorted({UNKNOWN, *df[col].unique()})
 
         # One-hot encodes column
-        df = _one_hot_encode(df, col, categories)
+        df = _one_hot_encode(df, col, categories[col])
 
     # Standardises numerical features
-    df[NUM_COLS] = StandardScaler().fit_transform(df[NUM_COLS])
+    stats = {}
+    for col in NUM_COLS:
+        stats[col] = {'mean': df[col].mean(), 'std': df[col].std()}
+        df[col] = (df[col] - stats[col]['mean']) / stats[col]['std']
 
     # Move is_fraud to the last column
     df['is_fraud'] = df.pop('is_fraud')
 
-    # Returns the transformed dataframe
-    return df
+    # Returns the result of the transformation
+    return TransformationResult(df, categories, stats)
 
 
 # ====================== PRIVATE METHODS ====================== #
@@ -143,7 +148,7 @@ def transform_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def _setup_currency_converter():
     if SKIP_EUR_DOWNLOAD:
-        print('Skipping download of currency data')
+        print('Note - Skipping download of currency data')
     else:
         urllib.request.urlretrieve(ECB_URL, 'data/eurofxref-hist.zip')
 
