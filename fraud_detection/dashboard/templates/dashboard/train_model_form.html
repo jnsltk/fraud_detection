@@ -1,0 +1,38 @@
+<div class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+
+    <div id="dialog"
+         class="fixed top-8 left-8 right-8 md:top-40 md:left-56 md:right-56 bg-white shadow-xl rounded-xl border py-12 px-16 mb-12 min-w-min text-nowrap">
+        <span class="block text-2xl md:text-4xl font-bold mb-6">Train new model</span>
+        <p class="mb-8">To train a new model, please select the date range of the data used for training.</p>
+        <form method="post" enctype="multipart/form-data" class="">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 w-full mb-12 gap-8">
+                <div class="col-span-1">
+                    <label class="block mb-2 font-normal uppercase text-neutral-500 text-sm tracking-wider"
+                           for="start_date">Start date</label>
+                    <input class="bg-stone-200 p-3 rounded-xl text-neutral-500 font-mono border border-stone-400 w-full"
+                           type="date" id="start_date" name="start_date">
+                </div>
+                <div class="col-span-1">
+                    <label class="block mb-2 font-normal uppercase text-neutral-500 text-sm tracking-wider"
+                           for="end_date">End date</label>
+                    <input class="bg-stone-200 p-3 rounded-xl text-neutral-500 font-mono border border-stone-400 w-full"
+                           type="date" id="end_date" name="end_date">
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full justify-end">
+                <button type="button"
+                        hx-get="{% url 'cancel_model_form' %}" hx-target="#dialog"
+                        class="text-nowrap bg-stone-300 rounded-xl px-4 py-2 shadow-lg border border-stone-400/50 border-2 text-sm text-neutral-500 font-bold hover:bg-stone-400/85 transition duration-150">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="text-nowrap bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition duration-150">
+                    Train model
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

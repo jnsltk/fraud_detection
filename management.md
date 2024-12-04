@@ -110,4 +110,46 @@ All team members will be looking for more datasets and try to train dummy models
 **Notes**: The team is to complete the tasks that we came up with on the previous meeting by **2024-11-29**
 
 ### Tasks
+
 - Janos and Omid will break down the tasks needed for the development of the front-end and the back-end and will implement some those tasks by **2024-12-06**
+
+# Meeting Six (2024-11-29):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+
+We talked about breaking down the tasks needed for the development of the front-end. There are tasks on development of the landing page, the register page, and the login page, admin dashbord, model training page, and data uploading page.
+
+### Tasks
+
+- Janos will be working on the admin dashbord and all pages that the admin shall have access to like training the model, uploading data, and deploying a model. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/13)
+- Omid will be working on the front-end development of the landing page, the register page, and the login page. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7)
+- Victoria wiil integate data validation with the back-end, so that when admin upload data, they are validated before being uploaded to the database. This is done as part of the data validation task.
+- Yingchao will be working on the front-end development of the fraud dectatio page where noraml users can use the model to see if a certian transaction is fraudulent or not.
+- Henrik will be working on conecting the different parts of the ML_pipeline and the explainable AI. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/14)
+
+**Notes**: The deadline for the tasks are included in the issues.
+
+# Meeting Seven (2024-12-06):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+
+We talked about integration of the code and how we can train the model on aserver and save it to the database whenever the base version (model training code) changes.
+
+### Tasks
+
+- Victoria will add data versioning to the transaction table so that each row contains the date of which the data was added. This is to be used when taining the model, so that the same model can be trained if needed.
+The rest of the team will work on the tasks they had from last fridays meeting.

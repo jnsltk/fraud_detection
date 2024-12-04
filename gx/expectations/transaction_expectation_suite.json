@@ -1,0 +1,187 @@
+{
+  "expectations": [
+    {
+      "id": "97231d00-c52e-4c22-9d0b-66b4b62242ef",
+      "kwargs": {
+        "column": "transaction_id"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "15153f30-5a2b-430a-95e3-8668357893fc",
+      "kwargs": {
+        "column": "currency",
+        "regex": "^[A-Z]{3}$"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_match_regex"
+    },
+    {
+      "id": "bc8a8221-7fe7-40e9-b309-212ff87ac970",
+      "kwargs": {
+        "column": "customer_id"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "4b1c6692-4fb8-4b10-acde-ade3ff28358a",
+      "kwargs": {
+        "column": "card_number"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "38728daa-b4aa-405a-a8a6-a1f814da3da4",
+      "kwargs": {
+        "column": "timestamp"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "9f59a293-4843-43d1-89fd-1c8d9e0f4b2f",
+      "kwargs": {
+        "column": "merchant_category",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "0dfa3457-b096-402d-8f03-db0b414292a7",
+      "kwargs": {
+        "column": "merchant_type",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "793b706d-0710-413b-ae60-1b91e4fc59f0",
+      "kwargs": {
+        "column": "merchant",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "46ef090b-6306-480a-a0f0-7ed8105b8f18",
+      "kwargs": {
+        "column": "amount",
+        "min_value": 0.0
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "d3024dbd-2843-4807-87c9-20ddc7b03ca2",
+      "kwargs": {
+        "column": "country",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "77ae9d93-c198-4825-a98f-e7f0f57fd1a1",
+      "kwargs": {
+        "column": "card_type",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "7225c03c-fde3-4fbf-9796-fa05ff0d356d",
+      "kwargs": {
+        "column": "card_present",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "1b3ca2e5-c45a-41b4-8619-8f21170beca0",
+      "kwargs": {
+        "column": "device",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "a83563d0-ac78-4e73-a7a2-ef95c86f1004",
+      "kwargs": {
+        "column": "channel",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "f4a13d99-a616-4356-84dd-6f67888d65e8",
+      "kwargs": {
+        "column": "device_fingerprint",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "6b5a30e3-b433-41ad-8452-a3990cef9c93",
+      "kwargs": {
+        "column": "distance_from_home",
+        "type_": "int64"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "ae626aa3-5d8a-41c0-a53a-817b76eef4fd",
+      "kwargs": {
+        "column": "high_risk_merchant",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "3164f379-6793-45c4-8ab9-c684f97f1818",
+      "kwargs": {
+        "column": "transaction_hour",
+        "max_value": 23.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "60ad5e7f-241b-4323-b4d7-4be51c32f94c",
+      "kwargs": {
+        "column": "weekend_transaction",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "d369077d-0969-4f88-a4c7-1436cca92309",
+      "kwargs": {
+        "column": "is_fraud",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    }
+  ],
+  "id": "6f6c5e0b-96c6-4ea5-afc1-b6cfe75894aa",
+  "meta": {
+    "great_expectations_version": "1.2.4"
+  },
+  "name": "transaction_expectation_suite",
+  "notes": null
+}

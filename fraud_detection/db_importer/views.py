@@ -17,8 +17,14 @@ def import_csv_to_db(request):
         if form.is_valid():
             csv_file = form.cleaned_data['csv_file']
             try:
-                process_csv(csv_file)
-                return HttpResponseRedirect(reverse('success_page'))
+                # Call the process_csv function
+                result = process_csv(csv_file)
+
+                # Redirect based on validation result
+                if result["status"] == "success":
+                    return HttpResponseRedirect(reverse('success_page'))
+                else:
+                    return HttpResponseRedirect(reverse('failure_page'))
             except Exception as e:
                 return JsonResponse({
                     'message': 'Error processing CSV file',
@@ -32,3 +38,7 @@ def import_csv_to_db(request):
 def success_page(request):
     # Simple view or template to show a success message after upload
     return render(request, 'success.html', {'message': 'CSV file imported successfully!'})
+
+def failure_page(request):
+    # Simple view or template to show a failure message
+    return render(request, 'failure.html', {'message': 'Invalid data in CSV file!'})

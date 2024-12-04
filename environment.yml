@@ -137,6 +137,7 @@ dependencies:
   - requests=2.32.3
   - rich=13.7.1
   - scikit-learn=1.5.1
+  - sqlalchemy=2.0.36
   - scipy=1.14.1
   - seaborn=0.13.2
   - seaborn-base=0.13.2
@@ -175,4 +176,5 @@ dependencies:
   - pip:
       - currencyconverter==0.17.34
       - psycopg==3.2.3
+      - great_expectations==1.2.4
 prefix: /opt/anaconda3/envs/prj

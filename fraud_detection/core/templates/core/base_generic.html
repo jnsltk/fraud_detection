@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+    <title>Fraud Detection</title>
+    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<div class="flex flex-col md:flex-row h-screen">
+
+    <!-- Sidebar -->
+    <div class="bg-blue-900 w-full md:w-1/4 p-6 md:p-8">
+        <div class="text-white text-center md:text-left">
+            <span class="block text-xl font-semibold tracking-wide mb-6">Fraud Detection</span>
+        </div>
+        {% block sidebar %}
+        <ul class="space-y-4 text-white">
+            <li><a href="{% url 'index' %}" class="block py-2 px-4 hover:bg-blue-700 rounded-md">Home</a></li>
+            <li><a href="{% url 'import_csv_to_db' %}" class="block py-2 px-4 hover:bg-blue-700 rounded-md">Upload CSV</a></li>
+            {% if user.is_authenticated %}
+                <li class="py-2 px-4">
+                    <span class="block">User: {{ user.get_username }}</span>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-white underline hover:text-blue-300 transition duration-150 mt-2">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            {% else %}
+                <li><a href="{% url 'login' %}?next=/dashboard/" class="text-white underline hover:text-blue-300 transition duration-150 block py-2 px-4">
+                    Login
+                </a></li>
+            {% endif %}
+        </ul>
+        {% endblock %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow bg-white p-6 md:p-8 overflow-auto">
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+    </div>
+
+</div>
+
+</body>
+</html>

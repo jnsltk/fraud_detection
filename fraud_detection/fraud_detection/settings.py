@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'db_importer',
     'core',
     'corsheaders',
+    'dashboard.apps.DashboardConfig'
 ]
 
 MIDDLEWARE = [
