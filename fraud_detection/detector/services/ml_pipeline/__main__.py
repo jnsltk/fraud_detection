@@ -6,9 +6,13 @@ import model
 import os
 from predictor import Predictor
 
+# ---------------------- SETUP ENV FLAGS --------------------- #
+
 load_dotenv()
 
 SAVE_MODEL_FILE = os.getenv("SAVE_MODEL_FILE") in ['TRUE', 'True', 'true', '1']
+
+# --------------------- PUBLIC FUNCTIONS --------------------- #
 
 
 def make_model():
@@ -17,16 +21,18 @@ def make_model():
     tester.test(df)  # throws if any test fails
     model_output = model.create(df)
 
+    print(model_output.test_result)
+
+    # save model locally?
     if SAVE_MODEL_FILE:
         model_output.model.save('data/model.keras')
 
-    print(model_output)
-    print(df.head())
+
+def make_predictor(model_id: str) -> Predictor:
+    return Predictor(model_id)
 
 
-def make_predictor() -> Predictor:
-    pass
-
+# --------------------------- START -------------------------- #
 
 if __name__ == '__main__':
     make_model()

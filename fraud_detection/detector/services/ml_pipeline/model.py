@@ -103,7 +103,6 @@ def _test(testing: np.ndarray, model: keras.Model) -> dict:
 
     # Evaluate the model
     test_loss, test_acc = model.evaluate(X_test, y_test, verbose=False)
-    print(f'Test accuracy: {test_acc:.4f}')
 
     y_pred = model.predict(X_test, verbose=False)
     predicted_classes = (y_pred > 0.5).astype(int)

@@ -3,7 +3,7 @@ FROM continuumio/miniconda3:latest
 # Ensures immediate prints to stdout
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app
+WORKDIR /fraud_detection
 
 # --------------------- SETUP ENVIRONMENT -------------------- #
 
@@ -19,7 +19,7 @@ RUN apt-get update && \
 
 # ------------------------ SETUP CONDA ----------------------- #
 
-COPY environment.yml /app/environment_raw.yml
+COPY environment.yml /fraud_detection//environment_raw.yml
 
 # Fix for platform dependent package - TODO: remove when fixed
 RUN grep -v "libgfortran" environment_raw.yml > environment.yml
@@ -27,11 +27,12 @@ RUN conda env create -f environment.yml
 
 # --------------------- SETUP FOR RUNNING -------------------- #
 
-COPY ./fraud_detection /app
+COPY ./fraud_detection /fraud_detection
+COPY ./gx /gx 
 
 # Useful if adding further run commands
 SHELL ["conda", "run", "-n", "prj", "/bin/bash", "-c"]
 
-CMD ["conda", "run", "-n", "prj", "./run.sh"]
+CMD ["conda", "run", "--live-stream", "-n", "prj", "./run.sh"]
 
 EXPOSE 8000

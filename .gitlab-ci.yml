@@ -37,6 +37,7 @@ build_docker_image:
       # ... and if the fraud_detection folder has changed
       changes:
         - fraud_detection/**
+        - gx/**
     - when: never
 
 # -------------------------- version ------------------------- #
@@ -109,5 +110,6 @@ deploy_to_k8s:
       # ... and if the fraud_detection folder or the deployment configuration has changed
       changes:
         - fraud_detection/**
+        - gx/**
         - deployment.yml
     - when: never

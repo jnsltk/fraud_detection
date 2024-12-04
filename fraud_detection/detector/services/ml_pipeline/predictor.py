@@ -19,16 +19,18 @@ class Predictor:
     # -------------------------- PUBLIC -------------------------- #
 
     def predict(self, input: dict) -> Prediction:
-        df = feature_transformer.transform_single(input, self.stats)
+        df = feature_transformer.transform_single(input, self.stats, self.categories)
 
         probability = model.predict(df, self.model)
         is_fraud = probability > 0.5
         explanation = f'Probability of fraud: {probability}'
         return Prediction(probability=probability, is_fraud=is_fraud, explanation=explanation)
 
+
     def __init__(self, model_id: str):
         self._load_model(model_id)
         self._load_data_stats()
+        self._load_categories()
 
     # ------------------------- PRIVATE ------------------------- #
 
@@ -39,11 +41,12 @@ class Predictor:
         self.trained_date_start = '2021-10-01'
         self.trained_date_end = '2021-10-01'
 
+
     def _load_data_stats(self) -> None:
         df = data_loader.get_all()
         amount_cols = np.array(df[['amount', 'timestamp', 'currency']])
 
-        df['euros'] = [feature_transformer.row_to_eur(row) for row in amount_cols]
+        df['euros'] = [feature_transformer.row_to_eur(row, None) for row in amount_cols]
 
         self.stats = {}
 
@@ -53,15 +56,23 @@ class Predictor:
 
             self.stats[col] = feature_transformer.Stat(mean=mean, std=std)
 
-        print(self.stats)
+
+    def _load_categories(self) -> None:
+        self.categories = {}
+
+        for col in feature_transformer.CAT_COLS:
+            self.categories[col] = data_loader.get_unique(col, feature_transformer.CAT_COLS) + [feature_transformer.UNKNOWN]
 
 
 if __name__ == '__main__':
 
-    df = data_loader.load_data(sample_size=1)
-    print('raw', df)
+    df = data_loader.load_data(sample_size=10)
+    df.drop(columns=['is_fraud'], inplace=True)
 
     predictor = Predictor(model_id='1')
-    prediction = predictor.predict(df.iloc[0].to_dict())
+    print('Made predictor')
 
-    print(prediction)
+    for i in range(len(df)):
+        row = df.iloc[i]
+        prediction = predictor.predict(row.to_dict())
+        print(f'{i}th chance of fraud is: {prediction.probability:.4f} with oracle:  {row['is_fraud']}')

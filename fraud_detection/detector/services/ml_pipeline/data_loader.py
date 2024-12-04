@@ -1,7 +1,7 @@
 import pandas as pd
 from dotenv import load_dotenv
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 # ---------------- LOAD ENVIRONMENT VARIABLES ---------------- #
 
@@ -21,47 +21,60 @@ DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 
 
 def load_data(sample_size: int = 20000) -> pd.DataFrame:
+    ''' Randomly sample data from the database '''
+
     engine = create_engine(DATABASE_URL)
 
-    # Sample data from the database
-    query = f'''
+    query = text('''
         SELECT setseed(0.37);
-        SELECT * FROM detector_transaction ORDER BY RANDOM() LIMIT {sample_size};
-    '''
-    df = pd.read_sql(query, engine)
+        SELECT * FROM detector_transaction ORDER BY RANDOM() LIMIT :sample_size;
+    ''')
 
-    engine.dispose()
+    with engine.connect() as connection:
+        df = pd.read_sql(query, connection, params={'sample_size': sample_size})
+
     return df
 
 
-def get_unique(column: str) -> list:
-    engine = create_engine(DATABASE_URL)
+def get_unique(column: str, const_valid_list: list) -> list:
+    ''' 
+        NOTE - The list should contain all possible values for the column parameter. 
+            It is used to limit possible inputs against SQL injection.
+    '''
 
-    # Load data from the database
+    # Input validation
+    if column not in const_valid_list:
+        raise ValueError(f'Invalid column name {column}')
+
+    # Setup connection and query
+    engine = create_engine(DATABASE_URL)
     query = f'''
         SELECT DISTINCT {column} FROM detector_transaction;
     '''
-    df = pd.read_sql(query, engine)
 
-    engine.dispose()
+    # Execute query
+    with engine.connect() as connection:
+        df = pd.read_sql(query, connection)
+
+    # Return the list of unique values
     return df[column].tolist()
 
 
 def get_all() -> pd.DataFrame:
     engine = create_engine(DATABASE_URL)
 
-    # Load data from the database
-    query = f'''
+    query = text('''
         SELECT * FROM detector_transaction;
-    '''
-    df = pd.read_sql(query, engine)
+    ''')
 
-    engine.dispose()
+    with engine.connect() as connection:
+        df = pd.read_sql(query, connection)
+
     return df
 
 
 # ---------------------------- RUN --------------------------- #
 
 if __name__ == '__main__':
-    # print(get_stats('amount'))
-    load_data()
+    data = load_data()
+    print(data.head())
