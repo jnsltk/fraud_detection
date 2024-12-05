@@ -70,7 +70,6 @@ def row_to_eur(row, euro_mean: float | None) -> float:
         return c.convert(row[0], row[2], date=row[1])
 
 
-# TODO - add end date
 def transform_single(input: dict, col_data: dict[str, any]) -> TransformSingleResult:
     ''' Throws ValueError if the input is invalid '''
 
@@ -90,11 +89,6 @@ def transform_single(input: dict, col_data: dict[str, any]) -> TransformSingleRe
 
     # One-hot encodes categorical features
     for col in CAT_COLS:
-
-        # If input value is unseen by the model, replace with unknown
-        if df[col].values[0] not in col_data[col]:
-            df[col].values[0] = UNKNOWN
-
         df = _one_hot_encode(df, col, col_data[col])
 
     # Standardises numerical features
@@ -120,10 +114,6 @@ def transform_df(df: pd.DataFrame, col_data: dict[str:any] = None) -> TransformD
     for col in df.select_dtypes(include=[np.number]).columns:
         df[col] = df[col].fillna(df[col].mean())
 
-    # Fill missing values for categorical features with UNKNOWN
-    for col in df.select_dtypes(include=[object]).columns:
-        df[col] = df[col].fillna(UNKNOWN)
-
     # One-hot encodes categorical features
     unknowns_amt = int(UNKNOWN_IN_TRAINING_PERCENTAGE * len(df))
     categories = {}
@@ -134,10 +124,7 @@ def transform_df(df: pd.DataFrame, col_data: dict[str:any] = None) -> TransformD
         df.loc[unknowns_idxs, col] = UNKNOWN
 
         if col_data is None:
-
-            # Creates list of categories with unknown and all unique values
-            # Note! - Do not remove, as an unknown column is not guaranteed otherwise
-            categories[col] = sorted({UNKNOWN, *df[col].unique()})
+            categories[col] = sorted(df[col].unique())
         else:
             categories[col] = col_data[col]
 
@@ -179,7 +166,7 @@ def _setup_currency_converter():
 def _one_hot_encode(df: pd.DataFrame, col: str, categories: list) -> pd.DataFrame:
 
     # Creates and fits encoder with the categories
-    encoder = OneHotEncoder(categories=[categories], handle_unknown='error')
+    encoder = OneHotEncoder(categories=[categories], handle_unknown='ignore')
     encoder.fit(df[[col]])
 
     # Encodes the column

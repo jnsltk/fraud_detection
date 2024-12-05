@@ -2,6 +2,7 @@ import pandas as pd
 from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine, text
+from datetime import datetime
 
 # ---------------- LOAD ENVIRONMENT VARIABLES ---------------- #
 
@@ -21,7 +22,7 @@ DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 
 
 # Note - Uses sqlalchemy for database connection so that can be run independently from Django
-def load_data(sample_size: int = 20000, start=None, end=None) -> pd.DataFrame:
+def load_data(sample_size: int = 20000, start: datetime = None, end: datetime = None) -> pd.DataFrame:
     ''' Randomly sample data from the database, throws ValueError if no data found '''
 
     engine = create_engine(DATABASE_URL)
@@ -32,7 +33,7 @@ def load_data(sample_size: int = 20000, start=None, end=None) -> pd.DataFrame:
         SELECT * 
         FROM detector_transaction 
         WHERE (:start IS NULL OR version_date >= :start)
-            OR (:end IS NULL OR version_date <= :end)
+            AND (:end IS NULL OR version_date < :end)
         ORDER BY RANDOM()
         LIMIT :sample_size;
     ''')
@@ -49,5 +50,7 @@ def load_data(sample_size: int = 20000, start=None, end=None) -> pd.DataFrame:
 # ---------------------------- RUN - (for testing) --------------------------- #
 
 if __name__ == '__main__':
-    data = load_data()
+    data = load_data(999999, start=datetime(2024, 11, 3), end=datetime(2024, 12, 4))
+
+    print(f'max: {data['version_date'].max()}\nmin: {data['version_date'].min(axis=0)}\n')
     print(data.head())

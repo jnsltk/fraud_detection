@@ -16,8 +16,10 @@ from _predictor import Predictor
 import json
 from dataclasses import dataclass
 import keras
+from datetime import datetime
 
 # -------------------------- CLASSES ------------------------- #
+
 
 @dataclass
 class ModelDetails:
@@ -35,13 +37,13 @@ SAVE_MODEL_FILE = os.getenv("SAVE_MODEL_FILE") in ['TRUE', 'True', 'true', '1']
 # --------------------- PUBLIC FUNCTIONS --------------------- #
 
 
-def make_model(start_data_date=None, end_data_date=None) -> ModelDetails:
+def make_model(start_data_date=None, end_data_date=None, sample_size: int = 20000) -> ModelDetails:
     ''' 
         Trains a new model for the data interval specified.
         Needs to be run within try-except block to catch any errors.
     '''
 
-    df = _data_loader.load_data(start=start_data_date, end=end_data_date)
+    df = _data_loader.load_data(start=start_data_date, end=end_data_date, sample_size=sample_size)
     res = _feature_transformer.transform_df(df, col_data=None)
 
     # Combines stats and categories dictionaries
@@ -78,11 +80,10 @@ def make_predictor(model_id: str, model_details: ModelDetails = None) -> Predict
 # --------------------------- START - (for testing) -------------------------- #
 
 if __name__ == '__main__':
-    output = make_model()
+    output = make_model(start_data_date=datetime(2024, 12, 3), end_data_date=datetime(2024, 12, 6), sample_size=10000)
+
     predictor = make_predictor('probably does not matter', output)
-
     df = _data_loader.load_data(sample_size=1)
-
     predictor = Predictor(model_id='1')
 
     for i in range(len(df)):

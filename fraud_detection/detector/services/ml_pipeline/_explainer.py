@@ -26,7 +26,7 @@ def create(model: keras.Model, col_data) -> shap.Explainer:
 def explain(explainer: shap.Explainer, data: pd.DataFrame, is_fraud: bool, raw_input: dict) -> np.array:
     # Prepares the data
     arr = np.array(data, dtype='float32')
-    columns = np.array(data.columns.tolist())  # TODO - save instead of recalculating
+    columns = data.columns.to_numpy()
     values = arr[0]
 
     # Explains the prediction

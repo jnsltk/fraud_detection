@@ -8,6 +8,8 @@ import seaborn as sns
 from dataclasses import dataclass
 import os
 from dotenv import load_dotenv
+import tensorflow as tf
+import random
 
 # sklearn
 from sklearn.model_selection import train_test_split
@@ -34,6 +36,11 @@ class ModelOutput:
 load_dotenv()
 SHOW_PLOTS = os.getenv('SHOW_PLOTS') in ('TRUE', 'True', 'true', '1')
 VERBOSE = os.getenv('VERBOSE') in ('TRUE', 'True', 'true', '1')
+
+# Ensures reproducibility
+np.random.seed(42)
+tf.random.set_seed(42)
+random.seed(42)
 
 # ------------------------- PUBLIC FUNCTIONS ------------------------ #
 
@@ -66,8 +73,7 @@ def _train(training: np.ndarray) -> keras.Model:
     X_train = training[:, :-1]
     y_train = training[:, -1:]
 
-    # validation dataset that might used to help the model to generalize
-    X_train, X_validate, y_train, y_validate = train_test_split(X_train, y_train, test_size=0.2, random_state=32415)
+    X_train, X_validate, y_train, y_validate = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
 
     model = Sequential([
         Dense(90, activation='relu'),
@@ -79,7 +85,7 @@ def _train(training: np.ndarray) -> keras.Model:
 
     model.compile(optimizer='adam', loss=keras.losses.binary_crossentropy, metrics=['accuracy'])
 
-    # note - reduces false negatives
+    # Note - Reduces false negatives
     class_weights = compute_class_weight('balanced', classes=np.unique(y_validate), y=y_validate[:, 0])
     class_weights_dict = dict(enumerate(class_weights))
 
