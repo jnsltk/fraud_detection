@@ -151,5 +151,5 @@ We talked about integration of the code and how we can train the model on aserve
 
 ### Tasks
 
-- Victoria will add data versioning to the transaction table so that each row contains the date of which the data was added. This is to be used when taining the model, so that the same model can be trained if needed.
+- Victoria will add data versioning to the transaction table so that each row contains the date of which the data was added. This is to be used when taining the model, so that the same model can be trained if needed [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/18).
 The rest of the team will work on the tasks they had from last fridays meeting.
