@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="max-w-3xl mx-8">
+    <div class="max-w-4xl mx-8">
         <div class="mb-8 mt-8 md:mt-0 items-center justify-between flex">
             <span class="block text-2xl md:text-4xl font-bold">Manage models</span>
             <button hx-get="{% url 'train_model_form' %}" hx-target="#dialog"
@@ -46,11 +46,11 @@
                     <tr>
                         <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.version }}</td>
                         <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.date_created }}</td>
-                        <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.created_by }}</td>
+                        <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.created_by_full_name }}</td>
                         <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.dataset_size }}</td>
                         <td class="pr-[min(12px)] py-3 font-mono border-b border-neutral-600 text-left">{{ model.score }}</td>
                         <td class="pr-[min(12px)] py-3 border-b border-neutral-600">
-                            {% if model.deployed %}
+                            {% if model.is_deployed %}
                                 <button class="bg-stone-300 rounded-xl px-3 py-1 shadow-lg border border-stone-400/50 border-2 text-xs text-neutral-500 font-bold cursor-default">
                                     Deployed
                                 </button>
