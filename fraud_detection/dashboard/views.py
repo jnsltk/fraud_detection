@@ -20,6 +20,7 @@ from dashboard.forms import NewModelForm
 @login_required
 @staff_member_required
 def index(request):
+    """The main dashboard view, only accessible to staff users."""
     context = {
         'users_num': User.objects.count,
     }
@@ -30,6 +31,13 @@ def index(request):
 @staff_member_required
 @require_http_methods(['GET', 'POST'])
 def manage_models(request):
+    """View to show and train models. Incomplete for now, will be updated with
+    model training pipeline."""
+
+    # Define context to pass to the template
+    context = {}
+
+    # Handle form submission (Model training)
     if request.method == "POST":
         form = NewModelForm(request.POST)
         if form.is_valid():
@@ -46,6 +54,7 @@ def manage_models(request):
 
                 # Simulate model training time
                 time.sleep(3)
+                # Simulate model file
                 random_data = os.urandom(1024)
                 dummy_model = FraudDetectionModel(
                     version=version_bump,
@@ -62,28 +71,28 @@ def manage_models(request):
                 )
                 dummy_model.save()
 
-                context = {
+                context.update({
                     'desc': 'Success!',
                     'message': 'Congratulations! You\'ve just trained a new model! Click \'Deploy\' if you want to use it.'
-                }
+                })
             except Exception as e:
-                context = {
+                context.update({
                     'desc': 'Uh oh, something went wrong.',
                     'message': 'Detailed information: \n' + e
-                }
+                })
+        # Load models into context, so it shows up behind the modal
+        context.update({'models': load_models()})
         return render(request, 'dashboard/train_model_result.html', context=context)
     else:
-        context = {}
-        # Query model metadata from database
-        model_metadata = load_models()
-
-        context.update({'models': model_metadata})
+        # Handle GET request (Show models)
+        context.update({'models': load_models()})
         return render(request, 'dashboard/manage_models.html', context=context)
 
 
 @login_required
 @staff_member_required
 def train_model_form(request):
+    """View to show the model training form. Only used for HTMX."""
     form = NewModelForm()
     return render(request, 'dashboard/train_model_form.html', {
         'form': form,
@@ -93,6 +102,7 @@ def train_model_form(request):
 @login_required
 @staff_member_required
 def cancel_model_form(request):
+    """View to dismiss the model training form. Only used for HTMX."""
     return HttpResponse(
         """<div id="dialog"></div>"""
     )
@@ -101,21 +111,29 @@ def cancel_model_form(request):
 @login_required
 @staff_member_required
 def train_model_result(request):
+    """View to show the result of the model training. Only used for HTMX."""
     return render(request, 'dashboard/train_model_result.html')
 
 
 @login_required
 @staff_member_required
 def deploy_model(request):
+    """View to deploy a model. Only used for HTMX."""
+
+    # Get the id of the model to deploy from the POST request
     selected_model_id = request.POST.get('deploy_id')
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
+    # Check if there is already a deployed model
     try:
         deployed_model = FraudDetectionModel.objects.get(is_deployed=True)
         if deployed_model != selected_model:
+            # If there is a deployed model, undeploy it
             deployed_model.is_deployed = False
             deployed_model.save()
     except Exception as e:
+        # If there is no deployed model, log the exception
         print('No deployed model found\n', e)
+    # Deploy the selected model
     selected_model.is_deployed = True
     selected_model.save()
     context = {
@@ -126,6 +144,9 @@ def deploy_model(request):
 @login_required
 @staff_member_required
 def delete_model(request):
+    """View to delete a model. Only used for HTMX."""
+
+    # Get the id of the model to delete from the POST request
     selected_model_id = request.POST.get('delete_id')
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
     selected_model.delete()
@@ -136,13 +157,16 @@ def delete_model(request):
     return render(request, 'dashboard/model_table.html', context=context)
 
 def load_models():
+    """Helper function to load models for the dashboard."""
     return list(
+        # Annotate the full name of the user who created the model
         FraudDetectionModel.objects.annotate(
             created_by_full_name=Concat(
                 'created_by__first_name',
                 Value(' '),
                 'created_by__last_name'
             )
+        # Select only the necessary fields
         ).values(
             'id',
             'version',
@@ -151,5 +175,6 @@ def load_models():
             'dataset_size',
             'score',
             'is_deployed'
+        # Order by version and date created in descending order
         ).order_by('-version', '-date_created')
     )
