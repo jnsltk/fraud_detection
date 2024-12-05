@@ -1,0 +1,42 @@
+<div class="flex items-center justify-between px-4 py-2 bg-[#102c89] text-white">
+    <h1 hx-get="{% url 'core/index' %}" hx-target="#root" class="text-lg font-bold hover:cursor-pointer hover:text-[#586BAC]">Fraud Detection</h1>
+    <div class="space-x-4">
+        {% if user.is_authenticated %}
+            <!-- TODO: Add a link to the dector page (replace index) -->
+            <button 
+                hx-get="{% url 'core/index' %}"
+                hx-target="#root"
+                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    Detector
+            </button>
+            <!-- If user is logged in -->
+            <button 
+                hx-get="{% url 'core/profile' %}"
+                hx-target="#root"
+                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    My Profile
+            </button>
+            <form action="{% url 'core/logout' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit"
+                    class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                        Log Out
+                </button>
+            </form>
+        {% else %}
+            <!-- If user is not logged in -->
+            <button 
+                hx-get="{% url 'core/register' %}"
+                hx-target="#root"
+                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    Sign Up
+            </button>
+            <button 
+                hx-get="{% url 'core/login' %}"
+                hx-target="#root" 
+                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    Sign In
+            </button>
+        {% endif %}
+    </div>
+</div>

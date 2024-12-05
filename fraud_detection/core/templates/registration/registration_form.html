@@ -1,0 +1,40 @@
+{% extends "core/base_generic.html" %}
+
+{% block content %}
+
+{% include "home_page/nav_bar.html" %}
+
+<div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white">
+    <h1 class="text-4xl font-bold text-center mb-4 ml-10">Welcome to Fraud Detection</h1>
+    <form action="{% url 'core/post_register' %}" method="post" class="flex flex-col items-center space-y-6">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="flex flex-col items-start w-full">
+                <!-- Label (white text) -->
+                <label for="{{ field.id_for_label }}" class="text-lg font-medium text-white">
+                    {% if field.label == 'Password confirmation' %}
+                    Confirm Password:
+                    {% else %}
+                    {{ field.label }}:
+                    {% endif %}
+                </label>
+                <input
+                    id="{{ field.id_for_label }}"
+                    name="{{ field.name }}"
+                    type="{{ field.field.widget.input_type }}"
+                    value="{{ field.value|default:'' }}"
+                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black"
+                />
+                <!-- Display Validation Errors -->
+                {% if field.errors %}
+                    <p class="text-red-600 text-sm">{{ field.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="px-4 py-2 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
+            Sign up
+        </button>
+    </form>
+</div>
+
+{% endblock %}
