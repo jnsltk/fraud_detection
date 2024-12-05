@@ -8,7 +8,6 @@ import seaborn as sns
 from dataclasses import dataclass
 import os
 from dotenv import load_dotenv
-import shap
 
 # sklearn
 from sklearn.model_selection import train_test_split

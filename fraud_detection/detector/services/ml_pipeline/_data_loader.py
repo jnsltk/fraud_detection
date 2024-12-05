@@ -31,11 +31,11 @@ def load_data(sample_size: int = 20000, start=None, end=None) -> pd.DataFrame:
 
         SELECT * 
         FROM detector_transaction 
+        WHERE (:start IS NULL OR version_date >= :start)
+            OR (:end IS NULL OR version_date <= :end)
         ORDER BY RANDOM()
         LIMIT :sample_size;
     ''')
-    # WHERE (:start IS NULL OR version_date >= :start)
-    #     OR (:end IS NULL OR version_date <= :end)
 
     with engine.connect() as connection:
         df = pd.read_sql(query, connection, params={'sample_size': sample_size, 'start': start, 'end': end})
@@ -46,7 +46,7 @@ def load_data(sample_size: int = 20000, start=None, end=None) -> pd.DataFrame:
     return df
 
 
-# ---------------------------- RUN --------------------------- #
+# ---------------------------- RUN - (for testing) --------------------------- #
 
 if __name__ == '__main__':
     data = load_data()

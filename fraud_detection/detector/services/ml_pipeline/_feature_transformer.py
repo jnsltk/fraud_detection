@@ -48,6 +48,8 @@ SKIP_EUR_DOWNLOAD = os.getenv('SKIP_EUR_DOWNLOAD') in ('TRUE', 'True', 'true', '
 # ======================== PUBLIC METHODS ======================= #
 
 
+# Note - This should ideally happen during data collection,
+# but is done here due to technical debt
 def row_to_eur(row, euro_mean: float | None) -> float:
     ''' Takes row of [amount, timestamp, currency] and returns the amount in EUR '''
 
@@ -200,7 +202,7 @@ c = _setup_currency_converter()
 if set(USED_FEATURES) != set(CAT_COLS + NUM_COLS + BOOL_COLS):
     raise ValueError('USED_FEATURES does not match the feature columns')
 
-# =========================== START ========================== #
+# =========================== START - (for testing) ========================== #
 
 if __name__ == '__main__':
     # Load the data

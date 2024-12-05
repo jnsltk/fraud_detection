@@ -1,6 +1,6 @@
 '''
-    The bulk of the data validations is performed db_importer app, meaning the loaded data from the database is already clean.
-    These simple tests simply tests the results of the transformer and loader.
+    NOTE - The bulk of the data validations is performed db_importer app, meaning the loaded data from the database is already clean.
+        These simple tests simply tests the results of the transformer and loader.
 '''
 
 

@@ -1,16 +1,13 @@
-import numpy as np
 from keras.models import load_model
 from dataclasses import dataclass
-import data_loader
-import feature_transformer
+import _data_loader
+import _feature_transformer
 import keras
-import model
+import _model
 import json
 import os
 from dotenv import load_dotenv
-import shap
-import matplotlib.pyplot as plt  # Import matplotlib for data visualisation
-import explainer
+import _explainer
 
 # -------------------- SETUP FEATURE FLAGS ------------------- #
 
@@ -27,7 +24,12 @@ class Prediction:
     reasons: list[str]
 
 
+
 class Predictor:
+    ''' 
+        This class serves as a stateful predictor for fraud detection.
+        It will set everything up when instantiated, and then can be used to make predictions.
+    '''
 
     # -------------------------- PUBLIC -------------------------- #
 
@@ -35,22 +37,27 @@ class Predictor:
         ''' Throws ValueError '''
 
         # Prepares the data
-        res = feature_transformer.transform_single(input, self._col_data)
+        res = _feature_transformer.transform_single(input, self._col_data)
         input['euros'] = res.euros
 
         # Makes the prediction
-        probability = model.predict(res.df, self.model)
+        probability = _model.predict(res.df, self._model)
         is_fraud = probability > 0.5
 
         # Explains the prediction
-        reasons = explainer.explain(self.explainer, res.df, is_fraud, input)
+        reasons = _explainer.explain(self.explainer, res.df, is_fraud, input)
 
         # Returns the prediction
         return Prediction(probability=probability, is_fraud=is_fraud, reasons=reasons)
 
 
-    def __init__(self, model_id: str):
-        self._load_model(model_id)
+    def __init__(self, model_id: str, model: keras.Model = None, metadata: dict = None):
+        if model is not None and metadata is not None:
+            self._model = model
+            self._col_data = metadata
+        else:
+            self._load_model(model_id)
+
         self._setup_explainer()
 
     # ------------------------- PRIVATE ------------------------- #
@@ -58,27 +65,30 @@ class Predictor:
     def _load_model(self, model_id: str) -> None:
 
         if USE_LOCAL_MODEL:
-            self.model: keras.Model = load_model('data/model.keras')
+            self._model: keras.Model = load_model('data/model.keras')
 
             with open('data/metadata.json', 'r') as f:
                 self._col_data: dict[str, list[str] | dict[str, float]] = json.load(f)
 
-            self.trained_date_start = None
-            self.trained_date_end = None
         else:
             raise NotImplementedError('Remote model loading not implemented yet :(')
 
 
+    # Note - Ideally the explainer should be loaded from the database, but the library is immature and 
+    #        doing so is very problematic for multiple reasons including lacking documentation and what seems to be a bug.
+    #        Now, it will be re-created every time a backend start, which is good enough.
     def _setup_explainer(self) -> None:
-        self.explainer = explainer.create(self.model, self._col_data, self.trained_date_start, self.trained_date_end)
+        if self._model is None:
+            raise ValueError('Model is not loaded yet.')
+        
+        self.explainer = _explainer.create(self._model, self._col_data)
 
 
 if __name__ == '__main__':
 
-    df = data_loader.load_data(sample_size=10)
+    df = _data_loader.load_data(sample_size=10)
 
     predictor = Predictor(model_id='1')
-    print('Made predictor')
 
     for i in range(len(df)):
         row = df.iloc[i]
