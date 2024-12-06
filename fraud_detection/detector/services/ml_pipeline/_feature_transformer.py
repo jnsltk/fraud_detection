@@ -12,6 +12,8 @@ import added_features
 class TransformSingleResult:
     df: pd.DataFrame
     euros: float
+    hour_sin: float
+    hour_cos: float
 
 
 @dataclass
@@ -28,11 +30,11 @@ UNKNOWN_IN_TRAINING_PERCENTAGE = 0.1
 
 USED_FEATURES = [
     'merchant_category', 'amount', 'currency', 'country', 'card_type', 'card_present', 'device', 'channel',
-    'distance_from_home', 'transaction_hour', 'weekend_transaction', 'euros'
+    'distance_from_home', 'transaction_hour', 'weekend_transaction', 'euros', 'hour_sin', 'hour_cos'
 ]
 
 CAT_COLS = ['merchant_category', 'currency', 'country', 'card_type', 'device', 'channel']
-NUM_COLS = ['amount', 'transaction_hour', 'euros']
+NUM_COLS = ['amount', 'transaction_hour', 'euros', 'hour_sin', 'hour_cos']
 BOOL_COLS = ['card_present', 'distance_from_home', 'weekend_transaction']
 
 # ======================== PUBLIC METHODS ======================= #
@@ -47,6 +49,11 @@ def transform_single(input: dict, col_data: dict[str, any]) -> TransformSingleRe
     amount_cols = [input['amount'], datetime.now(), input['currency']]
     euro = added_features.row_to_eur(amount_cols, euro_mean=col_data['euros']['mean'])
     df['euros'] = [euro]
+
+    # Adds hour trig columns
+    added_features.add_hour_trig_cols(df)
+    hour_sin = df['hour_sin'].values[0]
+    hour_cos = df['hour_cos'].values[0]
 
     # Selects feature subset & Sorts columns
     df = df[USED_FEATURES].copy()
@@ -64,7 +71,7 @@ def transform_single(input: dict, col_data: dict[str, any]) -> TransformSingleRe
         df[col] = (df[col] - col_data[col]['mean']) / col_data[col]['std']
 
     # Returns the transformed dataframe
-    return TransformSingleResult(df, euros=euro)
+    return TransformSingleResult(df, euros=euro, hour_cos=hour_cos, hour_sin=hour_sin)
 
 
 # Note - col_data will be passed if model is already trained, and the function is used for SHAP
@@ -75,6 +82,9 @@ def transform_df(df: pd.DataFrame, col_data: dict[str:any] = None) -> TransformD
         added_features.row_to_eur(row, euro_mean=None)
         for row in df[['amount', 'timestamp', 'currency']].itertuples(index=False)
     ]
+
+    # Adds hour trig columns
+    added_features.add_hour_trig_cols(df)
 
     # Selects feature subset & sorts columns
     df = df[USED_FEATURES + ['is_fraud']].copy()

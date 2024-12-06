@@ -38,6 +38,8 @@ class Predictor:
         # Prepares the data
         res = _feature_transformer.transform_single(input, self._col_data)
         input['euros'] = res.euros
+        input['hour_sin'] = res.hour_sin
+        input['hour_cos'] = res.hour_cos
 
         # Makes the prediction
         probability = _model.predict(res.df, self._model)

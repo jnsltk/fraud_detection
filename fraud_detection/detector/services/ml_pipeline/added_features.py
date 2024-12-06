@@ -2,6 +2,8 @@ import urllib.request
 from currency_converter import CurrencyConverter, ECB_URL
 from dotenv import load_dotenv
 import os
+import pandas as pd
+import numpy as np
 
 # ------------------------- CONSTANTS ------------------------ #
 
@@ -16,7 +18,7 @@ load_dotenv()
 
 SKIP_EUR_DOWNLOAD = os.getenv('SKIP_EUR_DOWNLOAD') in ('TRUE', 'True', 'true', '1')
 
-# ---------------------- PUBLIC METHODS ---------------------- #
+# ---------------------- CURRENCY METHODS ---------------------- #
 
 
 def has_currency(code: str) -> bool:
@@ -41,6 +43,19 @@ def row_to_eur(row, euro_mean: float | None) -> float:
     # Converts the amount to euros
     else:
         return c.convert(row[0], row[2], date=row[1])
+
+
+# ---------------------- HOUR FUNCTIONS ---------------------- #
+
+
+def add_hour_trig_cols(df: pd.DataFrame) -> pd.DataFrame:
+    ''' Adds sin and cos columns for the transaction hour which are more learnable '''
+
+    df['hour_sin'] = np.sin(2 * np.pi * df['transaction_hour'] / 24)
+    df['hour_cos'] = np.cos(2 * np.pi * df['transaction_hour'] / 24)
+
+    if df['hour_cos'].isnull().values.any() or df['hour_sin'].isnull().values.any():
+        raise ValueError('Missing values in hour_sin or hour_cos')
 
 
 # --------------------------- SETUP -------------------------- #
