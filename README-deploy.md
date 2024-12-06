@@ -1,3 +1,7 @@
+## Deployment diagram
+
+![Deployment diagram](./assets/deployment_diagram.jpg)
+
 ## Commands for building, running and pushing the docker image to the registry
 `
 ```zsh
@@ -34,3 +38,4 @@ kubectl create secret generic db-credentials --from-literal=DB_PASSWORD='<omidde
 kubectl create secret docker-registry docker-registry --docker-server=registry.git.chalmers.se --docker-username='<your CID>' --docker-password='<your-chalmers-password>'
 
 ```
+
