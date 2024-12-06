@@ -1,7 +1,6 @@
 '''
     This module is the main entry point for the ml_pipeline service.
-    It provides all the necessary functions to train a model and make predictions,
-    no other module should be used directly (apart from when an object is returned from here).
+    It provides all the necessary functions to train a model and make predictions.
 '''
 
 # -------------------------- IMPORTS ------------------------- #
@@ -47,6 +46,7 @@ def make_model(start_data_date=None, end_data_date=None, sample_size: int = 2000
     '''
 
     df = _data_loader.load_data(start=start_data_date, end=end_data_date, sample_size=sample_size)
+
     res = _feature_transformer.transform_df(df, col_data=None)
 
     # Combines stats and categories dictionaries
@@ -58,9 +58,14 @@ def make_model(start_data_date=None, end_data_date=None, sample_size: int = 2000
     model_output = _model.create(res.df)
 
     if SAVE_MODEL_FILE:
-        model_output.model.save('data/model.keras')
+        parent = ''      
 
-        with open('data/metadata.json', 'w') as f:
+        if not os.path.exists('data'):
+            parent = 'detector/services/ml_pipeline/'
+
+        model_output.model.save(f'{parent}data/model.keras')
+
+        with open(f'{parent}data/metadata.json', 'w') as f:
             json.dump(metadata, f, indent=4)
 
         print('Saved model and metadata locally to data/')

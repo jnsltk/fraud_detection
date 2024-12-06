@@ -37,6 +37,8 @@ class Predictor:
 
         # Prepares the data
         res = _feature_transformer.transform_single(input, self._col_data)
+
+        # Adds calculated features to the input for use in the explainer
         input['euros'] = res.euros
         input['hour_sin'] = res.hour_sin
         input['hour_cos'] = res.hour_cos

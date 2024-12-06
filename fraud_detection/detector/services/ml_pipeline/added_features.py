@@ -64,23 +64,23 @@ def add_hour_trig_cols(df: pd.DataFrame) -> pd.DataFrame:
 def _setup_currency_converter():
     data_path = None
 
+    # Gets right path for currency data
     if os.path.exists(EUR_PATH_1):
         data_path = EUR_PATH_1
     elif os.path.exists(EUR_PATH_2):
         data_path = EUR_PATH_2
-
-    if data_path is None:
+    else:
         raise FileNotFoundError('Could not find currency data')
 
     if SKIP_EUR_DOWNLOAD:
-        print('Note - Skipping download of currency data')
+        print('Note - Skipping download of currency data (using previously downloaded data)')
     else:
         urllib.request.urlretrieve(ECB_URL, data_path)
 
     if not os.path.exists(data_path):
         cur_path = os.path.abspath(os.getcwd())
 
-        raise FileNotFoundError(f'Could not download/find currency data. Current path is {cur_path}')
+        raise FileNotFoundError(f'Could not download/find currency data. DEBUG: current path is {cur_path}')
 
     return CurrencyConverter(data_path, fallback_on_missing_rate=True, fallback_on_wrong_date=True)
 

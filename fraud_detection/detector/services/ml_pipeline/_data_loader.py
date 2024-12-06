@@ -28,7 +28,7 @@ def load_data(sample_size: int = 20000, start: datetime = None, end: datetime = 
     engine = create_engine(DATABASE_URL)
 
     query = text('''
-        SELECT setseed(0.37);
+        SELECT setseed(0.42);
 
         SELECT * 
         FROM detector_transaction 

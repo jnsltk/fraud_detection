@@ -37,6 +37,8 @@ CAT_COLS = ['merchant_category', 'currency', 'country', 'card_type', 'device', '
 NUM_COLS = ['amount', 'transaction_hour', 'euros', 'hour_sin', 'hour_cos']
 BOOL_COLS = ['card_present', 'distance_from_home', 'weekend_transaction']
 
+STANDARDISED_COLS = ['amount', 'transaction_hour', 'euros']
+
 # ======================== PUBLIC METHODS ======================= #
 
 
@@ -67,7 +69,7 @@ def transform_single(input: dict, col_data: dict[str, any]) -> TransformSingleRe
         df = _one_hot_encode(df, col, col_data[col])
 
     # Standardises numerical features
-    for col in NUM_COLS:
+    for col in STANDARDISED_COLS:
         df[col] = (df[col] - col_data[col]['mean']) / col_data[col]['std']
 
     # Returns the transformed dataframe
@@ -112,8 +114,8 @@ def transform_df(df: pd.DataFrame, col_data: dict[str:any] = None) -> TransformD
 
     # Standardises numerical features
     stats = {}
-    for col in NUM_COLS:
-        # Note - ses pre-calculated, more accurate stats for mean and std if available
+    for col in STANDARDISED_COLS:
+        # Note - Uses pre-calculated, more accurate stats for mean and std if available
         stats[col] = {'mean': df[col].mean(), 'std': df[col].std()} if col_data is None else col_data[col]
 
         df[col] = (df[col] - stats[col]['mean']) / stats[col]['std']
@@ -147,10 +149,13 @@ def _one_hot_encode(df: pd.DataFrame, col: str, categories: list) -> pd.DataFram
     return df
 
 
-# ============================ OTHER =========================== #
+# ============================ TESTS =========================== #
 
 if set(USED_FEATURES) != set(CAT_COLS + NUM_COLS + BOOL_COLS):
     raise ValueError('USED_FEATURES does not match the feature columns')
+
+if set(STANDARDISED_COLS) <= set(NUM_COLS):
+    raise ValueError('STANDARDISED_COLS must be a subset of NUM_COLS')
 
 # =========================== START - (for testing) ========================== #
 

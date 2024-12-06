@@ -15,8 +15,8 @@ def create(model: keras.Model, col_data) -> shap.Explainer:
     print('Loading data for SHAP explainer...')
     data_sample = _data_loader.load_data(sample_size=1000)
 
-    res = _feature_transformer.transform_df(data_sample, col_data=col_data)
-    arr = np.array(res.df, dtype='float32')
+    transform_res = _feature_transformer.transform_df(data_sample, col_data=col_data)
+    arr = np.array(transform_res.df, dtype='float32')
     x_matrix = arr[:, :-1]
 
     print('Training SHAP explainer...')
