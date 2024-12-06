@@ -6,6 +6,9 @@
 
 # -------------------------- IMPORTS ------------------------- #
 
+import sys
+sys.path.append('detector/services/ml_pipeline')
+
 from dotenv import load_dotenv
 import _data_loader
 import _feature_transformer

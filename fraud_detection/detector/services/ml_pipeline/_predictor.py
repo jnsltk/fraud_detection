@@ -24,7 +24,6 @@ class Prediction:
     reasons: list[str]
 
 
-
 class Predictor:
     ''' 
         This class serves as a stateful predictor for fraud detection.

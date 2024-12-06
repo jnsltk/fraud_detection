@@ -9,6 +9,8 @@ from matplotlib.cbook import flatten
 from detector.models import Transaction
 import subprocess
 import os
+import detector.services.ml_pipeline.added_features as added_features
+
 
 # ------------------------------ Data Validation ----------------------------- #
 def validate_csv_data(temp_file_path):
@@ -16,9 +18,7 @@ def validate_csv_data(temp_file_path):
     project_root = os.path.abspath(os.path.join(current_dir, "../../../"))
     try:
         # Validate the file using the Great Expectations script
-        validation_script = os.path.join(
-            project_root, "gx", "scripts", "validate_data.py"
-        )
+        validation_script = os.path.join(project_root, "gx", "scripts", "validate_data.py")
         anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
 
         # Check whether the file exists
@@ -33,7 +33,7 @@ def validate_csv_data(temp_file_path):
             text=True,
         )
         try:
-             # Parse the result
+            # Parse the result
             output = json.loads(result.stdout)
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
@@ -46,23 +46,20 @@ def validate_csv_data(temp_file_path):
                 f"\t- Expectation: {failure['expectation']} on column '{failure['column']}', "
                 f"Unexpected Count: {failure['unexpected_count']}, "
                 f"Unexpected Percent: {failure['unexpected_percent']}%, "
-                f"Sample Unexpected: {failure['partial_unexpected_list']}"
-                for failure in output.get("failures", [])
+                f"Sample Unexpected: {failure['partial_unexpected_list']}" for failure in output.get("failures", [])
             ])
-            print(f"\033[1;91mData validation failed! Failure details as below:\033[0m") # Log the failure result in red
-            print(f"\033[1;91m{failure_details}\033[0m") # Log the failure details in red
-            return {
-                "status": "error",
-                "message": f"{output['message']}\nFailures:\n{repr(result.stdout)}"
-            }
+            print(
+                f"\033[1;91mData validation failed! Failure details as below:\033[0m")  # Log the failure result in red
+            print(f"\033[1;91m{failure_details}\033[0m")  # Log the failure details in red
+            return {"status": "error", "message": f"{output['message']}\nFailures:\n{repr(result.stdout)}"}
 
-        else:            
-            print(f"\033[1;92mValidation succeeded!\033[0m") # Log the successful result in green
+        else:
+            print(f"\033[1;92mValidation succeeded!\033[0m")  # Log the successful result in green
             return {"status": "success", "message": "Validation succeeded!"}
     except Exception as e:
         print(f"Error during validation: {e}")
         return {"status": "error", "message": f"An error occurred during validation: {str(e)}"}
-    
+
 
 # ------------------------------ Data Insertion ------------------------------ #
 def process_csv(input_file):
@@ -76,6 +73,7 @@ def process_csv(input_file):
         validation_result = validate_csv_data(temp_file_path)
         if validation_result["status"] != "success":
             return validation_result
+
         print("Start inserting...")
         with open(temp_file_path, "r", encoding="utf-8") as temp_file:
             reader = csv.DictReader(temp_file)
@@ -89,6 +87,10 @@ def process_csv(input_file):
             for row in reader:
                 velocity = flatten_velocity(row, 'velocity_last_hour')
                 row.update(velocity)
+
+                if not added_features.has_currency(row['currency']):
+                    raise ValueError(f"Invalid currency: {row['currency']}")
+
                 try:
                     data_to_insert.append(Transaction(**row))
                 except Exception as e:
@@ -103,7 +105,6 @@ def process_csv(input_file):
         # Clean up the temporary file
         if os.path.isfile(temp_file_path):
             os.remove(temp_file_path)
-            
 
 
 def flatten_velocity(row, fieldname):
@@ -112,9 +113,8 @@ def flatten_velocity(row, fieldname):
 
     json_string = json_string.replace("'", '"')
     try:
-      parsed = json.loads(json_string)
-      # append v_ to the beginning of original values
-      return {f"v_{key}": value for key, value in parsed.items()}
+        parsed = json.loads(json_string)
+        # append v_ to the beginning of original values
+        return {f"v_{key}": value for key, value in parsed.items()}
     except JSONDecodeError as e:
         print(f'Error decoding {fieldname}, {e}')
-
