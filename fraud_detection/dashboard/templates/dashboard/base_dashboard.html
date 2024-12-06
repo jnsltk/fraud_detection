@@ -68,7 +68,6 @@
                        class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Settings</a></li>
             </ul>
         {% endblock %}
-        {% if user.is_authenticated %}
             <div class="mt-auto pt-4">
                 <form id="logout-form" method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
@@ -78,7 +77,6 @@
                     </button>
                 </form>
             </div>
-        {% endif %}
     </div>
 
     <div class="flex-grow overflow-auto">

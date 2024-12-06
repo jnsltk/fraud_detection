@@ -5,7 +5,7 @@ import time
 from datetime import date
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
@@ -22,6 +22,8 @@ from dashboard.forms import NewModelForm
 def index(request):
     """The main dashboard view, only accessible to staff users."""
     context = {
+        'version': FraudDetectionModel.objects.filter(is_deployed=True).first().version or "N/A",
+        'accuracy': FraudDetectionModel.objects.filter(is_deployed=True).first().score or "N/A",
         'users_num': User.objects.count,
     }
     return render(request, 'dashboard/index.html', context=context)
@@ -78,7 +80,7 @@ def manage_models(request):
             except Exception as e:
                 context.update({
                     'desc': 'Uh oh, something went wrong.',
-                    'message': 'Detailed information: \n' + e
+                    'message': 'Detailed information: \n' + str(e)
                 })
         # Load models into context, so it shows up behind the modal
         context.update({'models': load_models()})
@@ -101,7 +103,7 @@ def train_model_form(request):
 
 @login_required
 @staff_member_required
-def cancel_model_form(request):
+def dismiss_modal(request):
     """View to dismiss the model training form. Only used for HTMX."""
     return HttpResponse(
         """<div id="dialog"></div>"""
@@ -146,8 +148,9 @@ def deploy_model(request):
 def delete_model(request):
     """View to delete a model. Only used for HTMX."""
 
-    # Get the id of the model to delete from the POST request
+    # Get the id of the model to delete from the request
     selected_model_id = request.POST.get('delete_id')
+    print(selected_model_id)
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
     selected_model.delete()
 
