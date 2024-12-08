@@ -83,10 +83,10 @@
 
             <!-- Currency -->
             <div class="flex flex-col">
-                <label for="merchant_category" class="text-lg font-medium text-white">
+                <label for="currency" class="text-lg font-medium text-white">
                     Currency:
                 </label>
-                <select id="merchant_category" name="merchant_category" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                <select id="currency" name="currency" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
                     <option value="" disabled selected>Select Currency</option>
                     <option value="GBP">GBP</option>
                     <option value="BRL">BRL</option>
@@ -103,9 +103,15 @@
 
             <!-- Amount -->
             <div class="flex flex-col">
-                <label for="amount" class="text-lg font-medium text-white">
-                    Amount:
-                </label>
+                <div class="flex items-center">
+                    <label for="amount" class="text-lg font-medium text-white mr-2">
+                        Amount:
+                    </label>
+                    <!-- Hint text for equivalent amount in Euro -->
+                    <span id="currency-hint" class="text-xs font-bold text-white mt-1 hidden">
+                        Enter the equivalent amount in euro
+                    </span>
+                </div>
                 <input
                     id="amount"
                     name="amount"
@@ -191,10 +197,10 @@
 
             <!-- Pending -->
             <div class="flex flex-col">
-                <label for="channel" class="text-lg font-medium text-white">
+                <label for="Pending" class="text-lg font-medium text-white">
                     Pending:
                 </label>
-                <select id="channel" name="channel" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                <select id="Pending" name="Pending" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
                     <option value="" disabled selected>Select</option>
                     <option value="Unknown">Other</option>
                 </select>
@@ -202,10 +208,10 @@
 
             <!-- Pending -->
             <div class="flex flex-col">
-                <label for="channel" class="text-lg font-medium text-white">
+                <label for="Pending" class="text-lg font-medium text-white">
                     Pending:
                 </label>
-                <select id="channel" name="channel" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                <select id="Pending" name="Pending" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
                     <option value="" disabled selected>Select</option>
                     <option value="Unknown">Other</option>
                 </select>
@@ -222,5 +228,22 @@
     </form>
 
 </div>
+
+<script>
+    // Get references to the currency select and hint text elements
+    const currencySelect = document.getElementById('currency');
+    const hintText = document.getElementById('currency-hint');
+
+    // Add an event listener to the currency field to check for "Other" or "Unknown"
+    currencySelect.addEventListener('change', function() {
+        if (currencySelect.value === 'Unknown') {
+            // Show the hint text when "Other" or "Unknown" is selected
+            hintText.classList.remove('hidden');
+        } else {
+            // Hide the hint text for other currency options
+            hintText.classList.add('hidden');
+        }
+    });
+</script>
 
 {% endblock %}
