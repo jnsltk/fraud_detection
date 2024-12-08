@@ -137,3 +137,9 @@ def post_change_password_view(request):
 @require_GET
 def detection_page_view(request):
     return render(request, 'detection/detection_page.html')
+
+@login_required
+@require_POST 
+def detection_result(request):
+
+    return render(request, 'detection/detection_result.html')
