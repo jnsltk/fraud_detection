@@ -132,7 +132,7 @@ We talked about breaking down the tasks needed for the development of the front-
 - Janos will be working on the admin dashbord and all pages that the admin shall have access to like training the model, uploading data, and deploying a model. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/13)
 - Omid will be working on the front-end development of the landing page, the register page, and the login page. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7)
 - Victoria will integate data validation with the back-end, so that when admin upload data, they are validated before being uploaded to the database. This is done as part of the data validation task.
-- Yingchao will be working on the front-end development of the fraud dectatio page where noraml users can use the model to see if a certian transaction is fraudulent or not.
+- Yingchao will be working on the front-end development of the fraud dectatio page where noraml users can use the model to see if a certian transaction is fraudulent or not. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/16)
 - Henrik will be working on setting up the ML_pipeline and explainable AI. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/14)
 
 **Notes**: The deadline for the tasks are included in the issues.
