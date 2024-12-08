@@ -143,15 +143,42 @@ def detection_page_view(request):
 def detection_result(request):
     if request.method == "POST":
         # Get form data
-        merchant = request.POST.get('merchant')
-        merchant_type = request.POST.get('merchant_type')
         merchant_category = request.POST.get('merchant_category')
+        merchant_type = request.POST.get('merchant_type')
+        country = request.POST.get('country')
         currency = request.POST.get('currency')
         amount = request.POST.get('amount')
-        country = request.POST.get('country')
+        city_size = request.POST.get('city_size')
+        distance_from_home = request.POST.get('distance_from_home')
+        transaction_hour = request.POST.get('transaction_hour')
+        weekend_transaction = request.POST.get('weekend_transaction')
+        high_risk_merchant = request.POST.get('high_risk_merchant')
         card_type = request.POST.get('card_type')
-        device = request.POST.get('device')
-        channel = request.POST.get('channel')
+
+        # Build the data into a dictionary
+        input_data = {
+            'merchant_category': merchant_category,
+            'merchant_type': merchant_type,
+            'country': country,
+            'currency': currency,
+            'amount': amount,
+            'city_size': city_size,
+            'distance_from_home': distance_from_home,
+            'transaction_hour': transaction_hour,
+            'weekend_transaction': weekend_transaction,
+            'high_risk_merchant': high_risk_merchant,
+            'card_type': card_type
+        }
+
+
+        # Data validation
+        
+
+
+        # Get the model predictions
+
+
+
 
         
     return render(request, 'detection/detection_result.html')
