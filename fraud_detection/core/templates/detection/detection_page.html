@@ -1,0 +1,30 @@
+{% extends "core/base_generic.html" %}
+
+{% block content %}
+
+{% include "home_page/nav_bar.html" %}
+
+<div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white">
+    <h1 class="text-4xl font-bold text-center mb-6">Transaction Fraud Detection</h1>
+    <p class="text-center text-lg mb-10">Enter transaction details below to check for potential fraud.</p>
+    
+    <!-- Fraud Detection Form -->
+    <form action="{% url 'core/detection_page' %}" method="post" class="flex flex-col items-center space-y-6 w-4/5 max-w-2xl">
+        {% csrf_token %}
+
+        <!-- Submit Button -->
+        <button type="submit" class="px-6 py-2 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
+            Detect Fraud
+        </button>
+    </form>
+
+    <!-- Detection Result -->
+    {% if detection_result %}
+    <div class="mt-10 text-center">
+        <h2 class="text-2xl font-bold">Detection Result</h2>
+        <p class="text-lg mt-4">{{ detection_result }}</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
