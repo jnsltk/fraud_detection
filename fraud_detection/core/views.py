@@ -132,3 +132,8 @@ def post_change_password_view(request):
         })
     error_message = "The old password is incorrect."
     return render(request, 'my_profile/change_password.html', {'form': form, 'error_message': error_message})
+
+@login_required
+@require_GET
+def detection_page_view(request):
+    return render(request, 'detection/detection_page.html')

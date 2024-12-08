@@ -4,7 +4,7 @@
         {% if user.is_authenticated %}
             <!-- TODO: Add a link to the dector page (replace index) -->
             <button 
-                hx-get="{% url 'core/index' %}"
+                hx-get="{% url 'core/detection_page' %}"
                 hx-target="#root"
                 class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
                     Detector
