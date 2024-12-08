@@ -141,5 +141,17 @@ def detection_page_view(request):
 @login_required
 @require_POST 
 def detection_result(request):
+    if request.method == "POST":
+        # Get form data
+        merchant = request.POST.get('merchant')
+        merchant_type = request.POST.get('merchant_type')
+        merchant_category = request.POST.get('merchant_category')
+        currency = request.POST.get('currency')
+        amount = request.POST.get('amount')
+        country = request.POST.get('country')
+        card_type = request.POST.get('card_type')
+        device = request.POST.get('device')
+        channel = request.POST.get('channel')
 
+        
     return render(request, 'detection/detection_result.html')
