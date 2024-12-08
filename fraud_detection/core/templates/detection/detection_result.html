@@ -1,0 +1,25 @@
+{% extends "core/base_generic.html" %}
+
+{% block content %}
+
+{% include "home_page/nav_bar.html" %}
+
+<div class="flex flex-col justify-start items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white pt-20">
+    <h1 class="text-5xl font-bold text-center mb-6">Fraud Detection Result</h1>
+    
+    <!-- Show detection result -->
+    <div class="text-center text-lg mb-6">
+        <h2 class="text-2xl font-bold">Detection Result</h2>
+        <p class="mt-4">{{ detection_result }}</p>
+    </div>
+
+    <!-- Continue Detect button -->
+    <button
+            hx-get="{% url 'core/detection_page' %}"
+            hx-target="#root"
+            class="px-6 py-3 bg-[#F5820F] rounded hover:bg-red-600 transition-colors mt-20">
+            Continue Detect
+        </button>
+</div>
+
+{% endblock %}
