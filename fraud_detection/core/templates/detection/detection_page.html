@@ -9,10 +9,10 @@
     <p class="text-center text-lg">Enter transaction details below to check for potential fraud.</p>
     
     <!-- Fraud Detection Form -->
-    <form action="{% url 'core/detection_result' %}" method="post" class="flex flex-col items-center space-y-16 w-4/5 max-w-6xl">
+    <form action="{% url 'core/detection_result' %}" method="post" class="flex flex-col items-center space-y-20 w-4/5 max-w-6xl">
         {% csrf_token %}
         
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-36 gap-y-10 w-full">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-36 gap-y-16 w-full">
             <!-- Merchant -->
             <div class="flex flex-col">
                 <label for="merchant" class="text-lg font-medium text-white">
@@ -143,18 +143,6 @@
                 </select>
             </div>
 
-            <!-- High Risk Merchant -->
-            <div class="flex flex-col">
-                <label for="high_risk_merchant" class="text-lg font-medium text-white">
-                    High Risk Merchant:
-                </label>
-                <select id="high_risk_merchant" name="high_risk_merchant" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Is a high-risk merchant?</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </div>
-
             <!-- Card Type -->
             <div class="flex flex-col">
                 <label for="card_type" class="text-lg font-medium text-white">
@@ -191,28 +179,6 @@
                     <option value="" disabled selected>Select Channel</option>
                     <option value="Online">Online</option>
                     <option value="In-store">In-store</option>
-                    <option value="Unknown">Other</option>
-                </select>
-            </div>
-
-            <!-- Pending -->
-            <div class="flex flex-col">
-                <label for="Pending" class="text-lg font-medium text-white">
-                    Pending:
-                </label>
-                <select id="Pending" name="Pending" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="Unknown">Other</option>
-                </select>
-            </div>
-
-            <!-- Pending -->
-            <div class="flex flex-col">
-                <label for="Pending" class="text-lg font-medium text-white">
-                    Pending:
-                </label>
-                <select id="Pending" name="Pending" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select</option>
                     <option value="Unknown">Other</option>
                 </select>
             </div>
