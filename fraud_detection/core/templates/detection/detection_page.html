@@ -4,19 +4,138 @@
 
 {% include "home_page/nav_bar.html" %}
 
-<div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white">
-    <h1 class="text-4xl font-bold text-center mb-6">Transaction Fraud Detection</h1>
+<div class="flex flex-col justify-start items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white pt-20">
+    <h1 class="text-5xl font-bold text-center mb-6">Transaction Fraud Detection</h1>
     <p class="text-center text-lg mb-10">Enter transaction details below to check for potential fraud.</p>
     
     <!-- Fraud Detection Form -->
-    <form action="{% url 'core/detection_page' %}" method="post" class="flex flex-col items-center space-y-6 w-4/5 max-w-2xl">
+    <form action="{% url 'core/detection_page' %}" method="post" class="flex flex-col items-center space-y-6 w-4/5 max-w-6xl">
         {% csrf_token %}
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-36 gap-y-12 w-full">
+            <!-- Merchant -->
+            <div class="flex flex-col">
+                <label for="merchant" class="text-lg font-medium text-white">
+                    Merchant:
+                </label>
+                <select id="merchant" name="merchant" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Merchant</option>
+                    <option value="Merchant1">Merchant1</option>
+                    <option value="Merchant2">Merchant2</option>
+                    <option value="Merchant3">Merchant3</option>
+                </select>
+            </div>
 
-        <!-- Submit Button -->
-        <button type="submit" class="px-6 py-2 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
-            Detect Fraud
-        </button>
+            <!-- Merchant Type -->
+            <div class="flex flex-col">
+                <label for="merchant_type" class="text-lg font-medium text-white">
+                    Merchant Type:
+                </label>
+                <select id="merchant_type" name="merchant_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Merchant Type</option>
+                    <option value="Type1">Type1</option>
+                    <option value="Type2">Type2</option>
+                    <option value="Type3">Type3</option>
+                </select>
+            </div>
+
+            <!-- Merchant Category -->
+            <div class="flex flex-col">
+                <label for="merchant_category" class="text-lg font-medium text-white">
+                    Merchant Category:
+                </label>
+                <select id="merchant_category" name="merchant_category" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Merchant Category</option>
+                    <option value="Category1">Category1</option>
+                    <option value="Category2">Category2</option>
+                    <option value="Category3">Category3</option>
+                </select>
+            </div>
+
+            <!-- Amount -->
+            <div class="flex flex-col">
+                <label for="amount" class="text-lg font-medium text-white">
+                    Amount:
+                </label>
+                <input
+                    id="amount"
+                    name="amount"
+                    type="number"
+                    step="0.01"
+                    placeholder="Enter Amount"
+                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black"
+                    required />
+            </div>
+
+            <!-- Country -->
+            <div class="flex flex-col">
+                <label for="country" class="text-lg font-medium text-white">
+                    Country:
+                </label>
+                <select id="country" name="country" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Country</option>
+                    <option value="USA">USA</option>
+                    <option value="Canada">Canada</option>
+                    <option value="UK">UK</option>
+                </select>
+            </div>
+
+            <!-- High Risk Merchant -->
+            <div class="flex flex-col">
+                <label for="high_risk_merchant" class="text-lg font-medium text-white">
+                    High Risk Merchant:
+                </label>
+                <select id="high_risk_merchant" name="high_risk_merchant" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Is this a high-risk merchant?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Card Type -->
+            <div class="flex flex-col">
+                <label for="card_type" class="text-lg font-medium text-white">
+                    Card Type:
+                </label>
+                <select id="card_type" name="card_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Card Type</option>
+                    <option value="Credit">Credit</option>
+                    <option value="Debit">Debit</option>
+                </select>
+            </div>
+
+            <!-- Device -->
+            <div class="flex flex-col">
+                <label for="device" class="text-lg font-medium text-white">
+                    Device:
+                </label>
+                <select id="device" name="device" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Device</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Desktop">Desktop</option>
+                    <option value="Tablet">Tablet</option>
+                </select>
+            </div>
+
+            <!-- Channel -->
+            <div class="flex flex-col">
+                <label for="channel" class="text-lg font-medium text-white">
+                    Channel:
+                </label>
+                <select id="channel" name="channel" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Channel</option>
+                    <option value="Online">Online</option>
+                    <option value="In-store">In-store</option>
+                </select>
+            </div>
+        </div>
+
     </form>
+
+    <!-- Submit Button -->
+    <button type="submit" class="px-10 py-3 bg-[#F5820F] rounded hover:bg-red-600 transition-colors mt-20">
+        Detect
+    </button>
 
     <!-- Detection Result -->
     {% if detection_result %}
