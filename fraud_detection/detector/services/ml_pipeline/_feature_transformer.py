@@ -154,7 +154,7 @@ def _one_hot_encode(df: pd.DataFrame, col: str, categories: list) -> pd.DataFram
 if set(USED_FEATURES) != set(CAT_COLS + NUM_COLS + BOOL_COLS):
     raise ValueError('USED_FEATURES does not match the feature columns')
 
-if set(STANDARDISED_COLS) <= set(NUM_COLS):
+if not set(STANDARDISED_COLS) <= set(NUM_COLS):
     raise ValueError('STANDARDISED_COLS must be a subset of NUM_COLS')
 
 # =========================== START - (for testing) ========================== #

@@ -7,8 +7,9 @@ import numpy as np
 
 # ------------------------- CONSTANTS ------------------------ #
 
-EUR_PATH_1 = 'data/eurofxref-hist.zip'
-EUR_PATH_2 = 'detector/services/ml_pipeline/data/eurofxref-hist.csv'
+EUR_DIR_1 = 'data'
+EUR_DIR_2 = 'detector/services/ml_pipeline/data'
+EUR_FILE = 'eurofxref-hist.zip'
 
 OTHER = 'other'
 
@@ -65,12 +66,12 @@ def _setup_currency_converter():
     data_path = None
 
     # Gets right path for currency data
-    if os.path.exists(EUR_PATH_1):
-        data_path = EUR_PATH_1
-    elif os.path.exists(EUR_PATH_2):
-        data_path = EUR_PATH_2
+    if os.path.exists(EUR_DIR_1):
+        data_path = os.path.join(EUR_DIR_1, EUR_FILE)
+    elif os.path.exists(EUR_DIR_2):
+        data_path = os.path.join(EUR_DIR_2, EUR_FILE)
     else:
-        raise FileNotFoundError('Could not find currency data')
+        raise FileNotFoundError('Could not find currency data folder')
 
     if SKIP_EUR_DOWNLOAD:
         print('Note - Skipping download of currency data (using previously downloaded data)')
