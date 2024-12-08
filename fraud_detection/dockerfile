@@ -17,13 +17,16 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y postgresql && \
     apt-get clean
 
+
 # ------------------------ SETUP CONDA ----------------------- #
 
 COPY environment.yml /fraud_detection//environment_raw.yml
 
 # Fix for platform dependent package - TODO: remove when fixed
 RUN grep -v "libgfortran" environment_raw.yml > environment.yml
-RUN conda env create -f environment.yml
+
+RUN conda install -n base -c conda-forge mamba
+RUN mamba env create -f environment.yml
 
 # --------------------- SETUP FOR RUNNING -------------------- #
 
