@@ -5,29 +5,40 @@ channels:
   - defaults
 dependencies:
   - absl-py=2.1.0
+  - anyio=4.6.2
   - appnope=0.1.3
+  - argon2-cffi=21.3.0
+  - argon2-cffi-bindings=21.2.0
   - asgiref=3.8.1
   - asttokens=2.0.5
   - astunparse=1.6.3
+  - async-lru=2.0.4
+  - attrs=24.2.0
+  - babel=2.11.0
   - backports=1.0
   - backports.functools_lru_cache=2.0.0
+  - beautifulsoup4=4.12.3
   - blas=1.0
+  - bleach=6.2.0
   - bottleneck=1.4.2
   - brotli=1.0.9
   - brotli-bin=1.0.9
   - brotli-python=1.0.9
   - bzip2=1.0.8
   - c-ares=1.19.1
-  - ca-certificates=2024.9.24
+  - ca-certificates=2024.11.26
   - certifi=2024.8.30
   - cffi=1.17.1
   - charset-normalizer=3.3.2
   - click=8.1.7
+  - cloudpickle=3.0.0
   - comm=0.2.1
   - contourpy=1.2.0
   - cycler=0.11.0
+  - cyrus-sasl=2.1.28
   - debugpy=1.6.7
   - decorator=5.1.1
+  - defusedxml=0.7.1
   - django=5.1.3
   - django-cors-headers=4.6.0
   - exceptiongroup=1.2.2
@@ -39,12 +50,16 @@ dependencies:
   - gast=0.5.3
   - giflib=5.2.2
   - google-pasta=0.2.0
+  - greenlet=3.0.1
   - grpcio=1.62.2
   - gunicorn=22.0.0
+  - h11=0.14.0
   - h2=4.1.0
   - h5py=3.12.1
   - hdf5=1.12.1
   - hpack=4.0.0
+  - httpcore=1.0.2
+  - httpx=0.27.0
   - hyperframe=6.0.1
   - icu=73.1
   - idna=3.7
@@ -53,10 +68,21 @@ dependencies:
   - ipykernel=6.29.5
   - ipython=8.27.0
   - jedi=0.19.1
+  - jinja2=3.1.4
   - joblib=1.4.2
   - jpeg=9e
+  - json5=0.9.25
+  - jsonschema=4.23.0
+  - jsonschema-specifications=2023.7.1
+  - jupyter-lsp=2.2.0
   - jupyter_client=8.6.0
   - jupyter_core=5.7.2
+  - jupyter_events=0.10.0
+  - jupyter_server=2.14.1
+  - jupyter_server_terminals=0.4.4
+  - jupyterlab=4.2.5
+  - jupyterlab_pygments=0.1.2
+  - jupyterlab_server=2.27.3
   - keras=3.4.1
   - kiwisolver=1.4.4
   - krb5=1.20.1
@@ -76,9 +102,11 @@ dependencies:
   - libgfortran=5.0.0
   - libgfortran5=11.3.0
   - libgrpc=1.62.2
+  - libllvm14=14.0.6
   - libnghttp2=1.57.0
   - libopenblas=0.3.21
   - libpng=1.6.39
+  - libpq=17.0
   - libprotobuf=4.25.3
   - libsodium=1.0.18
   - libsqlite=3.45.3
@@ -87,6 +115,7 @@ dependencies:
   - libwebp-base=1.3.2
   - libzlib=1.2.13
   - llvm-openmp=14.0.6
+  - llvmlite=0.43.0
   - lz4-c=1.9.4
   - markdown=3.4.1
   - markdown-it-py=2.2.0
@@ -95,19 +124,28 @@ dependencies:
   - matplotlib-base=3.9.2
   - matplotlib-inline=0.1.6
   - mdurl=0.1.0
+  - mistune=2.0.4
   - ml_dtypes=0.4.0
   - namex=0.0.7
+  - nbclient=0.8.0
+  - nbconvert=7.16.4
+  - nbformat=5.10.4
   - ncurses=6.4.20240210
   - nest-asyncio=1.6.0
+  - notebook=7.2.2
+  - notebook-shim=0.2.3
+  - numba=0.60.0
   - numexpr=2.10.1
   - numpy=1.26.4
   - numpy-base=1.26.4
   - openjpeg=2.5.2
+  - openldap=2.6.4
   - openssl=3.0.15
   - opt_einsum=3.3.0
   - optree=0.12.1
+  - overrides=7.4.0
   - packaging=24.1
-  - pandas=2.2.2
+  - pandocfilters=1.5.0
   - parso=0.8.3
   - patsy=1.0.1
   - pexpect=4.8.0
@@ -115,10 +153,12 @@ dependencies:
   - pillow=11.0.0
   - pip=24.2
   - platformdirs=3.10.0
+  - prometheus_client=0.21.0
   - prompt-toolkit=3.0.43
   - prompt_toolkit=3.0.43
   - protobuf=4.25.3
   - psutil=5.9.0
+  - psycopg2=2.9.9
   - ptyprocess=0.7.0
   - pure_eval=0.2.2
   - pycparser=2.22
@@ -128,53 +168,86 @@ dependencies:
   - python=3.12.7
   - python-dateutil=2.9.0post0
   - python-dotenv=0.21.0
+  - python-fastjsonschema=2.20.0
   - python-flatbuffers=24.3.25
+  - python-json-logger=2.0.7
   - python-tzdata=2023.3
   - pytz=2024.1
+  - pyyaml=6.0.2
   - pyzmq=25.1.2
   - re2=2022.04.01
   - readline=8.2
+  - referencing=0.30.2
   - requests=2.32.3
+  - rfc3339-validator=0.1.4
+  - rfc3986-validator=0.1.1
   - rich=13.7.1
+  - rpds-py=0.10.6
   - scikit-learn=1.5.1
-  - sqlalchemy=2.0.36
   - scipy=1.14.1
   - seaborn=0.13.2
   - seaborn-base=0.13.2
+  - send2trash=1.8.2
   - setuptools=75.1.0
+  - shap=0.46.0
   - six=1.16.0
+  - slicer=0.0.8
   - snappy=1.2.1
+  - sniffio=1.3.0
+  - soupsieve=2.5
+  - sqlalchemy=2.0.34
   - sqlite=3.45.3
   - sqlparse=0.4.4
   - stack_data=0.2.0
   - statsmodels=0.14.2
+  - tbb=2021.8.0
   - tensorboard=2.17.0
   - tensorboard-data-server=0.7.0
   - tensorflow=2.17.0
   - tensorflow-base=2.17.0
   - tensorflow-estimator=2.17.0
   - termcolor=2.1.0
+  - terminado=0.17.1
   - threadpoolctl=3.5.0
+  - tinycss2=1.2.1
   - tk=8.6.14
   - tornado=6.4.1
   - traitlets=5.14.3
-  - typing-extensions=4.11.0
-  - typing_extensions=4.11.0
   - tzdata=2024b
   - unicodedata2=15.1.0
   - urllib3=2.2.3
   - wcwidth=0.2.5
+  - webencodings=0.5.1
+  - websocket-client=1.8.0
   - werkzeug=3.0.6
   - wheel=0.44.0
   - wrapt=1.14.1
   - xz=5.4.6
+  - yaml=0.2.5
   - zeromq=4.3.5
   - zipp=3.21.0
   - zlib=1.2.13
   - zstandard=0.23.0
   - zstd=1.5.6
   - pip:
+      - altair==4.2.2
+      - annotated-types==0.7.0
+      - backoff==2.2.1
+      - cryptography==44.0.0
       - currencyconverter==0.17.34
+      - entrypoints==0.4
+      - great-expectations==1.2.4
+      - marshmallow==3.23.1
+      - monotonic==1.6
+      - pandas==2.1.4
+      - posthog==2.5.0
       - psycopg==3.2.3
-      - great_expectations==1.2.4
+      - pydantic==2.10.2
+      - pydantic-core==2.27.1
+      - ruamel-yaml==0.18.6
+      - ruamel-yaml-clib==0.2.12
+      - toolz==1.0.0
+      - tqdm==4.67.1
+      - typing-extensions==4.12.2
+      - tzlocal==5.2
 prefix: /opt/anaconda3/envs/prj

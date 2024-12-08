@@ -37,6 +37,7 @@ build_docker_image:
       # ... and if the fraud_detection folder has changed
       changes:
         - fraud_detection/**
+        - gx/**
     - when: never
 
 # -------------------------- version ------------------------- #
@@ -55,7 +56,7 @@ version_new_model:
       # A new model is detected if changes are made to the db_setup or ML_pipeline folders
       changes:
         - db_setup/**
-        - ML_pipeline/**
+        - fraud_detection/detector/services/ml_pipeline/**
     - when: never
   # Install required tools
   before_script:
@@ -109,5 +110,6 @@ deploy_to_k8s:
       # ... and if the fraud_detection folder or the deployment configuration has changed
       changes:
         - fraud_detection/**
+        - gx/**
         - deployment.yml
     - when: never

@@ -18,7 +18,7 @@ docker push registry.git.chalmers.se/courses/dit826/2024/group1/backend:latest
 ```
 
 ## Commands for deploying to a kubernetes cluster
->Not particularly useful as you probably can't access the cluster, but here they are anyway.
+> Not particularly useful as you probably can't access the cluster, but here they are anyway.
 
 ```zsh
 
