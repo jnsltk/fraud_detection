@@ -1,3 +1,8 @@
+import io
+import json
+import os
+import subprocess
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.contrib.auth import authenticate, login, logout
@@ -6,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.models import User
 from .form import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
-
+import pandas as pd
 
 
 @require_GET
@@ -147,7 +152,15 @@ def detection_result(request):
         merchant_type = request.POST.get('merchant_type')
         country = request.POST.get('country')
         currency = request.POST.get('currency')
-        amount = request.POST.get('amount')
+        # amount = request.POST.get('amount')
+        # Cast amount to float to ensure it passes validation
+        try:
+            amount = float(request.POST.get('amount', 0))  # Convert amount to float
+        except ValueError:
+            return JsonResponse({
+                "status": "error",
+                "message": "Invalid amount. Please enter a valid number."
+            }, status=400)
         city_size = request.POST.get('city_size')
         distance_from_home = request.POST.get('distance_from_home')
         transaction_hour = request.POST.get('transaction_hour')
@@ -172,11 +185,64 @@ def detection_result(request):
 
 
         # Data validation
-        
+
+        # Convert input data into a DataFrame
+        df = pd.DataFrame([input_data])
+        # Create an in-memory CSV file
+        csv_buffer = io.StringIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_data = csv_buffer.getvalue()
+
+        # Validate the file using the Great Expectations script
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(current_dir, "../../"))
+        validation_script = os.path.join(
+            project_root, "gx", "scripts", "validate_data.py"
+        )
+        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
+        try:
+            print("Start data validation......")
+
+            result = subprocess.run(
+                [anaconda_python, validation_script],
+                input=csv_data,
+                capture_output=True,
+                text=True,
+            )
+            try:
+                # Parse the result
+                output = json.loads(result.stdout)
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON: {e}")
+                print(f"Raw output: {repr(result.stdout)}")
+                return {"status": "error", "message": "Validation script returned invalid or empty output."}
+            # Check the validation result
+            if result.returncode != 0:
+                failure_details = "\n".join([
+                    f"\t- Expectation: {failure['expectation']} on column '{failure['column']}', "
+                    f"Unexpected Count: {failure['unexpected_count']}, "
+                    f"Unexpected Percent: {failure['unexpected_percent']}%, "
+                    f"Sample Unexpected: {failure['partial_unexpected_list']}"
+                    for failure in output.get("failures", [])
+                ])
+                print(f"\033[1;91mData validation failed! Failure details as below:\033[0m") # Log the failure result in red
+                print(f"\033[1;91m{failure_details}\033[0m") # Log the failure details in red
+                return JsonResponse({
+                    "status": "error",
+                    "message": output.get("message", "Validation failed."),
+                    "failures": output.get('failures', []),
+                }, status=400)  # Return 400 status to indicate a bad request
+            else:            
+                print(f"\033[1;92mValidation succeeded!\033[0m") # Log the successful result in green
+        except Exception as e:
+            print(f"Error during validation: {e}")
+            return JsonResponse({
+                "status": "error", 
+                "message": f"An error occurred during validation: {str(e)}"
+            }, status=500)  # Return 500 status for server error
 
 
         # Get the model predictions
-
 
 
 
