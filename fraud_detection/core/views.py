@@ -215,6 +215,11 @@ def detection_result(request):
                 return {"status": "error", "message": "Validation script returned invalid or empty output."}
             # Check the validation result
             if result.returncode != 0:
+                # Extract the invalid fields from the failures
+                failed_fields = list(set(failure['column'] for failure in output.get("failures", []) if failure.get('column')))
+                # Join the list of failed field names into a single string, separated by commas
+                failed_fields_message = ', '.join(failed_fields)
+
                 failure_details = "\n".join([
                     f"\t- Expectation: {failure['expectation']} on column '{failure['column']}', "
                     f"Unexpected Count: {failure['unexpected_count']}, "
@@ -224,11 +229,12 @@ def detection_result(request):
                 ])
                 print(f"\033[1;91mData validation failed! Failure details as below:\033[0m") # Log the failure result in red
                 print(f"\033[1;91m{failure_details}\033[0m") # Log the failure details in red
-                return JsonResponse({
-                    "status": "error",
-                    "message": output.get("message", "Validation failed."),
-                    "failures": output.get('failures', []),
-                }, status=400)  # Return 400 status to indicate a bad request
+                
+                # Render the detection_page.html with an error message
+                return render(request, 'detection/detection_page.html', {
+                    "error_message": f"Your input for the following fields is not valid: {failed_fields_message}.<br>Please refill the form with valid input.",
+                })
+
             else:            
                 print(f"\033[1;92mValidation succeeded!\033[0m") # Log the successful result in green
         except Exception as e:
