@@ -2,7 +2,7 @@ import json
 import os
 import time
 
-from datetime import date
+from datetime import date, datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, QueryDict
@@ -15,6 +15,10 @@ from django.db.models import Max
 
 from detector.models import FraudDetectionModel
 from dashboard.forms import NewModelForm
+from detector.services.ml_pipeline import make_model, SAVE_MODEL_FILE
+
+# Define the size of the dataset to use for training
+SAMPLE_SIZE = 20000
 
 
 @login_required
@@ -51,31 +55,41 @@ def manage_models(request):
             end_date = form.cleaned_data['end_date']
             # Call start model training pipeline here, passing in the selected dates
 
-            # Simulate model creation
+            temp_file_path = "/tmp/tmp_model.keras"
             try:
+                # Call the make_model function from the ml_pipeline service
+                result = make_model(start_data_date=datetime(start_date.year, start_date.month, start_date.day),
+                                    end_data_date=datetime(end_date.year, end_date.month, end_date.day),
+                                    sample_size=SAMPLE_SIZE)
+
                 # Bump up model version
                 highest_version = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
                 version_num = highest_version.get('max_version')
-                version_bump = f"v{round(float(version_num[1:-6]) + 0.1, 2)}-dummy"
+                version_bump = f"v{round(float(version_num[1:-6]) + 0.1, 2)}"
 
-                # Simulate model training time
-                time.sleep(3)
-                # Simulate model file
-                random_data = os.urandom(1024)
-                dummy_model = FraudDetectionModel(
+                # Save the model to a temporary file
+                result.model.save(temp_file_path)
+
+                # Read model file
+                with open(temp_file_path, 'rb') as f:
+                    model_bin = f.read()
+
+                # Save the model to the database
+                model = FraudDetectionModel(
                     version=version_bump,
-                    date_created=date.today(),
-                    dataset_size=100000,
+                    date_created=datetime.now(),
+                    created_by=request.user,
+                    dataset_size=SAMPLE_SIZE,
                     training_data_start_date=start_date,
                     training_data_end_date=end_date,
-                    score=98.02,
-                    detailed_performance={'f1-score': '98.02'},
-                    metadata={'important_data': 'yes'},
-                    model_file=random_data,
-                    is_deployed=False,
-                    created_by=request.user
+                    score=result.test_result['weighted avg']['f1-score'],
+                    detailed_performance=result.test_result,
+                    metadata=result.metadata,
+                    model_file=model_bin,
+                    is_deployed=False
                 )
-                dummy_model.save()
+
+                model.save()
 
                 context.update({
                     'desc': 'Success!',
@@ -86,6 +100,11 @@ def manage_models(request):
                     'desc': 'Uh oh, something went wrong.',
                     'message': 'Detailed information: \n' + str(e)
                 })
+            finally:
+                # Clean up the temporary file
+                if os.path.isfile(temp_file_path):
+                    os.remove(temp_file_path)
+
         # Load models into context, so it shows up behind the modal
         context.update({'models': load_models()})
         return render(request, 'dashboard/train_model_result.html', context=context)
@@ -155,6 +174,7 @@ def deploy_model(request):
     }
     return render(request, 'dashboard/model_table.html', context=context)
 
+
 @login_required
 @staff_member_required
 def delete_model(request):
@@ -173,6 +193,7 @@ def delete_model(request):
     }
     return render(request, 'dashboard/model_table.html', context=context)
 
+
 def load_models():
     """
         Helper function to load models for the dashboard.
@@ -185,7 +206,7 @@ def load_models():
                 Value(' '),
                 'created_by__last_name'
             )
-        # Select only the necessary fields
+            # Select only the necessary fields
         ).values(
             'id',
             'version',
@@ -194,6 +215,6 @@ def load_models():
             'dataset_size',
             'score',
             'is_deployed'
-        # Order by version and date created in descending order
+            # Order by version and date created in descending order
         ).order_by('-version', '-date_created')
     )
