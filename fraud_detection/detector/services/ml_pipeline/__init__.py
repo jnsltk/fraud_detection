@@ -28,6 +28,7 @@ class ModelDetails:
     model: keras.Model
     test_result: dict
     metadata: dict
+    true_sample_size: int = 0
 
 
 # ---------------------- SETUP FEATURE FLAGS --------------------- #
@@ -70,7 +71,7 @@ def make_model(start_data_date=None, end_data_date=None, sample_size: int = 2000
 
         print('Saved model and metadata locally to data/')
 
-    return ModelDetails(model=model_output.model, test_result=model_output.test_result, metadata=metadata)
+    return ModelDetails(model=model_output.model, test_result=model_output.test_result, metadata=metadata, true_sample_size=df.shape[0])
 
 
 def make_predictor(model_id: str, model_details: ModelDetails = None) -> Predictor:

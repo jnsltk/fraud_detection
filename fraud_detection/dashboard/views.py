@@ -56,9 +56,7 @@ def manage_models(request):
             temp_file_path = "/tmp/tmp_model.keras"
             try:
                 # Call the make_model function from the ml_pipeline service
-                result = make_model(start_data_date=start_date,
-                                    end_data_date=end_date,
-                                    sample_size=SAMPLE_SIZE)
+                result = make_model(start_data_date=start_date, end_data_date=end_date, sample_size=SAMPLE_SIZE)
 
                 # Bump up model version
                 highest_version = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
@@ -73,31 +71,28 @@ def manage_models(request):
                     model_bin = f.read()
 
                 # Save the model to the database
-                model = FraudDetectionModel(
-                    version=version_bump,
-                    date_created=datetime.now(),
-                    created_by=request.user,
-                    dataset_size=SAMPLE_SIZE,
-                    training_data_start_date=start_date,
-                    training_data_end_date=end_date,
-                    score=result.test_result['weighted avg']['f1-score'],
-                    detailed_performance=result.test_result,
-                    metadata=result.metadata,
-                    model_file=model_bin,
-                    is_deployed=False
-                )
+                model = FraudDetectionModel(version=version_bump,
+                                            date_created=datetime.now(),
+                                            created_by=request.user,
+                                            dataset_size=result.true_sample_size,
+                                            training_data_start_date=start_date,
+                                            training_data_end_date=end_date,
+                                            score=result.test_result['weighted avg']['f1-score'],
+                                            detailed_performance=result.test_result,
+                                            metadata=result.metadata,
+                                            model_file=model_bin,
+                                            is_deployed=False)
 
                 model.save()
 
                 context.update({
-                    'desc': 'Success!',
-                    'message': 'Congratulations! You\'ve just trained a new model! Click \'Deploy\' if you want to use it.'
+                    'desc':
+                    'Success!',
+                    'message':
+                    'Congratulations! You\'ve just trained a new model! Click \'Deploy\' if you want to use it.'
                 })
             except Exception as e:
-                context.update({
-                    'desc': 'Uh oh, something went wrong.',
-                    'message': 'Detailed information: \n' + str(e)
-                })
+                context.update({'desc': 'Uh oh, something went wrong.', 'message': 'Detailed information: \n' + str(e)})
             finally:
                 # Clean up the temporary file
                 if os.path.isfile(temp_file_path):
@@ -130,9 +125,7 @@ def dismiss_modal(request):
     """
         View to dismiss the model training form. Only used for HTMX.
     """
-    return HttpResponse(
-        """<div id="dialog"></div>"""
-    )
+    return HttpResponse("""<div id="dialog"></div>""")
 
 
 @login_required
@@ -174,9 +167,7 @@ def deploy_model(request):
     # Deploy the selected model
     selected_model.is_deployed = True
     selected_model.save()
-    context = {
-        'models': load_models()
-    }
+    context = {'models': load_models()}
     return render(request, 'dashboard/model_table.html', context=context)
 
 
@@ -193,9 +184,7 @@ def delete_model(request):
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
     selected_model.delete()
 
-    context = {
-        'models': load_models()
-    }
+    context = {'models': load_models()}
     return render(request, 'dashboard/model_table.html', context=context)
 
 
@@ -205,21 +194,10 @@ def load_models():
     """
     return list(
         # Annotate the full name of the user who created the model
-        FraudDetectionModel.objects.annotate(
-            created_by_full_name=Concat(
-                'created_by__first_name',
-                Value(' '),
-                'created_by__last_name'
-            )
-            # Select only the necessary fields
-        ).values(
-            'id',
-            'version',
-            'date_created',
-            'created_by_full_name',
-            'dataset_size',
-            'score',
-            'is_deployed'
-            # Order by version and date created in descending order
-        ).order_by('-version', '-date_created')
-    )
+        FraudDetectionModel.objects.annotate(created_by_full_name=Concat('created_by__first_name', Value(' '),
+                                                                         'created_by__last_name')
+                                             # Select only the necessary fields
+                                             ).values('id', 'version', 'date_created', 'created_by_full_name',
+                                                      'dataset_size', 'score', 'is_deployed'
+                                                      # Order by version and date created in descending order
+                                                      ).order_by('-version', '-date_created'))
