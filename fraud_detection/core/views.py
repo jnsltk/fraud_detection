@@ -9,8 +9,11 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+from core.predictor_singleton import PredictorSingleton
 from .form import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
 import pandas as pd
+
 
 @require_GET
 def home_page(request):
@@ -179,11 +182,12 @@ def detection_result(request):
             'card_type': card_type
         }
 
-
         # Data validation
 
         # Convert input data into a DataFrame
         df = pd.DataFrame([input_data])
+        print("Input shape:", df.shape)
+        
         # Create an in-memory CSV file
         csv_buffer = io.StringIO()
         df.to_csv(csv_buffer, index=False)
@@ -200,19 +204,29 @@ def detection_result(request):
         try:
             print("Start data validation......")
 
+            # Run the validation script
             result = subprocess.run(
                 [anaconda_python, validation_script],
                 input=csv_data,
                 capture_output=True,
                 text=True,
             )
+
+            # Print stderr and stdout for debugging
+            print(f"stderr: {result.stderr}")
+            print(f"stdout: {result.stdout}")
+
             try:
                 # Parse the result
                 output = json.loads(result.stdout)
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON: {e}")
                 print(f"Raw output: {repr(result.stdout)}")
-                return {"status": "error", "message": "Validation script returned invalid or empty output."}
+                return JsonResponse({
+                    "status": "error",
+                    "message": "Validation script returned invalid or empty output."
+                }, status=400)
+            
             # Check the validation result
             if result.returncode != 0:
                 # Extract the invalid fields from the failures
@@ -247,8 +261,20 @@ def detection_result(request):
                 "status": "error", 
                 "message": f"An error occurred during validation: {str(e)}"
             }, status=500)
+
+        # Get the model predictions   
+        try:
+            predictor = PredictorSingleton.get_instance().get_predictor()
+            prediction = predictor.predict(df.values.flatten())
+
+            print("Prediction:", prediction)
             
-            
-         # Get the model predictions   
+        except Exception as e:
+            print(f"Error during prediction: {e}")
+            return JsonResponse({
+                "status": "error", 
+                "message": f"An error occurred during prediction: {str(e)}"
+            }, status=500)
 
     return render(request, 'detection/detection_result.html')
+

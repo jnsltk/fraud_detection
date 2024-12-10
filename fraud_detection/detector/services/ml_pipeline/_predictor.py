@@ -7,6 +7,7 @@ import keras
 import _model
 import json
 import os
+import tempfile
 from dotenv import load_dotenv
 import _explainer
 # Do not import the following when running tests
@@ -77,8 +78,9 @@ class Predictor:
                 self._col_data: dict[str, list[str] | dict[str, float]] = json.load(f)
 
         else:
-            # Load model from database -- only works from within the Django environment,
-            temp_file_path = "/tmp/temp_model.keras"
+            # Load model from database -- ensure works for any environment,
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.keras') as temp_file:
+                temp_file_path = temp_file.name
             try:
                 remote_model = FraudDetectionModel.objects.get(id=int(model_id))
                 with open(temp_file_path, 'wb') as f:
