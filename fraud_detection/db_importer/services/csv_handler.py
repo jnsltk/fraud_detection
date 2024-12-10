@@ -3,6 +3,7 @@ import json
 from io import TextIOWrapper
 from json import JSONDecodeError
 from logging import exception
+import sys
 
 from matplotlib.cbook import flatten
 
@@ -19,7 +20,7 @@ def validate_csv_data(temp_file_path):
     try:
         # Validate the file using the Great Expectations script
         validation_script = os.path.join(project_root, "gx", "scripts", "validate_data.py")
-        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
+        anaconda_python = sys.executable  # Dynamic, works on Windows, Linux, and macOS
 
         # Check whether the file exists
         if not os.path.isfile(temp_file_path):

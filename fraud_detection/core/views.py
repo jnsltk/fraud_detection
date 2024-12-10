@@ -2,6 +2,7 @@ import io
 import json
 import os
 import subprocess
+import sys
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
@@ -149,8 +150,6 @@ def detection_result(request):
         merchant_type = request.POST.get('merchant_type')
         country = request.POST.get('country')
         currency = request.POST.get('currency')
-        # amount = request.POST.get('amount')
-        # Cast amount to float to ensure it passes validation
         try:
             amount = float(request.POST.get('amount', 0))  # Convert amount to float
         except ValueError:
@@ -196,7 +195,8 @@ def detection_result(request):
         validation_script = os.path.join(
             project_root, "gx", "scripts", "validate_data.py"
         )
-        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
+        anaconda_python = sys.executable  # Dynamic, works on Windows, Linux, and macOS
+        
         try:
             print("Start data validation......")
 
@@ -217,7 +217,6 @@ def detection_result(request):
             if result.returncode != 0:
                 # Extract the invalid fields from the failures
                 failed_fields = list(set(failure['column'] for failure in output.get("failures", []) if failure.get('column')))
-                # Join the list of failed field names into a single string, separated by commas
                 failed_fields_message = ', '.join(failed_fields)
 
                 failure_details = "\n".join([
@@ -227,27 +226,29 @@ def detection_result(request):
                     f"Sample Unexpected: {failure['partial_unexpected_list']}"
                     for failure in output.get("failures", [])
                 ])
-                print(f"\033[1;91mData validation failed! Failure details as below:\033[0m") # Log the failure result in red
-                print(f"\033[1;91m{failure_details}\033[0m") # Log the failure details in red
-                
-                # Render the detection_page.html with an error message
-                return render(request, 'detection/detection_page.html', {
-                    "error_message": f"Your input for the following fields is not valid: {failed_fields_message}.<br>Please refill the form with valid input.",
-                })
+                print(f"\033[1;91mData validation failed! Failure details as below:\033[0m")
+                print(f"\033[1;91m{failure_details}\033[0m")
 
+                if request.headers.get('Accept') == 'application/json': 
+                    return JsonResponse({
+                        "status": "error",
+                        "message": output.get("message", "Validation failed."),
+                        "failures": output.get('failures', []),
+                    }, status=400)
+                else:
+                    return render(request, 'detection/detection_page.html', {
+                        "error_message": f"Your input for the following fields is not valid: {failed_fields_message}.<br>Please refill the form with valid input.",
+                    })
             else:            
-                print(f"\033[1;92mValidation succeeded!\033[0m") # Log the successful result in green
+                print(f"\033[1;92mValidation succeeded!\033[0m")
         except Exception as e:
             print(f"Error during validation: {e}")
             return JsonResponse({
                 "status": "error", 
                 "message": f"An error occurred during validation: {str(e)}"
-            }, status=500)  # Return 500 status for server error
+            }, status=500)
+            
+            
+         # Get the model predictions   
 
-
-        # Get the model predictions
-
-
-
-        
     return render(request, 'detection/detection_result.html')
