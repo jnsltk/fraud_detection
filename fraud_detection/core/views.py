@@ -150,7 +150,6 @@ def detection_result(request):
     if request.method == "POST":
         # Get form data
         merchant_category = request.POST.get('merchant_category')
-        merchant_type = request.POST.get('merchant_type')
         country = request.POST.get('country')
         currency = request.POST.get('currency')
         try:
@@ -166,11 +165,16 @@ def detection_result(request):
         weekend_transaction = request.POST.get('weekend_transaction')
         high_risk_merchant = request.POST.get('high_risk_merchant')
         card_type = request.POST.get('card_type')
+        card_present = bool(int(request.POST.get('card_present')))
+        device = request.POST.get('device')
+        channel = request.POST.get('channel')
+        distance_from_home = bool(int(request.POST.get('distance_from_home')))
+        weekend_transaction = bool(int(request.POST.get('weekend_transaction')))
+        print("card_present", card_present)
 
         # Build the data into a dictionary
         input_data = {
             'merchant_category': merchant_category,
-            'merchant_type': merchant_type,
             'country': country,
             'currency': currency,
             'amount': amount,
@@ -179,7 +183,12 @@ def detection_result(request):
             'transaction_hour': transaction_hour,
             'weekend_transaction': weekend_transaction,
             'high_risk_merchant': high_risk_merchant,
-            'card_type': card_type
+            'card_type': card_type,
+            'card_present': card_present,
+            'device': device,
+            'channel': channel,
+            'distance_from_home': distance_from_home,
+            'weekend_transaction': weekend_transaction
         }
 
         # Data validation
@@ -211,10 +220,6 @@ def detection_result(request):
                 capture_output=True,
                 text=True,
             )
-
-            # Print stderr and stdout for debugging
-            print(f"stderr: {result.stderr}")
-            print(f"stdout: {result.stdout}")
 
             try:
                 # Parse the result
@@ -265,6 +270,7 @@ def detection_result(request):
         # Get the model predictions   
         try:
             predictor = PredictorSingleton.get_instance().get_predictor()
+            print("get predictor")
             prediction = predictor.predict(df.values.flatten())
 
             print("Prediction:", prediction)

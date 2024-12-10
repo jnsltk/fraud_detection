@@ -18,23 +18,6 @@
       "type": "expect_column_values_to_be_of_type"
     },
     {
-      "id": "dabd0f38-a4cf-4d61-917e-a7de2df26f1d",
-      "kwargs": {
-        "column": "merchant_type"
-      },
-      "meta": {},
-      "type": "expect_column_values_to_not_be_null"
-    },
-    {
-      "id": "912ec28f-1148-466f-b926-9f8fa08bab45",
-      "kwargs": {
-        "column": "merchant_type",
-        "type_": "str"
-      },
-      "meta": {},
-      "type": "expect_column_values_to_be_of_type"
-    },
-    {
       "id": "7b05e713-328f-4442-8409-6b221b7f3b28",
       "kwargs": {
         "column": "country"
@@ -93,6 +76,108 @@
       },
       "meta": {},
       "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "7cb7e94c-b8e9-49de-b40f-bcdb331dfc60",
+      "kwargs": {
+        "column": "card_type"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "34568ad0-0905-448d-8813-c49d5b2de38c",
+      "kwargs": {
+        "column": "card_type",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "bc7fba4c-7c00-44a9-b072-e53f9ac80a64",
+      "kwargs": {
+        "column": "card_present"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "4fd2f431-581a-4007-8e31-79c57961f583",
+      "kwargs": {
+        "column": "card_present",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "0852136f-2547-4e23-8e86-71329aa56fcc",
+      "kwargs": {
+        "column": "device"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "b9c321d9-35f8-4190-a0b3-af662dc3ee0f",
+      "kwargs": {
+        "column": "device",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "70eaa729-61b0-44e1-8c78-141226748ab9",
+      "kwargs": {
+        "column": "channel"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "f6d1e230-312d-4a34-b18f-85da277999a2",
+      "kwargs": {
+        "column": "channel",
+        "type_": "str"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "4c5914fa-4245-4942-96f1-4a02a3701caa",
+      "kwargs": {
+        "column": "distance_from_home"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "cadbf891-b224-4958-a673-91a264d04f87",
+      "kwargs": {
+        "column": "distance_from_home",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
+    },
+    {
+      "id": "c2ba101d-4781-4a56-b6e1-83d1bb39a8d5",
+      "kwargs": {
+        "column": "weekend_transaction"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "56d6e837-c5d8-4086-9a77-18acd84027b0",
+      "kwargs": {
+        "column": "weekend_transaction",
+        "type_": "bool"
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_of_type"
     }
   ],
   "id": "9f2b12ca-fa75-4326-afbd-b84f064b104a",
