@@ -91,10 +91,11 @@ build_docker_image:
     # Logs in to the GitLab Container Registry using standard environment variables
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     # Buildes the image for right platform
-    - DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
-      -t "$CI_REGISTRY_IMAGE/backend:latest" \
-      --build-arg VERSION_TAG=${LATEST_MODEL_VERSION} \
-      -f ./fraud_detection/dockerfile .
+    - |
+      DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
+        -t "$CI_REGISTRY_IMAGE/backend:latest" \
+        --build-arg VERSION_TAG=${LATEST_MODEL_VERSION} \
+        -f ./fraud_detection/dockerfile .
     # Pushes the image to the GitLab Container Registry
     - docker push "$CI_REGISTRY_IMAGE/backend:latest"
   # rules:
