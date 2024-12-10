@@ -15,6 +15,9 @@ from core.predictor_singleton import PredictorSingleton
 from detector.models import FraudDetectionModel
 from dashboard.forms import NewModelForm
 from detector.services.ml_pipeline import make_model
+import os
+
+VERSION_TAG = os.environ.get('VERSION_TAG')
 
 # Define the size of the dataset to use for training
 SAMPLE_SIZE = 50000
@@ -62,6 +65,10 @@ def manage_models(request):
                 highest_version = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
                 version_num = highest_version.get('max_version')
                 version_bump = f"v{round(float(version_num[1:]) + 0.1, 2)}"
+
+                # Prevent training when not the latest version
+                if int(version_num.split('.')[0][1:]) > int(VERSION_TAG.split('.')[0]):
+                    raise Exception("Can't train a model right now, try reloading the page")
 
                 # Save the model to a temporary file
                 result.model.save(temp_file_path)
@@ -147,6 +154,16 @@ def deploy_model(request):
     # Get the id of the model to deploy from the POST request
     selected_model_id = request.POST.get('deploy_id')
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
+    major_model_version = selected_model.version.split('.')[0][1:]
+
+    # Check if the model version is compatible with the software version
+    if major_model_version != VERSION_TAG.split('.')[0]:
+        context = {
+            'models': load_models(),
+            'desc': 'Uh oh, something went wrong.',
+            'message': f'You can not select model versions starting with {major_model_version}.X'
+        }
+        return render(request, 'dashboard/train_model_result.html', context=context)
 
     # Create new predictor instance with selected model
     if selected_model_id is not None:

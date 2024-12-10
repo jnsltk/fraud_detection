@@ -31,6 +31,15 @@ class Command(BaseCommand):
             self.create_model(f'v{new_major_version}.0')
 
     def create_model(self, version):
+
+        # If there is a deployed model, undeploy it
+        try:
+            deployed_model = FraudDetectionModel.objects.get(is_deployed=True)
+            deployed_model.is_deployed = False
+            deployed_model.save()
+        except FraudDetectionModel.DoesNotExist:
+            print('No deployed model found')
+
         temp_file_path = "/tmp/tmp_model.keras"
 
         # Call the make_model function from the ml_pipeline service
@@ -54,5 +63,5 @@ class Command(BaseCommand):
                                     detailed_performance=result.test_result,
                                     metadata=result.metadata,
                                     model_file=model_bin,
-                                    is_deployed=False)
+                                    is_deployed=True)
         model.save()

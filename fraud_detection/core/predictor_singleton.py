@@ -1,5 +1,8 @@
 from detector.models import FraudDetectionModel
 from detector.services.ml_pipeline import Predictor
+import os
+
+VERSION_TAG = os.environ.get('VERSION_TAG')
 
 
 class PredictorSingleton:
@@ -23,12 +26,19 @@ class PredictorSingleton:
     def get_instance(cls) -> 'PredictorSingleton':
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
-            try:
-                model_id = FraudDetectionModel.objects.get(is_deployed=True).id,
-                cls._instance._predictor = Predictor(model_id=str(model_id[0]))
-            except FraudDetectionModel.DoesNotExist:
+
+            model_data = FraudDetectionModel.objects.filter(is_deployed=True).values('version', 'id').first()
+
+            if model_data is None:
                 print("No model is deployed")
                 cls._instance._predictor = None
+
+            elif model_data['version'].split('.')[0][1:] != VERSION_TAG.split('.')[0]:
+                print("Model version does not match software version")
+                cls._instance._predictor = None
+
+            else:
+                cls._instance._predictor = Predictor(model_id=str(model_data['id']))
 
         return cls._instance
 
