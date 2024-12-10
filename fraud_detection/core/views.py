@@ -2,6 +2,7 @@ import io
 import json
 import os
 import subprocess
+import sys
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
@@ -194,7 +195,8 @@ def detection_result(request):
         validation_script = os.path.join(
             project_root, "gx", "scripts", "validate_data.py"
         )
-        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
+        anaconda_python = sys.executable  # Dynamic, works on Windows, Linux, and macOS
+        
         try:
             print("Start data validation......")
 
