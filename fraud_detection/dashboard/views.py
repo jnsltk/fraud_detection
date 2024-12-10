@@ -1,6 +1,4 @@
-import json
 import os
-import time
 
 from datetime import date, datetime
 from django.contrib.admin.views.decorators import staff_member_required
@@ -15,10 +13,10 @@ from django.db.models import Max
 
 from detector.models import FraudDetectionModel
 from dashboard.forms import NewModelForm
-from detector.services.ml_pipeline import make_model, SAVE_MODEL_FILE
+from detector.services.ml_pipeline import make_model
 
 # Define the size of the dataset to use for training
-SAMPLE_SIZE = 20000
+SAMPLE_SIZE = 50000
 
 
 @login_required
@@ -40,8 +38,7 @@ def index(request):
 @require_http_methods(['GET', 'POST'])
 def manage_models(request):
     """
-        View to show and train models. Incomplete for now, will be updated with
-        model training pipeline.
+        View to show and train models.
     """
 
     # Define context to pass to the template
@@ -58,14 +55,14 @@ def manage_models(request):
             temp_file_path = "/tmp/tmp_model.keras"
             try:
                 # Call the make_model function from the ml_pipeline service
-                result = make_model(start_data_date=datetime(start_date.year, start_date.month, start_date.day),
-                                    end_data_date=datetime(end_date.year, end_date.month, end_date.day),
+                result = make_model(start_data_date=start_date,
+                                    end_data_date=end_date,
                                     sample_size=SAMPLE_SIZE)
 
                 # Bump up model version
                 highest_version = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
                 version_num = highest_version.get('max_version')
-                version_bump = f"v{round(float(version_num[1:-6]) + 0.1, 2)}"
+                version_bump = f"v{round(float(version_num[1:]) + 0.1, 2)}"
 
                 # Save the model to a temporary file
                 result.model.save(temp_file_path)

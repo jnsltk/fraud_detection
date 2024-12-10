@@ -9,6 +9,9 @@ import json
 import os
 from dotenv import load_dotenv
 import _explainer
+# Do not import the following when running tests
+if __name__ != '__main__':
+    from detector.models import FraudDetectionModel
 
 # -------------------- SETUP FEATURE FLAGS ------------------- #
 
@@ -54,7 +57,6 @@ class Predictor:
         # Returns the prediction
         return Prediction(probability=probability, is_fraud=is_fraud, reasons=reasons)
 
-
     def __init__(self, model_id: str, model: keras.Model = None, metadata: dict = None):
         if model is not None and metadata is not None:
             self._model = model
@@ -75,7 +77,19 @@ class Predictor:
                 self._col_data: dict[str, list[str] | dict[str, float]] = json.load(f)
 
         else:
-            raise NotImplementedError('Remote model loading not implemented yet :(')
+            # Load model from database -- only works from within the Django environment,
+            temp_file_path = "/tmp/temp_model.keras"
+            try:
+                remote_model = FraudDetectionModel.objects.get(id=int(model_id))
+                with open(temp_file_path, 'wb') as f:
+                    f.write(remote_model.model_file)
+                self._model: keras.Model = load_model(temp_file_path)
+                self._col_data: dict[str, list[str] | dict[str, float]] = remote_model.metadata
+            except Exception as e:
+                raise Exception(f'Failed to load model from database: {e}')
+            finally:
+                if os.path.isfile(temp_file_path):
+                    os.remove(temp_file_path)
 
 
     # Note - Ideally the explainer should be loaded from the database, but the library is immature and 
@@ -89,7 +103,8 @@ class Predictor:
 
 
 if __name__ == '__main__':
-
+    # For testing always use local model
+    USE_LOCAL_MODEL = 1
     df = _data_loader.load_data(sample_size=10)
 
     predictor = Predictor(model_id='1')
