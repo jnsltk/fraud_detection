@@ -8,9 +8,9 @@ class PredictorSingleton:
         and will return the same instance every time it is called. It can also change the model used by the predictor,
         by replacing the current predictor with a new one. On initialization, it will try to load the deployed model.
 
-        Usage:
+        Example usage:
         predictor = PredictorSingleton.get_instance().get_predictor()
-        prediction = predictor.predict(input)
+        prediction = predictor.predict(input) # See the Predictor class for more details
 
     """
     _instance: 'PredictorSingleton' = None
@@ -32,8 +32,8 @@ class PredictorSingleton:
 
         return cls._instance
 
-    def change_model(self, model_id: int) -> Predictor:
-        self._predictor = Predictor(model_id=str(model_id))
+    def change_model(self, model_id: str) -> Predictor:
+        self._predictor = Predictor(model_id=model_id)
         return self._predictor
 
     def get_predictor(self) -> Predictor:

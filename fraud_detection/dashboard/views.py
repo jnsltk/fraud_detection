@@ -11,6 +11,7 @@ from django.db.models.functions import Concat
 from django.db.models import Value
 from django.db.models import Max
 
+from core.predictor_singleton import PredictorSingleton
 from detector.models import FraudDetectionModel
 from dashboard.forms import NewModelForm
 from detector.services.ml_pipeline import make_model
@@ -153,7 +154,14 @@ def deploy_model(request):
     # Get the id of the model to deploy from the POST request
     selected_model_id = request.POST.get('deploy_id')
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
-    # Check if there is already a deployed model
+
+    # Create new predictor instance with selected model
+    if selected_model_id is not None:
+        PredictorSingleton.get_instance().change_model(selected_model_id)
+    else:
+        # Should never happen
+        raise Exception("Invalid HTML request")
+    # Change the is_deployed flag for the selected model and update the database
     try:
         deployed_model = FraudDetectionModel.objects.get(is_deployed=True)
         if deployed_model != selected_model:
