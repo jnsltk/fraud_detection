@@ -23,7 +23,7 @@
 
             <!-- Merchant Category -->
             <div class="flex flex-col">
-                <label for="merchant_category" class="text-lg font-medium text-white">
+                <label for="merchant_category" class="text-lg font-medium text-white" title="General category of the merchant (e.g., Retail, Grocery, Travel)">
                     Merchant Category:
                 </label>
                 <select id="merchant_category" name="merchant_category" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
@@ -42,7 +42,7 @@
 
             <!-- Merchant Type -->
             <div class="flex flex-col">
-                <label for="merchant_type" class="text-lg font-medium text-white">
+                <label for="merchant_type" class="text-lg font-medium text-white" title="Specific type within the merchant category (e.g., 'online' for Retail)">
                     Merchant Type:
                 </label>
                 <select id="merchant_type" name="merchant_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
@@ -66,7 +66,7 @@
 
             <!-- Country -->
             <div class="flex flex-col">
-                <label for="country" class="text-lg font-medium text-white">
+                <label for="country" class="text-lg font-medium text-white" title="Country where the transaction occurred">
                     Country:
                 </label>
                 <select id="country" name="country" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
@@ -88,7 +88,7 @@
 
             <!-- Currency -->
             <div class="flex flex-col">
-                <label for="currency" class="text-lg font-medium text-white">
+                <label for="currency" class="text-lg font-medium text-white" title="Currency used for the transaction (e.g., USD, EUR, JPY)">
                     Currency:
                 </label>
                 <select id="currency" name="currency" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
@@ -110,7 +110,7 @@
             <!-- Amount -->
             <div class="flex flex-col">
                 <div class="flex items-center">
-                    <label for="amount" class="text-lg font-medium text-white mr-2">
+                    <label for="amount" class="text-lg font-medium text-white mr-2" title="Transaction amount (currency based on the country)">
                         Amount:
                     </label>
                     <!-- Hint text for equivalent amount in Euro -->
@@ -130,7 +130,7 @@
 
             <!-- City Size -->
             <div class="flex flex-col">
-                <label for="city_size" class="text-lg font-medium text-white">
+                <label for="city_size" class="text-lg font-medium text-white" title="Size of the city (e.g., medium, large)">
                     City Size:
                 </label>
                 <select id="city_size" name="city_size" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
@@ -142,7 +142,7 @@
 
             <!-- Distance From Home -->
             <div class="flex flex-col">
-                <label for="distance_from_home" class="text-lg font-medium text-white">
+                <label for="distance_from_home" class="text-lg font-medium text-white" title="Indicates if the transaction occurred outside the customer's home country">
                     Distance From Home:
                 </label>
                 <select 
@@ -158,7 +158,7 @@
 
             <!-- Transaction Hour -->
             <div class="flex flex-col">
-                <label for="transaction_hour" class="text-lg font-medium text-white">
+                <label for="transaction_hour" class="text-lg font-medium text-white" title="Hour of the day when the transaction was made">
                     Transaction Date and Time:
                 </label>
                 <input 
@@ -172,7 +172,7 @@
 
             <!-- Weekend Transaction -->
             <div class="flex flex-col">
-                <label for="weekend_transaction" class="text-lg font-medium text-white">
+                <label for="weekend_transaction" class="text-lg font-medium text-white" title="Indicates if the transaction took place on a weekend">
                     Is this a Weekend Transaction?
                 </label>
                 <select 
@@ -188,7 +188,7 @@
 
             <!-- High Risk Merchant -->
             <div class="flex flex-col">
-                <label for="high_risk_merchant" class="text-lg font-medium text-white">
+                <label for="high_risk_merchant" class="text-lg font-medium text-white" title="Indicates if the merchant category is known for higher fraud risk (e.g., Travel, Entertainment)">
                     Is this Merchant High Risk?
                 </label>
                 <select 
@@ -204,7 +204,7 @@
 
             <!-- Card Type -->
             <div class="flex flex-col">
-                <label for="card_type" class="text-lg font-medium text-white">
+                <label for="card_type" class="text-lg font-medium text-white" title="Type of card used (e.g., Basic Credit, Gold Credit)">
                     Card Type:
                 </label>
                 <select id="card_type" name="card_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
