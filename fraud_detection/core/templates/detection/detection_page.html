@@ -40,30 +40,6 @@
                 </select>
             </div>
 
-            <!-- Merchant Type -->
-            <div class="flex flex-col">
-                <label for="merchant_type" class="text-lg font-medium text-white" title="Specific type within the merchant category (e.g., 'online' for Retail)">
-                    Merchant Type:
-                </label>
-                <select id="merchant_type" name="merchant_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Merchant Type</option>
-                    <option value="airlines">Airlines</option>
-                    <option value="events">Events</option>
-                    <option value="fast_food">Fast Food</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="hotels">Hotels</option>
-                    <option value="local">Local</option>
-                    <option value="major">Major</option>
-                    <option value="medical">Medical</option>
-                    <option value="online">Online</option>
-                    <option value="pharmacy">Pharmacy</option>
-                    <option value="physical">Physical</option>
-                    <option value="premium">Premium</option>
-                    <option value="supplies">Supplies</option>
-                    <option value="Unknown">Other</option>
-                </select>
-            </div>
-
             <!-- Country -->
             <div class="flex flex-col">
                 <label for="country" class="text-lg font-medium text-white" title="Country where the transaction occurred">
@@ -83,6 +59,22 @@
                     <option value="Singapore">Singapore</option>
                     <option value="UK">UK</option>
                     <option value="Unknown">Other</option>
+                </select>
+            </div>
+
+            <!-- Weekend Transaction -->
+            <div class="flex flex-col">
+                <label for="weekend_transaction" class="text-lg font-medium text-white" title="Indicates if the transaction took place on a weekend">
+                    Is this a Weekend Transaction?
+                </label>
+                <select 
+                    id="weekend_transaction" 
+                    name="weekend_transaction" 
+                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
+                    required>
+                    <option value="" disabled selected>Select Yes or No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
                 </select>
             </div>
 
@@ -128,15 +120,78 @@
                     required />
             </div>
 
-            <!-- City Size -->
+            <!-- Transaction Hour -->
             <div class="flex flex-col">
-                <label for="city_size" class="text-lg font-medium text-white" title="Size of the city (e.g., medium, large)">
-                    City Size:
+                <label for="transaction_hour" class="text-lg font-medium text-white" title="Hour of the day when the transaction was made">
+                    Transaction Date and Time:
                 </label>
-                <select id="city_size" name="city_size" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select City Size</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
+                <input 
+                    type="datetime-local" 
+                    id="transaction_hour" 
+                    name="transaction_hour" 
+                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
+                    placeholder="Select date and time" 
+                    required>
+            </div>
+
+            <!-- Channel -->
+            <div class="flex flex-col">
+                <label for="channel" class="text-lg font-medium text-white" title="Type of channel used for the transaction (web, mobile, POS).">
+                    Channel:
+                </label>
+                <select id="channel" name="channel" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="mobile">Mobile</option>
+                    <option value="web">Web</option>
+                    <option value="pos">POS</option>
+                    <option value="Unknown">Other</option>
+                </select>
+            </div>
+
+            <!-- Card Type -->
+            <div class="flex flex-col">
+                <label for="card_type" class="text-lg font-medium text-white" title="Type of card used (e.g., Basic Credit, Gold Credit)">
+                    Card Type:
+                </label>
+                <select id="card_type" name="card_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Card Type</option>
+                    <option value="Basic Credit">Basic Credit</option>
+                    <option value="Basic Debit">Basic Debit</option>
+                    <option value="Gold Credit">Gold Credit</option>
+                    <option value="Platinum Credit">Platinum Credit</option>
+                    <option value="Premium Debit">Premium Debit</option>
+                    <option value="Unknown">Other</option>
+                </select>
+            </div>
+
+            <!-- Card Present -->
+            <div class="flex flex-col">
+                <label for="card_present" class="text-lg font-medium text-white" title="Indicates if the card was physically present during the transaction (used in POS transactions).">
+                    Card Present:
+                </label>
+                <select id="card_present" name="card_present" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Yes or No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <!-- Device -->
+            <div class="flex flex-col">
+                <label for="device" class="text-lg font-medium text-white" title="Device used for the transaction (e.g., Chrome, iOS App, NFC Payment).">
+                    Device:
+                </label>
+                <select id="device" name="device" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
+                    <option value="" disabled selected>Select Device</option>
+                    <option value="Android App">Android App</option>
+                    <option value="Chip Reader">Chip Reader</option>
+                    <option value="Chrome">Chrome</option>
+                    <option value="Edge">Edge</option>
+                    <option value="Firefox">Firefox</option>
+                    <option value="iOS App">iOS App</option>
+                    <option value="Magnetic Stripe">Magnetic Stripe</option>
+                    <option value="NFC Payment">NFC Payment</option>
+                    <option value="Safari">Safari</option>
+                    <option value="Unknown">Other</option>
                 </select>
             </div>
 
@@ -156,68 +211,6 @@
                 </select>
             </div>
 
-            <!-- Transaction Hour -->
-            <div class="flex flex-col">
-                <label for="transaction_hour" class="text-lg font-medium text-white" title="Hour of the day when the transaction was made">
-                    Transaction Date and Time:
-                </label>
-                <input 
-                    type="datetime-local" 
-                    id="transaction_hour" 
-                    name="transaction_hour" 
-                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
-                    placeholder="Select date and time" 
-                    required>
-            </div>
-
-            <!-- Weekend Transaction -->
-            <div class="flex flex-col">
-                <label for="weekend_transaction" class="text-lg font-medium text-white" title="Indicates if the transaction took place on a weekend">
-                    Is this a Weekend Transaction?
-                </label>
-                <select 
-                    id="weekend_transaction" 
-                    name="weekend_transaction" 
-                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
-                    required>
-                    <option value="" disabled selected>Select Yes or No</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-
-            <!-- High Risk Merchant -->
-            <div class="flex flex-col">
-                <label for="high_risk_merchant" class="text-lg font-medium text-white" title="Indicates if the merchant category is known for higher fraud risk (e.g., Travel, Entertainment)">
-                    Is this Merchant High Risk?
-                </label>
-                <select 
-                    id="high_risk_merchant" 
-                    name="high_risk_merchant" 
-                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
-                    required>
-                    <option value="" disabled selected>Select Yes or No</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-
-            <!-- Card Type -->
-            <div class="flex flex-col">
-                <label for="card_type" class="text-lg font-medium text-white" title="Type of card used (e.g., Basic Credit, Gold Credit)">
-                    Card Type:
-                </label>
-                <select id="card_type" name="card_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Card Type</option>
-                    <option value="Basic Credit">Basic Credit</option>
-                    <option value="Basic Debit">Basic Debit</option>
-                    <option value="Gold Credit">Gold Credit</option>
-                    <option value="Platinum Credit">Platinum Credit</option>
-                    <option value="Premium Debit">Premium Debit</option>
-                    <option value="Unknown">Other</option>
-                </select>
-            </div>
-            
         </div>
 
         <!-- Submit Button -->
