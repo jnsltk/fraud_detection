@@ -132,7 +132,7 @@ We talked about breaking down the tasks needed for the development of the front-
 - Janos will be working on the admin dashbord and all pages that the admin shall have access to like training the model, uploading data, and deploying a model. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/13)
 - Omid will be working on the front-end development of the landing page, the register page, and the login page. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/7)
 - Victoria will integate data validation with the back-end, so that when admin upload data, they are validated before being uploaded to the database. This is done as part of the data validation task.
-- Yingchao will be working on the front-end development of the fraud dectatio page where noraml users can use the model to see if a certian transaction is fraudulent or not.
+- Yingchao will be working on the front-end development of the fraud dectation page where noraml users can use the model to see if a certian transaction is fraudulent or not.
 - Henrik will be working on setting up the ML_pipeline and explainable AI. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/14)
 
 **Notes**: The deadline for the tasks are included in the issues.
@@ -160,3 +160,23 @@ We talked about integration of the code and how we can train the model on aserve
 # Meeting Eight (2024-12-06):
 
 [System state](assets/sys_2024-12-06.jpg)
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+Th eteam is on track with tasks. We talked about some bugs that we have in our code base. For example, the pipeline is timing ot due to the fact that environment takes so long to be built. We came up with samll tasks to do for the upcoming week.
+
+### Tasks
+
+- Henrik will automate model training on app deployment. so that whenever a new model codebase is detected. a new model is trained when the app is deployed and saved in the database. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/22)
+- Victori will work on user actions page input validation. When an Active user uses the detector page and want to know if a transaction is fraudulent, their input needs to be validated. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/21)
+- Yingchao will keep working on the front-end development of the fraud dectation page where noraml users can use the model to see if a certian transaction is fraudulent or not.
+- Janos will be working on model selection functionality, where the admin can select the model that will be used for fraud detection and they can also retain the model. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/17)
+- Omid will be working on fixing the pipline timing out issue. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/25). He will also work on creating documentation of the ML pipeline and the whole app. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/23)
+
+**Notes**: These tasks are to be done by **2024-12-13**

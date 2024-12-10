@@ -19,7 +19,9 @@ from sklearn.metrics import confusion_matrix
 
 # Keras
 import keras
+# noinspection PyUnresolvedReferences
 from keras.models import Sequential
+# noinspection PyUnresolvedReferences
 from keras.layers import Dense, Dropout
 
 # -------------------------- CLASSES ------------------------- #

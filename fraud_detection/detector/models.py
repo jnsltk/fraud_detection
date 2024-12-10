@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.timezone import now  # Import now for default timestamps
+from django.contrib.auth.models import User
+
 
 class Transaction(models.Model):
     transaction_id = models.CharField(max_length=20, primary_key=True)
@@ -31,3 +33,18 @@ class Transaction(models.Model):
     v_max_single_amount = models.DecimalField(max_digits=50, decimal_places=20, null=True, blank=True)
     is_fraud = models.BooleanField()
     version_date = models.DateTimeField(default=now) # Field for versioning
+
+
+class FraudDetectionModel(models.Model):
+    version = models.CharField(max_length=50)
+    date_created = models.DateField()
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='fraud_models')
+    dataset_size = models.IntegerField()
+    training_data_start_date = models.DateField()
+    training_data_end_date = models.DateField()
+    score = models.DecimalField(max_digits=10, decimal_places=2)
+    detailed_performance = models.JSONField()
+    metadata = models.JSONField()
+    model_file = models.BinaryField()
+    is_deployed = models.BooleanField()
+
