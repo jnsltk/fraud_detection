@@ -26,7 +26,7 @@ COPY environment.yml /fraud_detection//environment_raw.yml
 RUN grep -v "libgfortran" environment_raw.yml > environment.yml
 
 RUN conda install -n base -c conda-forge mamba
-RUN mamba env create -f environment.yml
+RUN mamba env create -v -f environment.yml
 
 # --------------------- SETUP FOR RUNNING -------------------- #
 
