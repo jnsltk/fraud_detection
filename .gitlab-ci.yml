@@ -23,15 +23,11 @@ env_test:
     - docker
   script:
     - |
-      if grep -q "jupyter" environment.yml || \
-          grep -q "notebook" environment.yml || \
-          grep -q "nbformat" environment.yml || \
-          grep -q "nbclient" environment.yml || \
-          grep -q "nbconvert" environment.yml; then
-        echo "Jupyter libraries should not be here because it becomes too slow";
-        exit 1;
-      else
+      if grep -q "ID-986429187489" environment.yml; then
         echo "No problems found";
+      else
+        echo "Changes to the environment.yml need to be done manually, else resolving it will be to slow";
+        exit 1;
       fi
 # --------------------------- build -------------------------- #
 # NOTE - inspired by https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html

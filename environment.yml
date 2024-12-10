@@ -1,3 +1,4 @@
+# NOTE - All future changes need to be made manually! (ID-986429187489)
 name: prj
 channels:
   - conda-forge
@@ -189,6 +190,7 @@ dependencies:
   - zipp=3.21.0
   - zlib=1.2.13
   - zstandard=0.23.0
+  - psycopg2
   - zstd=1.5.6
   - pip:
       - currencyconverter==0.17.34

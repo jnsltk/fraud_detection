@@ -10,6 +10,7 @@ from detector.models import Transaction
 import subprocess
 import os
 import detector.services.ml_pipeline.added_features as added_features
+import sys
 
 
 # ------------------------------ Data Validation ----------------------------- #
@@ -19,7 +20,7 @@ def validate_csv_data(temp_file_path):
     try:
         # Validate the file using the Great Expectations script
         validation_script = os.path.join(project_root, "gx", "scripts", "validate_data.py")
-        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
+        anaconda_python = sys.executable
 
         # Check whether the file exists
         if not os.path.isfile(temp_file_path):
