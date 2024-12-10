@@ -9,7 +9,7 @@
     <p class="text-center text-lg">Enter transaction details below to check for potential fraud.</p>
     
     <!-- Fraud Detection Form -->
-    <form action="{% url 'core/detection_result' %}" method="post" class="flex flex-col items-center space-y-16 w-4/5 max-w-6xl">
+    <form action="{% url 'core/detection_result' %}" method="post" class="flex flex-col items-center space-y-20 w-4/5 max-w-6xl">
         {% csrf_token %}
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-36 gap-y-16 w-full">
@@ -107,11 +107,7 @@
                         Amount:
                     </label>
                     <!-- Hint text for equivalent amount in Euro -->
-<<<<<<< HEAD
                     <span id="currency-hint" class="text-xs text-white mt-1 hidden">
-=======
-                    <span id="currency-hint" class="text-xs font-bold text-white mt-1 hidden">
->>>>>>> fe0a793 (#16 Add a text hint if the user selects Other/Unknown for currency)
                         Enter the equivalent amount in euro
                     </span>
                 </div>
