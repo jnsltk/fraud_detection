@@ -8,9 +8,9 @@ variables:
 
 stages:
   - pre-build-check
+  - versioning
   - build
   - test
-  - versioning
   - deploy
 
 # =========================== JOBS =========================== #
@@ -30,32 +30,6 @@ env_test:
         echo "Changes to the environment.yml need to be done manually, else resolving it will be to slow";
         exit 1;
       fi
-
-# --------------------------- build -------------------------- #
-
-# NOTE - inspired by https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html
-build_docker_image:
-  stage: build
-  image: docker:latest
-  tags:
-    - docker-build # Tag for gitlab-runner that can build images
-  services:
-    - docker:dind # dind service for building the image in the runners container
-  script:
-    # Logs in to the GitLab Container Registry using standard environment variables
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    # Buildes the image for right platform
-    - DOCKER_BUILDKIT=1 docker build --platform linux/amd64 -t "$CI_REGISTRY_IMAGE/backend:latest" -f ./fraud_detection/dockerfile .
-    # Pushes the image to the GitLab Container Registry
-    - docker push "$CI_REGISTRY_IMAGE/backend:latest"
-  rules:
-    # Only runs for pushes to main
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      # ... and if the fraud_detection folder has changed
-      changes:
-        - fraud_detection/**
-        - gx/**
-    - when: never
 
 # -------------------------- version ------------------------- #
 
@@ -103,6 +77,35 @@ version_new_model:
            --data "ref=${CI_COMMIT_BRANCH}" \
            --data "message=New model version: ${UPDATED_VERSION}"
 
+# --------------------------- build -------------------------- #
+
+# NOTE - inspired by https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html
+build_docker_image:
+  stage: build
+  image: docker:latest
+  tags:
+    - docker-build # Tag for gitlab-runner that can build images
+  services:
+    - docker:dind # dind service for building the image in the runners container
+  script:
+    # Logs in to the GitLab Container Registry using standard environment variables
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    # Buildes the image for right platform
+    - DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
+      -t "$CI_REGISTRY_IMAGE/backend:latest" \
+      --build-arg VERSION_TAG=${LATEST_MODEL_VERSION} \
+      -f ./fraud_detection/dockerfile .
+    # Pushes the image to the GitLab Container Registry
+    - docker push "$CI_REGISTRY_IMAGE/backend:latest"
+  # rules:
+  #   # Only runs for pushes to main
+  #   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  #     # ... and if the fraud_detection folder has changed
+  #     changes:
+  #       - fraud_detection/**
+  #       - gx/**
+  #   - when: never
+
 # -------------------------- deploy -------------------------- #
 
 deploy_to_k8s:
@@ -121,12 +124,12 @@ deploy_to_k8s:
     # so it will freeze, which is just awesome. This causes a tiny amount of downtime, no big deal.
     - kubectl delete pods -l app=backend
 
-  rules:
-    # Only runs for pushes to main
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      # ... and if the fraud_detection folder or the deployment configuration has changed
-      changes:
-        - fraud_detection/**
-        - gx/**
-        - deployment.yml
-    - when: never
+  # rules:
+  #   # Only runs for pushes to main
+  #   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  #     # ... and if the fraud_detection folder or the deployment configuration has changed
+  #     changes:
+  #       - fraud_detection/**
+  #       - gx/**
+  #       - deployment.yml
+  #   - when: never
