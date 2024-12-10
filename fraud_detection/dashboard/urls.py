@@ -10,5 +10,7 @@ urlpatterns = [
 # Htmx related urls
 urlpatterns += [
     path('train_model_form', views.train_model_form, name='train_model_form'),
-    path('dismiss_model_form', views.cancel_model_form, name='cancel_model_form')
+    path('dismiss_modal', views.dismiss_modal, name='dismiss_modal'),
+    path('deploy_model', views.deploy_model, name='deploy_model'),
+    path('delete_model', views.delete_model, name='delete_model')
 ]
