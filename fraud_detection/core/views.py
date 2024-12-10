@@ -2,11 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 from django.contrib.auth.models import User
 from .form import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
-
 
 
 @require_GET
