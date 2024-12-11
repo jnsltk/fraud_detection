@@ -7,12 +7,29 @@ variables:
 # ========================== STAGES ========================== #
 
 stages:
+  - pre-build-check
   - build
   - test
   - versioning
   - deploy
 
 # =========================== JOBS =========================== #
+
+# --------------------------- pre-build-check --------------------------- #
+
+# Checks that the environment.yml was manually updated
+env_test:
+  stage: pre-build-check
+  tags:
+    - docker
+  script:
+    - |
+      if grep -q "ID-986429187489" environment.yml; then
+        echo "No problems found";
+      else
+        echo "Changes to the environment.yml need to be done manually, else resolving it will be to slow";
+        exit 1;
+      fi
 
 # --------------------------- build -------------------------- #
 
@@ -28,7 +45,7 @@ build_docker_image:
     # Logs in to the GitLab Container Registry using standard environment variables
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     # Buildes the image for right platform
-    - docker build --platform linux/amd64 -t "$CI_REGISTRY_IMAGE/backend:latest" -f ./fraud_detection/dockerfile .
+    - DOCKER_BUILDKIT=1 docker build --platform linux/amd64 -t "$CI_REGISTRY_IMAGE/backend:latest" -f ./fraud_detection/dockerfile .
     # Pushes the image to the GitLab Container Registry
     - docker push "$CI_REGISTRY_IMAGE/backend:latest"
   rules:

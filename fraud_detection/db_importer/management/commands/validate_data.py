@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 import subprocess
 import os
 from django.conf import settings
+import sys
 
 
 class Command(BaseCommand):
@@ -9,14 +10,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Define the path to the Anaconda Python interpreter
-        anaconda_python = "/opt/anaconda3/envs/prj/bin/python"
+        anaconda_python = sys.executable
         # Moves up one level
-        project_root = os.path.dirname(settings.BASE_DIR)  
-        validation_script = os.path.join(
-            project_root, "great_expectations", "scripts", "validate_data.py"
-        )
+        project_root = os.path.dirname(settings.BASE_DIR)
+        validation_script = os.path.join(project_root, "great_expectations", "scripts", "validate_data.py")
         # Change the working directory to the project root
-        os.chdir(project_root)  
+        os.chdir(project_root)
 
         # Run the validation script using subprocess
         try:
