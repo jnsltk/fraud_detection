@@ -29,6 +29,14 @@ spec:
                 secretKeyRef:
                   name: db-credentials
                   key: DB_PASSWORD
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
 
 ---
 apiVersion: v1

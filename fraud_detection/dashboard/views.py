@@ -15,6 +15,8 @@ from core.predictor_singleton import PredictorSingleton
 from detector.models import FraudDetectionModel
 from dashboard.forms import NewModelForm
 from detector.services.ml_pipeline import make_model
+import os
+from detector.services.compatibility_check import is_sw_up_to_date, is_same_model_and_sw_version, MAJOR_TAG_VERSION
 
 # Define the size of the dataset to use for training
 SAMPLE_SIZE = 50000
@@ -55,13 +57,21 @@ def manage_models(request):
 
             temp_file_path = "/tmp/tmp_model.keras"
             try:
-                # Call the make_model function from the ml_pipeline service
-                result = make_model(start_data_date=start_date, end_data_date=end_date, sample_size=SAMPLE_SIZE)
-
                 # Bump up model version
                 highest_version = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
                 version_num = highest_version.get('max_version')
                 version_bump = f"v{round(float(version_num[1:]) + 0.1, 2)}"
+
+                # Prevent training when not the latest version of software
+                if not is_sw_up_to_date(version_num):
+                    raise Exception("Can't train a model right now, try reloading the page")
+
+                # Update version_bump if software is newer than model
+                if not is_same_model_and_sw_version(version_num):
+                    version_bump = f"v{round(float(MAJOR_TAG_VERSION), 2)}"
+
+                # Call the make_model function from the ml_pipeline service
+                result = make_model(start_data_date=start_date, end_data_date=end_date, sample_size=SAMPLE_SIZE)
 
                 # Save the model to a temporary file
                 result.model.save(temp_file_path)
@@ -147,6 +157,16 @@ def deploy_model(request):
     # Get the id of the model to deploy from the POST request
     selected_model_id = request.POST.get('deploy_id')
     selected_model = FraudDetectionModel.objects.get(id=selected_model_id)
+    major_model_version = selected_model.version.split('.')[0][1:]
+
+    # Check if the model version is compatible with the software version
+    if not is_same_model_and_sw_version(selected_model.version):
+        context = {
+            'models': load_models(),
+            'desc': 'Uh oh, something went wrong.',
+            'message': f'You can not select model versions starting with v{major_model_version}.X'
+        }
+        return render(request, 'dashboard/train_model_result.html', context=context)
 
     # Create new predictor instance with selected model
     if selected_model_id is not None:

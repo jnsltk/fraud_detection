@@ -1,8 +1,10 @@
 FROM continuumio/miniconda3:latest
 
+ARG VERSION_TAG
+ENV VERSION_TAG=${VERSION_TAG}
+
 # Ensures immediate prints to stdout
 ENV PYTHONUNBUFFERED=1
-
 WORKDIR /fraud_detection
 
 # --------------------- SETUP ENVIRONMENT -------------------- #

@@ -71,6 +71,7 @@ class Predictor:
     def _load_model(self, model_id: str) -> None:
 
         if USE_LOCAL_MODEL:
+            print('Using local model...')
             self._model: keras.Model = load_model('data/model.keras')
 
             with open('data/metadata.json', 'r') as f:
