@@ -159,11 +159,9 @@ def detection_result(request):
                 "status": "error",
                 "message": "Invalid amount. Please enter a valid number."
             }, status=400)
-        city_size = request.POST.get('city_size')
         distance_from_home = request.POST.get('distance_from_home')
         transaction_hour = request.POST.get('transaction_hour')
         weekend_transaction = request.POST.get('weekend_transaction')
-        high_risk_merchant = request.POST.get('high_risk_merchant')
         card_type = request.POST.get('card_type')
         card_present = bool(int(request.POST.get('card_present')))
         device = request.POST.get('device')
@@ -178,11 +176,9 @@ def detection_result(request):
             'country': country,
             'currency': currency,
             'amount': amount,
-            'city_size': city_size,
             'distance_from_home': distance_from_home,
             'transaction_hour': transaction_hour,
             'weekend_transaction': weekend_transaction,
-            'high_risk_merchant': high_risk_merchant,
             'card_type': card_type,
             'card_present': card_present,
             'device': device,
@@ -195,7 +191,7 @@ def detection_result(request):
 
         # Convert input data into a DataFrame
         df = pd.DataFrame([input_data])
-        print("Input shape:", df.shape)
+        # print("Input shape:", df.shape)
         
         # Create an in-memory CSV file
         csv_buffer = io.StringIO()
@@ -270,11 +266,37 @@ def detection_result(request):
         # Get the model predictions   
         try:
             predictor = PredictorSingleton.get_instance().get_predictor()
-            print("get predictor")
-            prediction = predictor.predict(df.values.flatten())
+            # Convert amount to int after DataFrame creation
+            df['amount'] = df['amount'].astype(int)
+            df['card_present'] = df['card_present'].astype(int)
+            df['distance_from_home'] = df['distance_from_home'].astype(int)
+            df['weekend_transaction'] = df['weekend_transaction'].astype(int)
+            df['transaction_hour'] = pd.to_datetime(df['transaction_hour'], errors='coerce').dt.hour
+
+            input_data = df.iloc[0].to_dict()
+            prediction = predictor.predict(input_data)
+
 
             print("Prediction:", prediction)
-            
+            # Determine risk level based on the probability and is_fraud value
+            if prediction.is_fraud:
+                if prediction.probability > 0.9:  # High risk if probability > 90%
+                    detection_result = "high_risk"
+                elif prediction.probability > 0.6:  # Medium risk if probability > 60%
+                    detection_result = "medium_risk"
+                else:  # If is_fraud is True but probability is low
+                    detection_result = "low_risk"
+            else:
+                detection_result = "safe"  # If is_fraud is False, it’s secure
+
+            # Pass prediction and detection result to the template
+            context = {
+                "status": "success",
+                "prediction": prediction,  # Pass the whole prediction object to the template
+                "detection_result": detection_result  # Pass the risk level for the icon logic
+            }
+            return render(request, 'detection/detection_result.html', context)
+
         except Exception as e:
             print(f"Error during prediction: {e}")
             return JsonResponse({

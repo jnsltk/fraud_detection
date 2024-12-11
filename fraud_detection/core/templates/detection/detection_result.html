@@ -4,9 +4,8 @@
 
 {% include "home_page/nav_bar.html" %}
 
-{% with detection_result="high_risk" %}
 
-<div class="flex flex-col justify-start items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white pt-20">
+<div class="flex flex-col justify-start items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] min-h-screen w-screen text-white pt-20">
     <h1 class="text-5xl font-bold text-center mb-12">Fraud Detection Result</h1>
     
     <!-- Show detection result -->
@@ -31,10 +30,40 @@
         <div class="mt-4 flex flex-col items-center">
             <!-- Low Risk Icon -->
             <svg t="1733794456927" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1723" width="200" height="200"><path d="M839.68 117.76L520.149333 0 203.818667 116.138667C163.370667 135.722667 128 147.370667 128 186.325333v191.872a739.84 739.84 0 0 0 104.234667 382.592A654.208 654.208 0 0 0 523.306667 1024c129.322667-43.093333 225.834667-157.909333 284.885333-256.256a740.48 740.48 0 0 0 104.234667-382.421333V212.821333c0-54.997333-28.458667-81.834667-72.746667-95.104z" fill="#34C724" p-id="1724"></path><path d="M839.68 117.76L520.149333 0 203.818667 116.138667C163.370667 135.722667 128 147.370667 128 186.325333v191.872a739.84 739.84 0 0 0 104.234667 382.592A654.208 654.208 0 0 0 523.306667 1024c129.322667-43.093333 225.834667-157.909333 284.885333-256.256a740.48 740.48 0 0 0 104.234667-382.421333V212.821333c0-54.997333-28.458667-81.834667-72.746667-95.104z" fill="#FFFFFF" opacity=".8" p-id="1725"></path><path d="M776.533333 195.712l-256.341333-94.378667-253.866667 93.056c-32.426667 15.701333-60.842667 25.088-60.842666 56.064v154.24a593.578667 593.578667 0 0 0 83.712 307.072 524.586667 524.586667 0 0 0 233.514666 211.626667c103.68-34.56 181.162667-126.805333 228.565334-205.568a594.346667 594.346667 0 0 0 83.626666-307.072V272.042667c0-44.117333-22.869333-65.706667-58.368-76.330667z" fill="#34C724" p-id="1726"></path><path d="M475.008 341.333333h162.944l-99.584 126.72H674.133333l-217.173333 235.306667 45.226667-171.946667H375.466667L475.008 341.333333z" fill="#FFFFFF" p-id="1727"></path></svg>
+            <p class="text-3xl text-white font-bold mt-16">Your transaction is low risky!</p>
+        </div>
+
+        {% elif detection_result == "safe" %}
+        <div class="mt-4 flex flex-col items-center">
+            <!-- Using the same icon as Low Risk Icon -->
+            <svg t="1733794456927" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1723" width="200" height="200"><path d="M839.68 117.76L520.149333 0 203.818667 116.138667C163.370667 135.722667 128 147.370667 128 186.325333v191.872a739.84 739.84 0 0 0 104.234667 382.592A654.208 654.208 0 0 0 523.306667 1024c129.322667-43.093333 225.834667-157.909333 284.885333-256.256a740.48 740.48 0 0 0 104.234667-382.421333V212.821333c0-54.997333-28.458667-81.834667-72.746667-95.104z" fill="#34C724" p-id="1724"></path><path d="M839.68 117.76L520.149333 0 203.818667 116.138667C163.370667 135.722667 128 147.370667 128 186.325333v191.872a739.84 739.84 0 0 0 104.234667 382.592A654.208 654.208 0 0 0 523.306667 1024c129.322667-43.093333 225.834667-157.909333 284.885333-256.256a740.48 740.48 0 0 0 104.234667-382.421333V212.821333c0-54.997333-28.458667-81.834667-72.746667-95.104z" fill="#FFFFFF" opacity=".8" p-id="1725"></path><path d="M776.533333 195.712l-256.341333-94.378667-253.866667 93.056c-32.426667 15.701333-60.842667 25.088-60.842666 56.064v154.24a593.578667 593.578667 0 0 0 83.712 307.072 524.586667 524.586667 0 0 0 233.514666 211.626667c103.68-34.56 181.162667-126.805333 228.565334-205.568a594.346667 594.346667 0 0 0 83.626666-307.072V272.042667c0-44.117333-22.869333-65.706667-58.368-76.330667z" fill="#34C724" p-id="1726"></path><path d="M475.008 341.333333h162.944l-99.584 126.72H674.133333l-217.173333 235.306667 45.226667-171.946667H375.466667L475.008 341.333333z" fill="#FFFFFF" p-id="1727"></path></svg>
             <p class="text-3xl text-white font-bold mt-16">Your transaction is secure!</p>
         </div>
         {% endif %}
-    </div>
+        <!-- Display Prediction Details -->
+        {% if prediction %}
+            <div class="bg-white bg-opacity-30 backdrop-blur-md  p-6 rounded-md shadow-md animate-pop-up mt-8">
+                <h2 class="text-2xl font-bold mb-4">Prediction Details</h2>
+
+                <p><strong>Probability of Fraud:</strong> {{ prediction.probability }}</p>
+                <p><strong>Fraud Status:</strong> 
+                    {% if prediction.is_fraud %}
+                        <span class="text-red-500 font-bold">Fraud Detected</span>
+                    {% else %}
+                        <span class="text-green-500 font-bold">No Fraud Detected</span>
+                    {% endif %}
+                </p>
+
+                <h3 class="mt-4 text-xl font-semibold">Reasons:</h3>
+                <ul class="list-disc list-inside">
+                    {% for reason in prediction.reasons %}
+                        <li>{{ reason }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p>No prediction data was found.</p>
+        {% endif %}
 
     <!-- Continue Detect button -->
     <button
@@ -44,7 +73,5 @@
         Continue Detect
     </button>
 </div>
-
-{% endwith %}
 
 {% endblock %}
