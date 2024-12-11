@@ -1,8 +1,6 @@
 from detector.models import FraudDetectionModel
 from detector.services.ml_pipeline import Predictor
-import os
-
-VERSION_TAG = os.environ.get('VERSION_TAG')
+from detector.services.compatibility_check import is_same_model_and_sw_version
 
 
 class PredictorSingleton:
@@ -33,7 +31,7 @@ class PredictorSingleton:
                 print("No model is deployed")
                 cls._instance._predictor = None
 
-            elif model_data['version'].split('.')[0][1:] != VERSION_TAG.split('.')[0]:
+            elif not is_same_model_and_sw_version(model_data['version']):
                 print("Model version does not match software version")
                 cls._instance._predictor = None
 
