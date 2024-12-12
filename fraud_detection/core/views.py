@@ -1,9 +1,18 @@
+import io
+import json
+import os
+import subprocess
+import sys
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
+
+from core.predictor_singleton import PredictorSingleton
+from .form import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
+import pandas as pd
 
 
 @require_GET
@@ -129,3 +138,175 @@ def post_change_password_view(request):
         })
     error_message = "The old password is incorrect."
     return render(request, 'my_profile/change_password.html', {'form': form, 'error_message': error_message})
+
+@login_required
+@require_GET
+def detection_page_view(request):
+    return render(request, 'detection/detection_page.html')
+
+@login_required
+@require_POST 
+def detection_result(request):
+    if request.method == "POST":
+        # Get form data
+        merchant_category = request.POST.get('merchant_category')
+        country = request.POST.get('country')
+        currency = request.POST.get('currency')
+        try:
+            amount = float(request.POST.get('amount', 0))  # Convert amount to float
+        except ValueError:
+            return JsonResponse({
+                "status": "error",
+                "message": "Invalid amount. Please enter a valid number."
+            }, status=400)
+        distance_from_home = request.POST.get('distance_from_home')
+        transaction_hour = request.POST.get('transaction_hour')
+        weekend_transaction = request.POST.get('weekend_transaction')
+        card_type = request.POST.get('card_type')
+        card_present = bool(int(request.POST.get('card_present')))
+        device = request.POST.get('device')
+        channel = request.POST.get('channel')
+        distance_from_home = bool(int(request.POST.get('distance_from_home')))
+        weekend_transaction = bool(int(request.POST.get('weekend_transaction')))
+        print("card_present", card_present)
+
+        # Build the data into a dictionary
+        input_data = {
+            'merchant_category': merchant_category,
+            'country': country,
+            'currency': currency,
+            'amount': amount,
+            'distance_from_home': distance_from_home,
+            'transaction_hour': transaction_hour,
+            'weekend_transaction': weekend_transaction,
+            'card_type': card_type,
+            'card_present': card_present,
+            'device': device,
+            'channel': channel,
+            'distance_from_home': distance_from_home,
+            'weekend_transaction': weekend_transaction
+        }
+
+        # Data validation
+
+        # Convert input data into a DataFrame
+        df = pd.DataFrame([input_data])
+        # print("Input shape:", df.shape)
+        
+        # Create an in-memory CSV file
+        csv_buffer = io.StringIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_data = csv_buffer.getvalue()
+
+        # Validate the file using the Great Expectations script
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(current_dir, "../../"))
+        validation_script = os.path.join(
+            project_root, "gx", "scripts", "validate_data.py"
+        )
+        anaconda_python = sys.executable  # Dynamic, works on Windows, Linux, and macOS
+        
+        try:
+            print("Start data validation......")
+
+            # Run the validation script
+            result = subprocess.run(
+                [anaconda_python, validation_script],
+                input=csv_data,
+                capture_output=True,
+                text=True,
+            )
+
+            try:
+                # Parse the result
+                output = json.loads(result.stdout)
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON: {e}")
+                print(f"Raw output: {repr(result.stdout)}")
+                return JsonResponse({
+                    "status": "error",
+                    "message": "Validation script returned invalid or empty output."
+                }, status=400)
+            
+            # Check the validation result
+            if result.returncode != 0:
+                # Extract the invalid fields from the failures
+                failed_fields = list(set(failure['column'] for failure in output.get("failures", []) if failure.get('column')))
+                failed_fields_message = ', '.join(failed_fields)
+
+                failure_details = "\n".join([
+                    f"\t- Expectation: {failure['expectation']} on column '{failure['column']}', "
+                    f"Unexpected Count: {failure['unexpected_count']}, "
+                    f"Unexpected Percent: {failure['unexpected_percent']}%, "
+                    f"Sample Unexpected: {failure['partial_unexpected_list']}"
+                    for failure in output.get("failures", [])
+                ])
+                print(f"\033[1;91mData validation failed! Failure details as below:\033[0m")
+                print(f"\033[1;91m{failure_details}\033[0m")
+
+                if request.headers.get('Accept') == 'application/json': 
+                    return JsonResponse({
+                        "status": "error",
+                        "message": output.get("message", "Validation failed."),
+                        "failures": output.get('failures', []),
+                    }, status=400)
+                else:
+                    return render(request, 'detection/detection_page.html', {
+                        "error_message": f"Your input for the following fields is not valid: {failed_fields_message}.<br>Please refill the form with valid input.",
+                    })
+            else:            
+                print(f"\033[1;92mValidation succeeded!\033[0m")
+        except Exception as e:
+            print(f"Error during validation: {e}")
+            # Return to the page with a clear error message
+            return render(request, 'detection/detection_page.html', {
+                "error_message": f"An error occurred during validation.<br>Please try again."
+            })
+
+        # Get the model predictions   
+        try:
+            predictor = PredictorSingleton.get_instance().get_predictor()
+
+            # Convert amount to int after DataFrame creation
+            df['amount'] = df['amount'].astype(int)
+            df['card_present'] = df['card_present'].astype(int)
+            df['distance_from_home'] = df['distance_from_home'].astype(int)
+            df['weekend_transaction'] = df['weekend_transaction'].astype(int)
+            df['transaction_hour'] = pd.to_datetime(df['transaction_hour'], errors='coerce').dt.hour
+
+            input_data = df.iloc[0].to_dict()
+            prediction = predictor.predict(input_data)
+
+
+            print("Prediction:", prediction)
+            # Convert probability to a percentage and round to 2 decimal places
+            prediction.probability = round(prediction.probability * 100, 2)
+
+            # Determine risk level based on the probability and is_fraud value
+            if prediction.is_fraud:
+                if prediction.probability > 0.9:  # High risk if probability > 90%
+                    detection_result = "high_risk"
+                elif prediction.probability > 0.6:  # Medium risk if probability > 60%
+                    detection_result = "medium_risk"
+                else:  # If is_fraud is True but probability is low
+                    detection_result = "low_risk"
+            else:
+                detection_result = "safe"  # If is_fraud is False, it’s secure
+
+            # Pass prediction and detection result to the template
+            context = {
+                "status": "success",
+                "prediction": prediction,  # Pass the whole prediction object to the template
+                "detection_result": detection_result  # Pass the risk level for the icon logic
+            }
+            return render(request, 'detection/detection_result.html', context)
+
+        except Exception as e:
+            print(f"Error during prediction: {e}")
+            # Return to the page with a clear error message
+            return render(request, 'detection/detection_page.html', {
+                "error_message": f"An error occurred during prediction.<br>Please try again."
+            })
+
+    return render(request, 'detection/detection_result.html')
+
