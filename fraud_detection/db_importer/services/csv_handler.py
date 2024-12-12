@@ -11,6 +11,7 @@ from detector.models import Transaction
 import subprocess
 import os
 import detector.services.ml_pipeline.added_features as added_features
+import sys
 
 
 # ------------------------------ Data Validation ----------------------------- #
