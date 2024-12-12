@@ -216,7 +216,7 @@ def load_models():
     """
         Helper function to load models for the dashboard.
     """
-    return list(
+    models_list = list(
         # Annotate the full name of the user who created the model
         FraudDetectionModel.objects.annotate(created_by_full_name=Concat('created_by__first_name', Value(' '),
                                                                          'created_by__last_name')
@@ -225,3 +225,8 @@ def load_models():
                                                       'dataset_size', 'score', 'is_deployed'
                                                       # Order by version and date created in descending order
                                                       ).order_by('-version', '-date_created'))
+    
+    # Sort the models by version using packaging's parse_version
+    sorted_models = sorted(models_list, key=lambda x: parse_version(x['version']), reverse=True)
+
+    return sorted_models
