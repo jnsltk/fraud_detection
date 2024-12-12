@@ -279,6 +279,9 @@ def detection_result(request):
 
 
             print("Prediction:", prediction)
+            # Convert probability to a percentage and round to 2 decimal places
+            prediction.probability = round(prediction.probability * 100, 2)
+
             # Determine risk level based on the probability and is_fraud value
             if prediction.is_fraud:
                 if prediction.probability > 0.9:  # High risk if probability > 90%

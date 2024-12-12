@@ -44,8 +44,13 @@
         {% if prediction %}
             <div class="bg-white bg-opacity-30 backdrop-blur-md  p-6 rounded-md shadow-md animate-pop-up mt-8">
                 <h2 class="text-2xl font-bold mb-4">Prediction Details</h2>
-
-                <p><strong>Probability of Fraud:</strong> {{ prediction.probability }}</p>
+                <!-- Probability of Fraud shown in percentage -->
+                <p>
+                    <strong>Probability of Fraud:</strong> 
+                    <span class="text-blue-600 font-bold">{{ prediction.probability }}%</span>
+                </p>
+                
+                <!-- Fraud Status -->
                 <p><strong>Fraud Status:</strong> 
                     {% if prediction.is_fraud %}
                         <span class="text-red-500 font-bold">Fraud Detected</span>
@@ -53,7 +58,7 @@
                         <span class="text-green-500 font-bold">No Fraud Detected</span>
                     {% endif %}
                 </p>
-
+                <!-- Reasoning -->
                 <h3 class="mt-4 text-xl font-semibold">Reasons:</h3>
                 <ul class="list-disc list-inside">
                     {% for reason in prediction.reasons %}
