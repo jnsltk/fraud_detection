@@ -258,14 +258,15 @@ def detection_result(request):
                 print(f"\033[1;92mValidation succeeded!\033[0m")
         except Exception as e:
             print(f"Error during validation: {e}")
-            return JsonResponse({
-                "status": "error", 
-                "message": f"An error occurred during validation: {str(e)}"
-            }, status=500)
+            # Return to the page with a clear error message
+            return render(request, 'detection/detection_page.html', {
+                "error_message": f"An error occurred during validation.<br>Please try again."
+            })
 
         # Get the model predictions   
         try:
             predictor = PredictorSingleton.get_instance().get_predictor()
+
             # Convert amount to int after DataFrame creation
             df['amount'] = df['amount'].astype(int)
             df['card_present'] = df['card_present'].astype(int)
@@ -299,10 +300,10 @@ def detection_result(request):
 
         except Exception as e:
             print(f"Error during prediction: {e}")
-            return JsonResponse({
-                "status": "error", 
-                "message": f"An error occurred during prediction: {str(e)}"
-            }, status=500)
+            # Return to the page with a clear error message
+            return render(request, 'detection/detection_page.html', {
+                "error_message": f"An error occurred during prediction.<br>Please try again."
+            })
 
     return render(request, 'detection/detection_result.html')
 
