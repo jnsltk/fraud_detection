@@ -1,3 +1,4 @@
+import sys
 from django.core.management.base import BaseCommand
 import subprocess
 import os
@@ -10,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Define the path to the Anaconda Python interpreter
-        anaconda_python = sys.executable
+        anaconda_python = sys.executable  # Dynamic, works on Windows, Linux, and macOS
         # Moves up one level
         project_root = os.path.dirname(settings.BASE_DIR)
         validation_script = os.path.join(project_root, "great_expectations", "scripts", "validate_data.py")

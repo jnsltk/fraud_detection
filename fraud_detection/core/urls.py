@@ -12,4 +12,6 @@ urlpatterns = [
     path('update_profile/', views.update_profile_view, name='core/update_profile'),
     path('change_password/', views.get_change_password_view, name='core/change_password'),
     path('post_change_password/', views.post_change_password_view, name='core/post_change_password'),
+    path('detection_page/', views.detection_page_view, name='core/detection_page'),
+    path('detection_result/', views.detection_result, name='core/detection_result'),
 ]
