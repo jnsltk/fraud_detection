@@ -98,7 +98,7 @@ def process_csv(input_file):
                 except Exception as e:
                     print(f"Error processing row {row}: {e}")
 
-            Transaction.objects.bulk_create(data_to_insert)
+            Transaction.objects.bulk_create(data_to_insert, ignore_conflicts=True)
         return {"status": "success", "message": "File processed successfully!"}
     except Exception as e:
         print(f"Error during processing: {e}")
