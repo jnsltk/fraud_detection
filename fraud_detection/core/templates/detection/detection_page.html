@@ -16,7 +16,7 @@
     {% endif %}
 
     <!-- Fraud Detection Form -->
-    <form action="{% url 'core/detection_result' %}" method="post" class="flex flex-col items-center space-y-20 w-4/5 max-w-6xl">
+    <form id="detection-form" action="{% url 'core/detection_result' %}" method="post" class="flex flex-col items-center space-y-20 w-4/5 max-w-6xl">
         {% csrf_token %}
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-36 gap-y-16 w-full">
@@ -196,6 +196,14 @@
                 </select>
             </div>
 
+            <!-- Detection Button -->
+            <div class="flex flex-col">
+                <!-- Submit Button -->
+                <button id="detect-button" type="submit" class="px-16 py-3 bg-[#F5820F] rounded hover:bg-red-600 transition-colors mt-6">
+                    Detect
+                </button>
+            </div>
+
             <!-- Distance From Home -->
             <div class="flex flex-col">
                 <label for="distance_from_home" class="text-lg font-medium text-white" title="Indicates if the transaction occurred outside the customer's home country">
@@ -214,10 +222,8 @@
 
         </div>
 
-        <!-- Submit Button -->
-        <button type="submit" class="px-16 py-3 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
-            Detect
-        </button>
+        <p id="prompt-message" class="text-lg font-medium text-green-400"></p>
+        
 
     </form>
 
@@ -225,8 +231,11 @@
 
 <script>
     // Get references to the currency select and hint text elements
+    const form = document.getElementById('detection-form');
     const currencySelect = document.getElementById('currency');
     const hintText = document.getElementById('currency-hint');
+    const detectButton = document.getElementById('detect-button');
+    const promptMessage = document.getElementById('prompt-message');
 
     // Add an event listener to the currency field to check for "Other" or "Unknown"
     currencySelect.addEventListener('change', function() {
@@ -236,6 +245,26 @@
         } else {
             // Hide the hint text for other currency options
             hintText.classList.add('hidden');
+        }
+    });
+
+    detectButton.addEventListener('click', () => {
+        
+        // Update prompt message
+        if (form.checkValidity()) {
+            promptMessage.textContent = "Validating data...";
+
+            setTimeout(() => {
+                promptMessage.textContent = "Detecting...";
+                
+                setTimeout(() => {
+                    promptMessage.textContent = "Detection completed";
+                    
+                    form.submit();
+                }, 3000);
+            }, 4000);
+        }else {
+            promptMessage.textContent = "";
         }
     });
 </script>
