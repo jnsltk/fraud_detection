@@ -46,8 +46,8 @@ version_new_model:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # A new model is detected if changes are made to the db_setup or ML_pipeline folders
       changes:
-        - db_setup/**
-        - fraud_detection/detector/services/ml_pipeline/**
+        - db_setup/**/*
+        - fraud_detection/detector/services/ml_pipeline/**/*
     - when: never
   # Install required tools
   before_script:
@@ -103,8 +103,8 @@ build_docker_image:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # ... and if the fraud_detection folder has changed
       changes:
-        - fraud_detection/**
-        - gx/**
+        - fraud_detection/**/*
+        - gx/**/*
     - when: never
 
 # -------------------------- deploy -------------------------- #
@@ -130,7 +130,7 @@ deploy_to_k8s:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # ... and if the fraud_detection folder or the deployment configuration has changed
       changes:
-        - fraud_detection/**
-        - gx/**
+        - fraud_detection/**/*
+        - gx/**/*
         - deployment.yml
     - when: never

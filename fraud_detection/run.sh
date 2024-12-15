@@ -2,6 +2,7 @@
 
 # This script is used for running the application within the docker container
 
+# Setup job
 python manage.py setup_models
 
 if [ "$RUN_MODE" = "dev" ]; then
