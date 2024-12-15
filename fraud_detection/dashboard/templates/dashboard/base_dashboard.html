@@ -62,23 +62,26 @@
                 <li><a href="{% url 'import_csv_to_db' %}"
                        class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Upload
                     Data</a></li>
+                <!-- Not implemented yet
                 <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Usage
                     Statistics</a></li>
                 <li><a href=""
                        class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Settings</a></li>
+                       -->
                 <li><a href="{% url 'core/index' %}"
-                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Back to Home Page</a></li>
+                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Back to Home
+                    Page</a></li>
             </ul>
         {% endblock %}
-            <div class="mt-auto pt-4">
-                <form id="logout-form" method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="text-amber-500 font-bold hover:text-red-500 transition duration-150 mt-2">
-                        Logout
-                    </button>
-                </form>
-            </div>
+        <div class="mt-auto pt-4">
+            <form id="logout-form" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit"
+                        class="text-amber-500 font-bold hover:text-red-500 transition duration-150 mt-2">
+                    Logout
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="flex-grow overflow-auto">
