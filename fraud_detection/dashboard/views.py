@@ -1,5 +1,4 @@
 import os
-
 from datetime import date, datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -10,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from django.db.models.functions import Concat
 from django.db.models import Value
 from django.db.models import Max
-
+from packaging.version import parse as parse_version
 from core.predictor_singleton import PredictorSingleton
 from detector.models import FraudDetectionModel
 from dashboard.forms import NewModelForm
@@ -57,10 +56,15 @@ def manage_models(request):
 
             temp_file_path = "/tmp/tmp_model.keras"
             try:
-                # Bump up model version
-                highest_version = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
-                version_num = highest_version.get('max_version')
-                version_bump = f"v{round(float(version_num[1:]) + 0.1, 2)}"
+                # Get all versions and sort them numerically
+                all_versions = FraudDetectionModel.objects.values_list('version', flat=True)
+                parsed_versions = sorted(all_versions, key=parse_version, reverse=True)
+                version_num = parsed_versions[0]  # Get the highest version
+
+                major_version, minor_version = version_num.split('.')
+                minor_version = int(minor_version) + 1
+                version_bump = f"{major_version}.{minor_version}"
+                print(version_num)
 
                 # Prevent training when not the latest version of software
                 if not is_sw_up_to_date(version_num):
@@ -212,7 +216,7 @@ def load_models():
     """
         Helper function to load models for the dashboard.
     """
-    return list(
+    models_list = list(
         # Annotate the full name of the user who created the model
         FraudDetectionModel.objects.annotate(created_by_full_name=Concat('created_by__first_name', Value(' '),
                                                                          'created_by__last_name')
@@ -221,3 +225,8 @@ def load_models():
                                                       'dataset_size', 'score', 'is_deployed'
                                                       # Order by version and date created in descending order
                                                       ).order_by('-version', '-date_created'))
+    
+    # Sort the models by version using packaging's parse_version
+    sorted_models = sorted(models_list, key=lambda x: parse_version(x['version']), reverse=True)
+
+    return sorted_models

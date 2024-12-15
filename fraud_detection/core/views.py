@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from core.predictor_singleton import PredictorSingleton
-from .form import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
+from .forms import RegisterForm, LoginForm, ChangePasswordForm, MyProfileForm
 import pandas as pd
 
 
