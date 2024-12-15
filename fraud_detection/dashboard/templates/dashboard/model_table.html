@@ -1,3 +1,15 @@
+{% block custom_script %}
+    <script>
+        function swapLoader(event) {
+            const button = event.target.closest('button');
+            const loader = button.querySelector('#loader');
+            const label = button.querySelector('#label');
+            loader.classList.toggle('hidden');
+            label.classList.toggle('hidden');
+        }
+    </script>
+{% endblock %}
+
 <table id="models" class="table-auto w-full">
     <thead>
     <tr>
@@ -37,8 +49,17 @@
                     <button hx-post="{% url 'deploy_model' %}"
                             hx-vals='{"deploy_id": "{{ model.id }}"}'
                             hx-target="#models"
+                            hx-on:click="swapLoader(event)"
                             class="bg-orange-500/85 rounded-xl px-5 py-1 shadow-lg border border-amber-800/50 border-2 text-xs text-neutral-50 font-bold hover:bg-orange-400/85 transition transition-duration-150">
-                        Deploy
+                    <span id="loader" class="flex gap-1 items-center -mx-2 hidden">
+                        <svg class="animate-spin" fill="#f8f8f8" width="15" height="15" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+                                  class="spinner_P7sC"/>
+                        </svg>
+                        Wait...
+                    </span>
+                        <span id="label" class="">Deploy</span>
                     </button>
                 {% endif %}
             </td>

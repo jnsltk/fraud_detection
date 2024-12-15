@@ -1,31 +1,81 @@
 {% extends "dashboard/base_dashboard.html" %}
 
+{% block custom_script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const labels = {{ versions|safe }};
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Model Accuracy',
+                backgroundColor: 'rgba(255, 165, 0, 0.2)',
+                borderColor: 'rgba(255, 165, 0, 1)',
+                data: {{ scores|safe }},
+                fill: false,
+                tension: 0.1
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: false,
+                            text: 'Version'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: false,
+                            text: 'Accuracy'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        const ctx = document.getElementById('accuracyChart').getContext('2d');
+        const accuracyChart = new Chart(ctx, config);
+    });
+    </script>
+{% endblock %}
 {% block breadcrumbs %}
-<span class="block text-sm text-neutral-500">Dashboard / Home</span>
+    <span class="block text-sm text-neutral-500">Dashboard / Home</span>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-8">
-    <span class="mb-10 block text-4xl font-bold">Welcome back, {{ user.first_name }}!</span>
-    <div class="flex flex-col md:flex-row gap-8 pb-8">
-        <div class="md:basis-1/3 bg-white shadow-xl rounded-xl border p-8">
-            <h2 class="text-xl font-bold pb-10">Model version</h2>
-            <span class="block font-light font-mono text-amber-500 text-5xl text-right">{{ version }}</span>
+    <div class="max-w-3xl mx-8">
+        <span class="mb-10 block text-4xl font-bold">Welcome back, {{ user.first_name }}!</span>
+        <div class="flex flex-col md:flex-row gap-8 pb-8">
+            <div class="md:basis-1/3 bg-white shadow-xl rounded-xl border p-8">
+                <h2 class="text-xl font-bold pb-10">Model version</h2>
+                <span class="block font-light font-mono text-amber-500 text-5xl text-right">{{ version }}</span>
+            </div>
+            <div class="md:basis-1/3 bg-white shadow-xl rounded-xl border p-8">
+                <h2 class="text-xl font-bold pb-10">Model accuracy</h2>
+                <span class="block font-light font-mono text-amber-500 text-5xl text-right">{{ accuracy }}</span>
+            </div>
+            <div class="md:basis-1/3 bg-white shadow-xl rounded-xl border p-8">
+                <h2 class="text-xl font-bold pb-10">Registered users</h2>
+                <span class="block font-light font-mono text-amber-500 text-5xl text-right">{{ users_num }}</span>
+            </div>
         </div>
-        <div class="md:basis-1/3 bg-white shadow-xl rounded-xl border p-8">
-            <h2 class="text-xl font-bold pb-10">Model accuracy</h2>
-            <span class="block font-light font-mono text-amber-500 text-5xl text-right">{{ accuracy }}</span>
-        </div>
-        <div class="md:basis-1/3 bg-white shadow-xl rounded-xl border p-8">
-            <h2 class="text-xl font-bold pb-10">Registered users</h2>
-            <span class="block font-light font-mono text-amber-500 text-5xl text-right">{{ users_num }}</span>
+        <div>
+            <div class="bg-white shadow-xl rounded-xl border p-8 mb-12">
+                <h2 class="text-xl font-bold pb-10">Prediction accuracy over time</h2>
+                <canvas id="accuracyChart" class="rounded-lg"></canvas>
+            </div>
         </div>
     </div>
-    <div>
-        <div class="bg-white shadow-xl rounded-xl border p-8 mb-12">
-            <h2 class="text-xl font-bold pb-10">Prediction accuracy over time</h2>
-            <img class="rounded-lg " src="https://i.cbc.ca/1.5359228.1577206958!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_940/smudge-the-viral-cat.jpg" alt="Graph showing model prediction accuracy over time">
-        </div>
-    </div>
-</div>
 {% endblock %}

@@ -27,11 +27,19 @@ def index(request):
     """
         The main dashboard view, only accessible to staff users.
     """
+    # Fetch data for graph
+    performance = FraudDetectionModel.objects.values_list('version', 'score')
+    sorted_performance = sorted(performance, key=lambda x: parse_version(x[0]))
+    versions = [x[0] for x in sorted_performance]
+    scores = [float(x[1]) for x in sorted_performance]
     context = {
         'version': FraudDetectionModel.objects.filter(is_deployed=True).first().version or "N/A",
         'accuracy': FraudDetectionModel.objects.filter(is_deployed=True).first().score or "N/A",
         'users_num': User.objects.count,
+        'versions': versions,
+        'scores': scores
     }
+    print(scores)
     return render(request, 'dashboard/index.html', context=context)
 
 
@@ -101,9 +109,9 @@ def manage_models(request):
 
                 context.update({
                     'desc':
-                    'Success!',
+                        'Success!',
                     'message':
-                    'Congratulations! You\'ve just trained a new model! Click \'Deploy\' if you want to use it.'
+                        'Congratulations! You\'ve just trained a new model! Click \'Deploy\' if you want to use it.'
                 })
             except Exception as e:
                 context.update({'desc': 'Uh oh, something went wrong.', 'message': 'Detailed information: \n' + str(e)})
@@ -225,7 +233,7 @@ def load_models():
                                                       'dataset_size', 'score', 'is_deployed'
                                                       # Order by version and date created in descending order
                                                       ).order_by('-version', '-date_created'))
-    
+
     # Sort the models by version using packaging's parse_version
     sorted_models = sorted(models_list, key=lambda x: parse_version(x['version']), reverse=True)
 
