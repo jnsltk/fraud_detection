@@ -43,7 +43,7 @@ version_new_model:
   stage: versioning
   rules:
     # This job runs only for merge requests and if the target brach is main
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "push"' # && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # A new model is detected if changes are made to the db_setup or ML_pipeline folders
       changes:
         - db_setup/**/*

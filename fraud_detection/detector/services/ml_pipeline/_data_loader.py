@@ -50,7 +50,7 @@ def load_data(sample_size: int = 20000, start: datetime = None, end: datetime = 
 # ---------------------------- RUN - (for testing) --------------------------- #
 
 if __name__ == '__main__':
-    data = load_data(999999, start=datetime(2024, 11, 3), end=datetime(2024, 12, 4))
+    data = load_data(999999, start=datetime(2024, 11, 2), end=datetime(2024, 12, 4))
 
     print(f'max: {data['version_date'].max()}\nmin: {data['version_date'].min(axis=0)}\n')
     print(data.head())
