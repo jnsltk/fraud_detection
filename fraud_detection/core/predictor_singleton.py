@@ -40,9 +40,9 @@ class PredictorSingleton:
 
         return cls._instance
 
-    def change_model(self, model_id: str) -> Predictor:
+    def change_model(self, model_id: str) -> Predictor | None:
         self._predictor = Predictor(model_id=model_id)
         return self._predictor
 
-    def get_predictor(self) -> Predictor:
+    def get_predictor(self) -> Predictor | None:
         return self._predictor
