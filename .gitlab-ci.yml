@@ -43,7 +43,7 @@ version_new_model:
   stage: versioning
   rules:
     # This job runs only for merge requests and if the target brach is main
-    - if: '$CI_PIPELINE_SOURCE == "push"' # && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # A new model is detected if changes are made to the db_setup or ML_pipeline folders
       changes:
         - db_setup/**/*
@@ -100,7 +100,7 @@ build_docker_image:
     - docker push "$CI_REGISTRY_IMAGE/backend:latest"
   rules:
     # Only runs for pushes to main
-    - if: '$CI_PIPELINE_SOURCE == "push"' # && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # ... and if the fraud_detection folder has changed
       changes:
         - fraud_detection/**/*
@@ -127,7 +127,7 @@ deploy_to_k8s:
 
   rules:
     # Only runs for pushes to main
-    - if: '$CI_PIPELINE_SOURCE == "push"' #' && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       # ... and if the fraud_detection folder or the deployment configuration has changed
       changes:
         - fraud_detection/**/*
