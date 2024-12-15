@@ -1,3 +1,16 @@
+{% block custom_script %}
+    <script>
+        function swapLoader(event) {
+            const button = event.target.closest('button');
+            const loader = button.querySelector('#loader');
+            const label = button.querySelector('#label');
+            loader.classList.toggle('hidden');
+            label.classList.toggle('hidden');
+            console.log('hello')
+        }
+    </script>
+{% endblock %}
+
 <div id="dialog" class="fixed inset-0 flex items-center justify-center z-50">
     <div class="absolute inset-0 bg-black opacity-60"></div>
 
@@ -23,13 +36,23 @@
 
             <div class="flex gap-4 w-full justify-end">
                 <button type="button"
-                        hx-get="{% url 'dismiss_modal' %}" hx-target="#dialog"
+                        hx-get="{% url 'dismiss_modal' %}"
+                        hx-target="#dialog"
                         class="text-nowrap bg-stone-300 rounded-xl px-4 py-2 shadow-lg border border-stone-400/50 border-2 text-sm text-neutral-500 font-bold hover:bg-stone-400/85 transition duration-150">
                     Cancel
                 </button>
                 <button type="submit"
+                        hx-on:click="swapLoader(event)"
                         class="text-nowrap bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition duration-150">
-                    Train model
+                    <span id="loader" class="flex gap-1 items-center hidden px-1.5">
+                        <svg class="animate-spin" fill="#f8f8f8" width="20" height="20" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+                                  class="spinner_P7sC"/>
+                        </svg>
+                        Wait...
+                    </span>
+                    <span id="label" class="">Train model</span>
                 </button>
             </div>
         </form>
