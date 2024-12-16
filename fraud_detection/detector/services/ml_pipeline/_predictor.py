@@ -38,7 +38,7 @@ class Predictor:
     # -------------------------- PUBLIC -------------------------- #
 
     def predict(self, input: dict) -> Prediction:
-        ''' Throws ValueError '''
+        ''' thid function is used to predict whether a transaction is fraudulent. Throws ValueError '''
 
         # Prepares the data
         res = _feature_transformer.transform_single(input, self._col_data)
