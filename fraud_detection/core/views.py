@@ -147,11 +147,19 @@ def detection_page_view(request):
 @login_required
 @require_POST 
 def detection_result(request):
+    # ---------------------- Handle POST request to collect ---------------------- #
     if request.method == "POST":
         # Get form data
         merchant_category = request.POST.get('merchant_category')
         country = request.POST.get('country')
         currency = request.POST.get('currency')
+
+        # Adjust 'currency' if it is 'Unknown' for model compatibility and validation purposes
+        ori_currency = currency
+        if currency == 'Unknown':
+            ori_currency = 'unknown' # Change the string for the model
+            currency = 'OTH' # Change the string for validation purpose
+
         try:
             amount = float(request.POST.get('amount', 0))  # Convert amount to float
         except ValueError:
@@ -159,16 +167,14 @@ def detection_result(request):
                 "status": "error",
                 "message": "Invalid amount. Please enter a valid number."
             }, status=400)
-        distance_from_home = request.POST.get('distance_from_home')
         transaction_hour = request.POST.get('transaction_hour')
-        weekend_transaction = request.POST.get('weekend_transaction')
         card_type = request.POST.get('card_type')
-        card_present = bool(int(request.POST.get('card_present')))
         device = request.POST.get('device')
         channel = request.POST.get('channel')
+        # Transform boolean fields for validation compatibility
+        card_present = bool(int(request.POST.get('card_present')))
         distance_from_home = bool(int(request.POST.get('distance_from_home')))
         weekend_transaction = bool(int(request.POST.get('weekend_transaction')))
-        print("card_present", card_present)
 
         # Build the data into a dictionary
         input_data = {
@@ -176,7 +182,6 @@ def detection_result(request):
             'country': country,
             'currency': currency,
             'amount': amount,
-            'distance_from_home': distance_from_home,
             'transaction_hour': transaction_hour,
             'weekend_transaction': weekend_transaction,
             'card_type': card_type,
@@ -187,11 +192,9 @@ def detection_result(request):
             'weekend_transaction': weekend_transaction
         }
 
-        # Data validation
-
+        # ------------------------------ Data validation ----------------------------- #
         # Convert input data into a DataFrame
         df = pd.DataFrame([input_data])
-        # print("Input shape:", df.shape)
         
         # Create an in-memory CSV file
         csv_buffer = io.StringIO()
@@ -263,22 +266,22 @@ def detection_result(request):
                 "error_message": f"An error occurred during validation.<br>Please try again."
             })
 
-        # Get the model predictions   
+        # ------------------------- Get the model predictions ------------------------ #
         try:
             predictor = PredictorSingleton.get_instance().get_predictor()
 
-            # Convert amount to int after DataFrame creation
+            # Convert the values to the values required by the model after DataFrame creation
             df['amount'] = df['amount'].astype(int)
             df['card_present'] = df['card_present'].astype(int)
             df['distance_from_home'] = df['distance_from_home'].astype(int)
             df['weekend_transaction'] = df['weekend_transaction'].astype(int)
             df['transaction_hour'] = pd.to_datetime(df['transaction_hour'], errors='coerce').dt.hour
+            df['currency'] = ori_currency
 
-            input_data = df.iloc[0].to_dict()
-            prediction = predictor.predict(input_data)
+            input_data = df.iloc[0].to_dict() # Extract the first row of the df as a dictionary
+            prediction = predictor.predict(input_data) # Pass the input data dictionary to the prediction model (predictor)
 
-
-            print("Prediction:", prediction)
+            print("Prediction:", prediction) 
             # Convert probability to a percentage and round to 2 decimal places
             prediction.probability = round(prediction.probability * 100, 2)
 
