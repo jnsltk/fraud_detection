@@ -189,7 +189,6 @@ def detection_result(request):
             'device': device,
             'channel': channel,
             'distance_from_home': distance_from_home,
-            'weekend_transaction': weekend_transaction
         }
 
         # ------------------------------ Data validation ----------------------------- #
@@ -256,6 +255,7 @@ def detection_result(request):
                 else:
                     return render(request, 'detection/detection_page.html', {
                         "error_message": f"Your input for the following fields is not valid: {failed_fields_message}.<br>Please refill the form with valid input.",
+                        "input_data": input_data
                     })
             else:            
                 print(f"\033[1;92mValidation succeeded!\033[0m")
@@ -263,7 +263,8 @@ def detection_result(request):
             print(f"Error during validation: {e}")
             # Return to the page with a clear error message
             return render(request, 'detection/detection_page.html', {
-                "error_message": f"An error occurred during validation.<br>Please try again."
+                "error_message": f"An error occurred during validation.<br>Please try again.",
+                "input_data": input_data,
             })
 
         # ------------------------- Get the model predictions ------------------------ #
@@ -308,7 +309,8 @@ def detection_result(request):
             print(f"Error during prediction: {e}")
             # Return to the page with a clear error message
             return render(request, 'detection/detection_page.html', {
-                "error_message": f"An error occurred during prediction.<br>Please try again."
+                "error_message": f"An error occurred during prediction.<br>Please try again.",
+                "input_data": input_data,
             })
 
     return render(request, 'detection/detection_result.html')

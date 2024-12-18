@@ -27,16 +27,16 @@
                     Merchant Category:
                 </label>
                 <select id="merchant_category" name="merchant_category" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Merchant Category</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Grocery">Grocery</option>
-                    <option value="Healthcare">Healthcare</option>
-                    <option value="Restaurant">Restaurant</option>
-                    <option value="Retail">Retail</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Gas">Gas</option>
-                    <option value="Education">Education</option>
-                    <option value="Unknown">Other</option>
+                    <option value="" disabled {% if not input_data.merchant_category %}selected{% endif %}>Select Merchant Category</option>
+                    <option value="Entertainment" {% if input_data.merchant_category == "Entertainment" %}selected{% endif %}>Entertainment</option>
+                    <option value="Grocery" {% if input_data.merchant_category == "Grocery" %}selected{% endif %}>Grocery</option>
+                    <option value="Healthcare" {% if input_data.merchant_category == "Healthcare" %}selected{% endif %}>Healthcare</option>
+                    <option value="Restaurant" {% if input_data.merchant_category == "Restaurant" %}selected{% endif %}>Restaurant</option>
+                    <option value="Retail" {% if input_data.merchant_category == "Retail" %}selected{% endif %}>Retail</option>
+                    <option value="Travel" {% if input_data.merchant_category == "Travel" %}selected{% endif %}>Travel</option>
+                    <option value="Gas" {% if input_data.merchant_category == "Gas" %}selected{% endif %}>Gas</option>
+                    <option value="Education" {% if input_data.merchant_category == "Education" %}selected{% endif %}>Education</option>
+                    <option value="Unknown" {% if input_data.merchant_category == "Unknown" %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -46,19 +46,19 @@
                     Country:
                 </label>
                 <select id="country" name="country" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Country</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Canada">Canada</option>
-                    <option value="France">France</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="Nigeria">Nigeria</option>
-                    <option value="Russia">Russia</option>
-                    <option value="Singapore">Singapore</option>
-                    <option value="UK">UK</option>
-                    <option value="Unknown">Other</option>
+                    <option value="" disabled {% if not input_data.country %}selected{% endif %}>Select Country</option>
+                    <option value="Australia" {% if input_data.country == "Australia" %}selected{% endif %}>Australia</option>
+                    <option value="Brazil" {% if input_data.country == "Brazil" %}selected{% endif %}>Brazil</option>
+                    <option value="Canada" {% if input_data.country == "Canada" %}selected{% endif %}>Canada</option>
+                    <option value="France" {% if input_data.country == "France" %}selected{% endif %}>France</option>
+                    <option value="Germany" {% if input_data.country == "Germany" %}selected{% endif %}>Germany</option>
+                    <option value="Japan" {% if input_data.country == "Japan" %}selected{% endif %}>Japan</option>
+                    <option value="Mexico" {% if input_data.country == "Mexico" %}selected{% endif %}>Mexico</option>
+                    <option value="Nigeria" {% if input_data.country == "Nigeria" %}selected{% endif %}>Nigeria</option>
+                    <option value="Russia" {% if input_data.country == "Russia" %}selected{% endif %}>Russia</option>
+                    <option value="Singapore" {% if input_data.country == "Singapore" %}selected{% endif %}>Singapore</option>
+                    <option value="UK" {% if input_data.country == "UK" %}selected{% endif %}>UK</option>
+                    <option value="Unknown" {% if input_data.country == "Unknown" %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -72,9 +72,9 @@
                     name="weekend_transaction" 
                     class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
                     required>
-                    <option value="" disabled selected>Select Yes or No</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
+                    <option value="" disabled {% if input_data.weekend_transaction is none %}selected{% endif %}>Select Yes or No</option>
+                    <option value="1" {% if input_data.weekend_transaction %}selected{% endif %}>Yes</option>
+                    <option value="0" {% if not input_data.weekend_transaction and input_data.weekend_transaction is not none %}selected{% endif %}>No</option>
                 </select>
             </div>
 
@@ -84,18 +84,18 @@
                     Currency:
                 </label>
                 <select id="currency" name="currency" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Currency</option>
-                    <option value="AUD">AUD</option>
-                    <option value="BRL">BRL</option>
-                    <option value="CAD">CAD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    <option value="JPY">JPY</option>
-                    <option value="MXN">MXN</option>
-                    <option value="NGN">NGN</option>
-                    <option value="RUB">RUB</option>
-                    <option value="SGD">SGD</option>
-                    <option value="Unknown">Other</option>
+                    <option value="" disabled {% if not input_data.currency %}selected{% endif %}>Select Currency</option>
+                    <option value="AUD" {% if input_data.currency == "AUD" %}selected{% endif %}>AUD</option>
+                    <option value="BRL" {% if input_data.currency == "BRL" %}selected{% endif %}>BRL</option>
+                    <option value="CAD" {% if input_data.currency == "CAD" %}selected{% endif %}>CAD</option>
+                    <option value="EUR" {% if input_data.currency == "EUR" %}selected{% endif %}>EUR</option>
+                    <option value="GBP" {% if input_data.currency == "GBP" %}selected{% endif %}>GBP</option>
+                    <option value="JPY" {% if input_data.currency == "JPY" %}selected{% endif %}>JPY</option>
+                    <option value="MXN" {% if input_data.currency == "MXN" %}selected{% endif %}>MXN</option>
+                    <option value="NGN" {% if input_data.currency == "NGN" %}selected{% endif %}>NGN</option>
+                    <option value="RUB" {% if input_data.currency == "RUB" %}selected{% endif %}>RUB</option>
+                    <option value="SGD" {% if input_data.currency == "SGD" %}selected{% endif %}>SGD</option>
+                    <option value="Unknown" {% if input_data.currency == "Unknown" %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -116,6 +116,7 @@
                     type="number"
                     step="0.01"
                     placeholder="Enter Amount"
+                    value="{{ input_data.amount }}"
                     class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black"
                     required />
             </div>
@@ -131,6 +132,7 @@
                     name="transaction_hour" 
                     class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
                     placeholder="Select date and time" 
+                    value="{{ input_data.transaction_hour }}"
                     required>
             </div>
 
@@ -140,11 +142,11 @@
                     Channel:
                 </label>
                 <select id="channel" name="channel" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Channel</option>
-                    <option value="mobile">Mobile</option>
-                    <option value="web">Web</option>
-                    <option value="pos">POS</option>
-                    <option value="Unknown">Other</option>
+                    <option value="" disabled {% if not input_data.channel %}selected{% endif %}>Select Channel</option>
+                    <option value="mobile" {% if input_data.channel == "mobile" %}selected{% endif %}>Mobile</option>
+                    <option value="web" {% if input_data.channel == "web" %}selected{% endif %}>Web</option>
+                    <option value="pos" {% if input_data.channel == "pos" %}selected{% endif %}>POS</option>
+                    <option value="unknown" {% if input_data.channel == "unknown" %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -154,13 +156,13 @@
                     Card Type:
                 </label>
                 <select id="card_type" name="card_type" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Card Type</option>
-                    <option value="Basic Credit">Basic Credit</option>
-                    <option value="Basic Debit">Basic Debit</option>
-                    <option value="Gold Credit">Gold Credit</option>
-                    <option value="Platinum Credit">Platinum Credit</option>
-                    <option value="Premium Debit">Premium Debit</option>
-                    <option value="Unknown">Other</option>
+                    <option value="" disabled {% if not input_data.card_type %}selected{% endif %}>Select Card Type</option>
+                    <option value="Basic Credit" {% if input_data.card_type == "Basic Credit" %}selected{% endif %}>Basic Credit</option>
+                    <option value="Basic Debit" {% if input_data.card_type == "Basic Debit" %}selected{% endif %}>Basic Debit</option>
+                    <option value="Gold Credit" {% if input_data.card_type == "Gold Credit" %}selected{% endif %}>Gold Credit</option>
+                    <option value="Platinum Credit" {% if input_data.card_type == "Platinum Credit" %}selected{% endif %}>Platinum Credit</option>
+                    <option value="Premium Debit" {% if input_data.card_type == "Premium Debit" %}selected{% endif %}>Premium Debit</option>
+                    <option value="Unknown" {% if input_data.card_type == "Unknown" %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -170,9 +172,9 @@
                     Card Present:
                 </label>
                 <select id="card_present" name="card_present" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Yes or No</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
+                    <option value="" disabled {% if input_data.card_present is none %}selected{% endif %}>Select Yes or No</option>
+                    <option value="1" {% if input_data.card_present %}selected{% endif %}>Yes</option>
+                    <option value="0" {% if input_data.card_present %}selected{% endif %}>No</option>
                 </select>
             </div>
 
@@ -182,17 +184,17 @@
                     Device:
                 </label>
                 <select id="device" name="device" class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" required>
-                    <option value="" disabled selected>Select Device</option>
-                    <option value="Android App">Android App</option>
-                    <option value="Chip Reader">Chip Reader</option>
-                    <option value="Chrome">Chrome</option>
-                    <option value="Edge">Edge</option>
-                    <option value="Firefox">Firefox</option>
-                    <option value="iOS App">iOS App</option>
-                    <option value="Magnetic Stripe">Magnetic Stripe</option>
-                    <option value="NFC Payment">NFC Payment</option>
-                    <option value="Safari">Safari</option>
-                    <option value="Unknown">Other</option>
+                    <option value="" disabled {% if not input_data.device %}selected{% endif %}>Select Device</option>
+                    <option value="Android App" {% if input_data.device == "Android App" %}selected{% endif %}>Android App</option>
+                    <option value="Chip Reader" {% if input_data.device == "Chip Reader" %}selected{% endif %}>Chip Reader</option>
+                    <option value="Chrome" {% if input_data.device == "Chrome" %}selected{% endif %}>Chrome</option>
+                    <option value="Edge" {% if input_data.device == "Edge" %}selected{% endif %}>Edge</option>
+                    <option value="Firefox" {% if input_data.device == "Firefox" %}selected{% endif %}>Firefox</option>
+                    <option value="iOS App" {% if input_data.device == "iOS App" %}selected{% endif %}>iOS App</option>
+                    <option value="Magnetic Stripe" {% if input_data.device == "Magnetic Stripe" %}selected{% endif %}>Magnetic Stripe</option>
+                    <option value="NFC Payment" {% if input_data.device == "NFC Payment" %}selected{% endif %}>NFC Payment</option>
+                    <option value="Safari" {% if input_data.device == "Safari" %}selected{% endif %}>Safari</option>
+                    <option value="Unknown" {% if input_data.device == "Unknown" %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -214,9 +216,9 @@
                     name="distance_from_home" 
                     class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black" 
                     required>
-                    <option value="" disabled selected>Select Yes or No</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
+                    <option value="" disabled {% if input_data.distance_from_home is none %}selected{% endif %}>Select Yes or No</option>
+                    <option value="1" {% if input_data.distance_from_home %}selected{% endif %}>Yes</option>
+                    <option value="0" {% if input_data.distance_from_home %}selected{% endif %}>No</option>
                 </select>
             </div>
 
@@ -262,7 +264,7 @@
                     
                     form.submit();
                 }, 3000);
-            }, 4000);
+            }, 6000);
         }else {
             promptMessage.textContent = "";
         }
