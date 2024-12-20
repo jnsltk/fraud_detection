@@ -41,20 +41,44 @@ def explain(explainer: shap.Explainer, data: pd.DataFrame, is_fraud: bool, raw_i
     relavent_columns = columns[relevant_idx]
     relavent_values = values[relevant_idx]
 
+    # Group contributions for time-related features
+    time_related_features = {"hour_sin", "hour_cos", "transaction_hour"}
+    time_shap_value = 0
+    time_contributed = False
+    time_reason = ""
+    time_value = None
+
+    for i in range(len(relavent_columns)):
+        if relavent_columns[i] in time_related_features:
+            time_shap_value += relavent_shap_values[i]
+            time_contributed = True
+        if relavent_columns[i] == "transaction_hour":
+            time_value = relavent_values[i]
+
+    if time_contributed and np.abs(time_shap_value) >= 0.05 and time_value is not None:
+        time_reason = _describe_explanation(time_shap_value, "transaction_hour", time_value, raw_input, is_fraud)
+
     reasons = []
 
     # Note - The n most relevant features are always included
     for i in range(MIN_EXPLANATIONS):
+        if relavent_columns[i] in time_related_features:
+            continue
         description = _describe_explanation(relavent_shap_values[i], relavent_columns[i], relavent_values[i], raw_input, is_fraud)
         reasons.append(description)
 
     # Note - More features are included if their absolute contribution is more or equal to 5%
     for i in range(MIN_EXPLANATIONS, MAX_EXPLANATIONS):
+        if relavent_columns[i] in time_related_features:
+            continue
         if np.abs(relavent_shap_values[i]) >= 0.05:
             description = _describe_explanation(relavent_shap_values[i], relavent_columns[i], relavent_values[i], raw_input, is_fraud)
             reasons.append(description)
         else:
             break
+
+    if time_reason != "":
+        reasons.append(time_reason)
 
     return reasons
 
