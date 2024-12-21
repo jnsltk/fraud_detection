@@ -169,7 +169,8 @@ We talked about integration of the code and how we can train the model on aserve
 - Yingchao
 
 ### Meeting Agenda
-Th eteam is on track with tasks. We talked about some bugs that we have in our code base. For example, the pipeline is timing ot due to the fact that environment takes so long to be built. We came up with samll tasks to do for the upcoming week.
+
+The team is on track with tasks. We talked about some bugs that we have in our code base. For example, the pipeline is timing ot due to the fact that environment takes so long to be built. We came up with samll tasks to do for the upcoming week.
 
 ### Tasks
 
@@ -180,3 +181,69 @@ Th eteam is on track with tasks. We talked about some bugs that we have in our c
 - Omid will be working on fixing the pipline timing out issue. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/25). He will also work on creating documentation of the ML pipeline and the whole app. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/23)
 
 **Notes**: These tasks are to be done by **2024-12-13**
+
+# Meeting Nine (2024-12-13):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+
+The team Discussed the presentation in this meeting. We wrote slides and wrote a script for when we will talk and who presents what part. We also discussed the next meeting. some additional features. We decided to replace the cat picture with a graph of f1 score of different models. We also missed some links in the nav bar. If an admin or a staff came to homepage, they could not go back to admin or dashboard. Model version overflow was another problem. When admin creates new models the minor version is to be incremented. However, in our logic went from 3.9 to 4.0 and not 3.10 for example.
+
+### Tasks
+
+- Note that the task regrading the pipline timing out problem was reassigned to Henrik.[link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/25). This task was done by this meeting.
+
+- Omid will fix some front-end bugs, inlcuding adding links for admin and staff in the nav bar. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/28). Omid will also work on fixing th model version overflow. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/27). The ML documention issue is to be delayed to Friday the 20th as it not of importance for presentation, but rather a working system is needed. 
+- Janos will work on replacing the cat picture with a graph of f1 score of different models. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/30). He will also work on allowing duplicate records to be in a csv file or records that are alreay in the database to be in the csv file. The system would just not add those records to the database. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/26)
+- Yingchao will add prompts to the detect page to show th user that when the data is being validated and when prediction is taking place. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/29)
+
+**Notes**: These tasks are to be done by **2024-12-15**
+
+The team also scheduled an extra meeting on monday 2024-12-16 to practice the presentation.
+
+# Meeting Ten (2024-12-16): 
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+
+Our deployment was failing with an error regrading `shap` package. We had to kill the pod, and make a new deployment to fix the problem. The team then talked about the presenation script and added more detail to it. We then practiced the presentation and timed ourselves. We did pretty good.
+
+### Tasks
+
+We did not assign tasks in this meeting as this meeting was meant for presentation practice
+
+# Meeting Eleven (2024-12-17):
+
+### Atendees
+- Janos
+- Omid
+- Henrik
+- Victoria
+- Yingchao
+
+### Meeting Agenda
+
+We talked about the other group's presentation and submitted the feedback forms ofr groups 2, 5, and 8. We discussed unit testing and how we should do it. We are a bit confused as to what needs to be tested, only the ML pipeline or the whole client and server application and the ML pipeline. We decided to ask our TA in our supervision meeting and come up with how and who will do unit testing later. We discussed the Assignment 2 report. There are 5 sections and each person took one section. We also noted down questions that we have for our TA. Furthermore we discussed that code related tasks, unit testing, and bug fixes must be done by Monday 2024-12-23. We also decided to have the report done by the 28th and then schedule one or two meetings to discuss what we have written and change the report and produce the fnal draft.
+
+### Tasks
+
+- Omid will work on SHap hour bug fix.[link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/31). He will work on fixing thr bug with routing to Dashboard from the nav bar bug as well.[link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/33). He will continue with ML pipeline documentation. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/23) and he will work on section 4 of the report.
+- Victoria will fix a constratint with the other frequency choice on the front-end as that currently throws a bug. [link](https://git.chalmers.se/courses/dit826/2024/group1/-/issues/32). She will work on section 5 of the report.
+- Henrik will work on section 7 of the report.
+- Janos will work on section 6 of the report.
+- Yingchao will work on section 3 of the report.
+
+**Notes**: The code tasks are to be done by 2024-12-23 and the report tasks are to be done by 2024-12-28
+
