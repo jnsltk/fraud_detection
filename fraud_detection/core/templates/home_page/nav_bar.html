@@ -31,12 +31,11 @@
                 </a>
             {% endif %}
             {% if user.is_staff or user.is_superuser %}
-                <button 
-                    hx-get="{% url 'dashboard/index' %}"
-                    hx-target="#root"
+                <a
+                    href="{% url 'dashboard/index' %}"
                     class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
                         Dashboard
-                </button>
+                </a>
             {% endif %}
         {% else %}
             <!-- If user is not logged in -->
