@@ -93,9 +93,6 @@ def _describe_explanation(shap_value: float, column: str, value: float, raw_inpu
 
     if feature == 'euros':
         return f'The amount being equivalent to {float(raw_input_value):.2f}€, {altered_str} the probability of fraud by {shap_str}'
-    
-    if feature == 'hour_sin' or feature == 'hour_cos':
-        return f'The transaction hour {altered_str} the probability of fraud by {shap_str}'
 
     elif feature in _feature_transformer.CAT_COLS:
         return f'The {feature_print} {'' if value else 'not '}being "{category}", {altered_str} the probability of fraud by {shap_str}'
