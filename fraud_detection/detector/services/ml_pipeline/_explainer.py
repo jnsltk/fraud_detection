@@ -46,16 +46,14 @@ def explain(explainer: shap.Explainer, data: pd.DataFrame, is_fraud: bool, raw_i
     time_shap_value = 0
     time_contributed = False
     time_reason = ""
-    time_value = None
+    time_value = values[columns.tolist().index("transaction_hour")]
 
     for i in range(len(relavent_columns)):
         if relavent_columns[i] in time_related_features:
             time_shap_value += relavent_shap_values[i]
             time_contributed = True
-        if relavent_columns[i] == "transaction_hour":
-            time_value = relavent_values[i]
 
-    if time_contributed and np.abs(time_shap_value) >= 0.05 and time_value is not None:
+    if time_contributed and np.abs(time_shap_value) >= 0.05:
         time_reason = _describe_explanation(time_shap_value, "transaction_hour", time_value, raw_input, is_fraud)
 
     reasons = []
