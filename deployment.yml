@@ -51,6 +51,6 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 8000 # the port the service listens on
+      port: 80 # the port the service listens on
       targetPort: 8000 # the port the container listens on
 
