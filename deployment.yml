@@ -23,7 +23,7 @@ spec:
             - containerPort: 8000
           env:
             - name: RUN_MODE
-              value: "dev" # allowed values are "dev" and "prod"
+              value: "prod" # allowed values are "dev" and "prod"
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -51,6 +51,6 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 8000 # the port the service listens on
+      port: 80 # the port the service listens on
       targetPort: 8000 # the port the container listens on
 
