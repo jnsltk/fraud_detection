@@ -1,6 +1,7 @@
 from django.test import TestCase
 import pandas as pd
 from detector.services.ml_pipeline._feature_transformer import transform_single, transform_df, _one_hot_encode
+from datetime import datetime
 
 col_data = {
     "euros": {
@@ -107,33 +108,71 @@ class TransformSingleTests(TestCase):
 
 class TransformDfTests(TestCase):
 
+    def __init__(self, methodName="runTest"):
+        super().__init__(methodName)
+
+        self.df = pd.DataFrame({
+            'merchant_category': ['Restaurant', 'Retail', 'Retail', 'Restaurant', 'Restaurant'],
+            'currency': ['EUR', 'USD', 'USD', 'EUR', 'EUR'],
+            'country': ['SE', 'US', 'US', 'SE', 'SE'],
+            'card_type': ['credit', 'debit', 'debit', 'credit', 'credit'],
+            'device': ['mobile', 'web', 'mobile', 'mobile', 'web'],
+            'channel': ['online', 'online', 'pos', 'online', 'online'],
+            'amount': [50.75, 100.0, 150.0, 200.0, 250.0],
+            'transaction_hour': [14.0, 15.0, 16.0, 17.0, 18.0],
+            'euros': [50.75, 100.0, 150.0, 200.0, 250.0],
+            'hour_sin': [0.866, 0.5, 0.0, -0.5, -0.866],
+            'hour_cos': [0.5, 0.866, 1.0, 0.866, 0.5],
+            'card_present': [False, True, False, True, False],
+            'distance_from_home': [True, False, True, False, True],
+            'weekend_transaction': [False, False, False, False, True],
+            'timestamp': [datetime.now(),
+                          datetime.now(),
+                          datetime.now(),
+                          datetime.now(),
+                          datetime.now()],
+            'is_fraud': [False, False, False, False, True]
+        })
+
     # ------------------------ SHOULD WORK ----------------------- #
 
-    def test_valid_normal_input(self):
-        pass
+    def test_with_col_data(self):
+        result = transform_df(self.df, col_data)
+        self.assertTrue(result.df.map(lambda x: isinstance(x, (bool, float))).all().all())
+        self.assertEqual(len(result.df.columns), 63)
+
+    def test_null_col_data(self):
+        ''' Valid case, col_data will be calculated when not provided '''
+        result = transform_df(self.df, None)
+        self.assertTrue(result.df.map(lambda x: isinstance(x, (bool, float))).all().all())
+        self.assertEqual(len(result.df.columns), 21)
 
     # ------------------- SHOULD FAIL CORRECTLY ------------------ #
 
-    def test_null_col_data(self):
-        pass
-
     def test_null_df(self):
-        pass
+        with self.assertRaises(TypeError):
+            transform_df(None, col_data)
 
     def test_missing_col_data_entry_for_categorical(self):
-        pass
+        col_data_cpy = col_data.copy()
+        col_data_cpy.pop('device')
+
+        with self.assertRaises(KeyError):
+            transform_df(self.df, col_data_cpy)
 
     def test_missing_col_data_entry_for_numerical(self):
-        pass
+        col_data_cpy = col_data.copy()
+        col_data_cpy.pop('transaction_hour')
 
-    def test_extra_col_data_entry_for_categorical(self):
-        pass
+        with self.assertRaises(KeyError):
+            transform_df(self.df, col_data_cpy)
 
-    def test_extra_col_data_entry_for_numerical(self):
-        pass
+    def test_missing_df_col(self):
+        df_cpy = self.df.copy()
+        df_cpy.pop('merchant_category')
 
-    def test_missing_df_value(self):
-        pass
+        with self.assertRaises(KeyError):
+            transform_df(df_cpy, col_data)
 
 
 class OneHotEncodeTests(TestCase):
