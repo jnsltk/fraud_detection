@@ -2,38 +2,117 @@ from django.test import TestCase
 import pandas as pd
 from detector.services.ml_pipeline._feature_transformer import transform_single, transform_df, _one_hot_encode
 
+col_data = {
+    "euros": {
+        "std": 926.890265767884,
+        "mean": 606.3402683218625
+    },
+    "amount": {
+        "std": 259435.16796209908,
+        "mean": 75496.7242845
+    },
+    "device": [
+        "Android App", "Chip Reader", "Chrome", "Edge", "Firefox", "Magnetic Stripe", "NFC Payment", "Safari",
+        "iOS App", "unknown"
+    ],
+    "channel": ["mobile", "pos", "unknown", "web"],
+    "country": [
+        "Australia", "Brazil", "Canada", "France", "Germany", "Japan", "Mexico", "Nigeria", "Russia", "Singapore", "UK",
+        "USA", "unknown"
+    ],
+    "currency": ["AUD", "BRL", "CAD", "EUR", "GBP", "JPY", "MXN", "NGN", "RUB", "SGD", "USD", "unknown"],
+    "card_type": ["Basic Credit", "Basic Debit", "Gold Credit", "Platinum Credit", "Premium Debit", "unknown"],
+    "transaction_hour": {
+        "std": 0.9492128529746034,
+        "mean": 1.0751
+    },
+    "merchant_category":
+    ["Education", "Entertainment", "Gas", "Grocery", "Healthcare", "Restaurant", "Retail", "Travel", "unknown"]
+}
+
 
 class TransformSingleTests(TestCase):
 
+    def __init__(self, methodName="runTest"):
+        super().__init__(methodName)
+
+        self.input = {
+            'merchant_category': 'Restaurant',
+            'currency': 'EUR',
+            'country': 'SE',
+            'card_type': 'credit',
+            'device': 'mobile',
+            'channel': 'online',
+            'amount': 50.75,
+            'transaction_hour': 14.0,
+            'euros': 50.75,
+            'hour_sin': 0.866,
+            'hour_cos': 0.5,
+            'card_present': False,
+            'distance_from_home': True,
+            'weekend_transaction': False
+        }
+
+    # ------------------------ SHOULD WORK ----------------------- #
+
     def test_valid_normal_input(self):
-        pass
+        result = transform_single(self.input, col_data)
+        self.assertTrue(result.df.map(lambda x: isinstance(x, (bool, float))).all().all())
+        self.assertEqual(len(result.df.columns), 62)
+
+    def test_unknown_categorical(self):
+        input_cpy = self.input.copy()
+        input_cpy['device'] = 'some_category_not_in_col_data'
+
+        result = transform_single(input_cpy, col_data)
+
+        self.assertTrue(result.df.map(lambda x: isinstance(x, (bool, float))).all().all())
+        self.assertEqual(len(result.df.columns), 62)
+
+        for col in result.df.columns:
+            if col.startswith('device='):
+                self.assertEqual(result.df[col].values[0], 0.0)
+
+    # ------------------- SHOULD FAIL CORRECTLY ------------------ #
 
     def test_null_input(self):
-        pass
+        with self.assertRaises(TypeError):
+            transform_single(None, col_data)
 
     def test_null_col_data(self):
-        pass
+        with self.assertRaises(TypeError):
+            transform_single(self.input, None)
 
     def test_missing_col_data_entry_for_categorical(self):
-        pass
+        col_data_cpy = col_data.copy()
+        col_data_cpy.pop('device')
+
+        with self.assertRaises(KeyError):
+            transform_single(self.input, col_data_cpy)
 
     def test_missing_col_data_entry_for_numerical(self):
-        pass
+        col_data_cpy = col_data.copy()
+        col_data_cpy.pop('transaction_hour')
+
+        with self.assertRaises(KeyError):
+            transform_single(self.input, col_data_cpy)
 
     def test_missing_input_value(self):
-        pass
+        input_cpy = self.input.copy()
+        input_cpy.pop('amount')
 
-    def test_extra_col_data_entry_for_categorical(self):
-        pass
-
-    def test_extra_col_data_entry_for_numerical(self):
-        pass
+        with self.assertRaises(KeyError):
+            transform_single(input_cpy, col_data)
 
 
-class TransformDFTests(TestCase):
+class TransformDfTests(TestCase):
+
+    # ------------------------ SHOULD WORK ----------------------- #
 
     def test_valid_normal_input(self):
         pass
+
+    # ------------------- SHOULD FAIL CORRECTLY ------------------ #
 
     def test_null_col_data(self):
         pass
@@ -59,7 +138,7 @@ class TransformDFTests(TestCase):
 
 class OneHotEncodeTests(TestCase):
 
-    # ------------------------ SHOULD PASS ----------------------- #
+    # ------------------------ SHOULD WORK ----------------------- #
 
     def test_valid_normal_input(self):
         df = pd.DataFrame({'col1': ['a', 'b', 'c'], 'col2': ['Rock', 'Paper', 'Scissors'], 'col3': ['1', '2', '3']})
