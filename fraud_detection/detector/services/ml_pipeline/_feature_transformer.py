@@ -131,14 +131,21 @@ def transform_df(df: pd.DataFrame, col_data: dict[str:any] = None) -> TransformD
 
 
 def _one_hot_encode(df: pd.DataFrame, col: str, categories: list) -> pd.DataFrame:
-
     # Creates and fits encoder with the categories
     encoder = OneHotEncoder(categories=[categories], handle_unknown='ignore')
     encoder.fit(df[[col]])
 
     # Encodes the column
+    columns = []
+    for cat in categories:
+        if cat == '':
+            cleaned_cat = 'empty'  # NOTE - don't question my variable naming :)
+        else:
+            cleaned_cat = cat.replace('=', '_').replace(' ', '_')
+
+        columns.append(f'{col}={cleaned_cat}')
+
     encoded = encoder.transform(df[[col]])
-    columns = [f'{col}={cat}' for cat in categories]
     encoded_df = pd.DataFrame(encoded.toarray(), columns=columns)
 
     # Replaces original column with encoded columns
