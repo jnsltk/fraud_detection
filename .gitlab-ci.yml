@@ -115,7 +115,8 @@ run_unit_tests:
   tags:
     - docker
   before_script:
-    - conda init --yes
+    - conda init
+    - source ~/.bashrc
     - conda install -n base -c conda-forge mamba
     - mamba env create -v -f environment.yml
   script:
