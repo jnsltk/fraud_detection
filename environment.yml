@@ -196,4 +196,5 @@ dependencies:
       - entrypoints==0.4
       - great-expectations==1.2.4
       - psycopg==3.2.3
+      - whitenoise==6.8.2
 prefix: /opt/anaconda3/envs/prj
