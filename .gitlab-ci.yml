@@ -117,11 +117,8 @@ run_unit_tests:
   before_script:
     - conda init
     - source ~/.bashrc
-    - conda install -n base -c conda-forge mamba
-    - mamba shell init --shell bash --root-prefix=~/.local/share/mamba
-    - source ~/.bashrc
-    - mamba env create -v -f environment.yml
-    - mamba activate prj
+    - conda env create -f environment.yml
+    - conda activate prj
   script:
     - cd fraud_detection
     - python3 manage.py test
