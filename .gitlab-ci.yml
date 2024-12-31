@@ -115,8 +115,9 @@ run_unit_tests:
   tags:
     - docker
   before_script:
-    - conda env create -f environment.yml
-    - conda activate prj
+    - conda init --yes
+    - conda install -n base -c conda-forge mamba
+    - mamba env create -v -f environment.yml
   script:
     - cd fraud_detection
     - python3 manage.py test
