@@ -118,6 +118,7 @@ run_unit_tests:
     - conda init
     - source ~/.bashrc
     - conda install -n base -c conda-forge mamba
+    - mamba shell init --shell bash --root-prefix=~/.local/share/mamba
     - mamba env create -v -f environment.yml
     - mamba activate prj
   script:
