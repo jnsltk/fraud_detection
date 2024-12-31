@@ -6,6 +6,7 @@ from detector.models import FraudDetectionModel
 from django.db.models import Value
 from django.db.models import Max
 from detector.services.ml_pipeline import make_model
+from packaging.version import parse as parse_version
 
 
 class Command(BaseCommand):
@@ -18,8 +19,10 @@ class Command(BaseCommand):
         new_major_version = version_tag.split('.')[0]
 
         # Get the last model version from the database
-        last_model = FraudDetectionModel.objects.aggregate(max_version=Max('version'))
-        last_model_major_version = last_model.get('max_version').split('.')[0][1:]
+        all_versions = FraudDetectionModel.objects.values_list('version', flat=True)
+        parsed_versions = sorted(all_versions, key=parse_version, reverse=True)
+        last_model = parsed_versions[0]  # Get the highest version
+        last_model_major_version = last_model.split('.')[0][1:]
 
         # Prints the versions for debugging
         print(f"new major version is: {new_major_version}")
