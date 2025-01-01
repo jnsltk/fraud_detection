@@ -107,6 +107,22 @@ build_docker_image:
         - gx/**/*
     - when: never
 
+# --------------------------- test --------------------------- #
+
+run_unit_tests:
+  stage: test
+  image: continuumio/miniconda3:latest
+  tags:
+    - docker
+  before_script:
+    - conda init
+    - source ~/.bashrc
+    - conda env create -f environment.yml
+    - conda activate prj
+  script:
+    - cd fraud_detection
+    - python3 manage.py test
+
 # -------------------------- deploy -------------------------- #
 
 deploy_to_k8s:
