@@ -1,3 +1,7 @@
+'''
+    Made by: Henrik Lagrosen
+'''
+
 # noinspection PyUnresolvedReferences
 from keras.models import load_model
 from dataclasses import dataclass

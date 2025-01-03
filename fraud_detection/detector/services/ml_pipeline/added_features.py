@@ -1,3 +1,7 @@
+'''
+    Made by: Henrik Lagrosen
+'''
+
 import urllib.request
 from currency_converter import CurrencyConverter, ECB_URL
 from dotenv import load_dotenv

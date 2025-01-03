@@ -1,3 +1,7 @@
+'''
+    Made by: Henrik Lagrosen, Yingchao Ji
+'''
+
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np

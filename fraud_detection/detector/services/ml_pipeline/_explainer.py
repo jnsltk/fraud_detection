@@ -1,4 +1,7 @@
-''' Creates and uses a SHAP explainer to explain the predictions of the model '''
+''' 
+    Made by: Henrik Lagrosen
+    Creates and uses a SHAP explainer to explain the predictions of the model 
+'''
 
 import shap
 import keras

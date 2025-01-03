@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Made by: Henrik Lagrosen
+
 # This script is used for running the application within the docker container
 
 # Setup job

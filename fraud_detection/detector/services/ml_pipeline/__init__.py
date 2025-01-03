@@ -1,4 +1,5 @@
 '''
+    Made by: Henrik Lagrosen
     This module is the main entry point for the ml_pipeline service.
     It provides all the necessary functions to train a model and make predictions.
 '''
