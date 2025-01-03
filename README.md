@@ -1,3 +1,7 @@
+<!---
+Made by:  Omid
+---->
+
 # Project Description
 
 This project is an AI data intensive fraud detection application that relies on the power of **DNNs** to classify transactions as fraudulent or non-fraudulent based on the transactions features. The trained DNN model is availabe for use via a web application developed using the **Django** framework. The dockeried web application is also deployed on the **Google Cloud** platform using kubernetes. The ML pipeline is described in the **ML_pipeline_documentaion** file.

@@ -1,3 +1,5 @@
+# Made by: Janos
+
 from currency_converter import ECB_URL
 from django.test import TestCase
 from unittest.mock import patch, MagicMock
