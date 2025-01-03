@@ -1,3 +1,5 @@
+# Made by: Janos
+
 import os
 from datetime import date, datetime
 from django.contrib.admin.views.decorators import staff_member_required

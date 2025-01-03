@@ -1,3 +1,7 @@
+'''
+    Made by: Henrik Lagrosen
+'''
+
 from datetime import datetime, timezone, timedelta
 from django.core.management.base import BaseCommand
 import os

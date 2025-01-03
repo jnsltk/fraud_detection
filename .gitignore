@@ -368,3 +368,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,windows,python,web,vue,django,jupiternotebooks
 node_modules
 /export
+
+.codegpt

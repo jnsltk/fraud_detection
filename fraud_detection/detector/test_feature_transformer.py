@@ -1,3 +1,7 @@
+'''
+    Made by: Henrik Lagrosen
+'''
+
 from django.test import TestCase
 import pandas as pd
 from detector.services.ml_pipeline._feature_transformer import transform_single, transform_df, _one_hot_encode

@@ -1,3 +1,5 @@
+-- Made by Janos
+
 -- Create schema
 CREATE SCHEMA IF NOT EXISTS transactions;
 

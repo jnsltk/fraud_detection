@@ -1,3 +1,7 @@
+<!---
+Made by:  Janos
+---->
+
 # Database setup
 
 The database is running on the VPS inside a docker container, which is using the official PostgreSQL image.

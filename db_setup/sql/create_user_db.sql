@@ -1,3 +1,5 @@
+-- Made by Janos
+
 CREATE USER fraud_db_user WITH PASSWORD 'SECRET_PASSWORD'; -- Actual password removed for security reasons
 
 CREATE DATABASE fraud_db;

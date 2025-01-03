@@ -1,3 +1,7 @@
+<!---
+Made by:  Henrik Lagrosen
+---->
+
 ## Deployment diagram
 
 ![Deployment diagram](./assets/deployment_diagram.jpg)

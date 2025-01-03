@@ -1,3 +1,7 @@
+<!---
+Made by:  Omid
+---->
+
 # System Component Diagram
 
 ![System Component Diagram](./assets/Component_diagram.png)

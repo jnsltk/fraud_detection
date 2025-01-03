@@ -1,3 +1,5 @@
+# Made by: Henrik Lagrosen
+
 apiVersion: apps/v1 # specifies kubernetes api version
 kind: Deployment
 metadata:

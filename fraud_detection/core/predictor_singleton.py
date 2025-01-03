@@ -1,3 +1,5 @@
+# Made by: Janos
+
 from detector.models import FraudDetectionModel
 from detector.services.ml_pipeline import Predictor
 from detector.services.compatibility_check import is_same_model_and_sw_version

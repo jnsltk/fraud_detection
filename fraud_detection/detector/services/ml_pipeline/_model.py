@@ -1,3 +1,7 @@
+'''
+    Made by: Henrik Lagrosen
+'''
+
 # --------------------- IMPORTS LIBRARIES -------------------- #
 
 # misc
