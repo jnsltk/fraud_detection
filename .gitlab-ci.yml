@@ -123,7 +123,8 @@ run_unit_tests:
     - conda activate prj
   script:
     - cd fraud_detection
-    - python3 manage.py test
+    - python3 manage.py test --noinput
+
 
 # -------------------------- deploy -------------------------- #
 
