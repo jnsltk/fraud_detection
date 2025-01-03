@@ -1,3 +1,7 @@
+'''
+    Made by: Yingchao Ji
+'''
+
 # Formatted data
 # Replace single quotes in JSON format with double quotes
 # Delete duplicate transaction_id data

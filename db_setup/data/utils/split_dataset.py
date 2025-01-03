@@ -1,3 +1,7 @@
+'''
+    Made by: Yingchao Ji
+'''
+
 # Split data into multiple files
 
 import csv

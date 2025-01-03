@@ -1,3 +1,7 @@
+'''
+    Made by: Yingchao Ji
+'''
+
 # Delete multiple files for quick delete
 
 import os

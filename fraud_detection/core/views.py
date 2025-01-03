@@ -1,3 +1,9 @@
+'''
+    Made by: Omid Khodaparast
+    Made by: Shiyao Xin
+    Made by: Yingchao Ji
+'''
+
 import io
 import json
 import os
