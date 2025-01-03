@@ -47,6 +47,10 @@ We make use of a client/server architecture since we have a web application. Sin
 
 To get a full viw on the ML_pipeline, please refer to the `ML_pipeline_documentaion.md`
 
+The deployment structure is as follows:
+
+![Deployment_diagram](assets/deployment_diagram.jpg)
+
 # Get Started
 
 To get started with the project, you need to do the following steps:
