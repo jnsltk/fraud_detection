@@ -1,11 +1,63 @@
-<!-- Made by: Omid -->
-
 {% extends "core/base_generic.html" %}
 
 {% block content %}
-    <!-- Include Navigation Bar -->
-    {% include "home_page/nav_bar.html" %}
+    <section class="flex-col flex justify-end bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-5/6 mt-16">
+        <div class="md:mx-24">
+            <h1 class="text-7xl text-neutral-50/85 font-black mb-24">We detect<br> transaction fraud</h1>
+            <div class="flex justify-between items-center mb-20">
+                <button
+                        hx-get="{% url 'core/detection_page' %}"
+                        hx-target="#root"
+                        class="text-nowrap bg-orange-500/95 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-neutral-50 font-bold hover:bg-orange-400/95 transition transition-duration-150">
+                    Get Started
+                </button>
+                <p class="text-neutral-50/85 font-bold text-xl">Or scroll down to learn more</p>
+            </div>
+        </div>
+    </section>
 
-    <!-- Include Consolidated Home Page Content -->
-    {% include "home_page/home_page.html" %}
+    <section class="bg-gradient-to-br from-[#f5820f] to-[#f53f0f] flex flex-col justify-end h-5/6">
+        <div class="md:mx-24">
+            <h2 class="text-7xl text-neutral-50/85 font-black text-right mb-24">State-of-the-art AI <br>to fight the baddies</h2>
+            <div class="flex justify-between items-center mb-20">
+                <div class="flex items-center">
+                    <p class="text-xl text-left font-bold text-neutral-50/85">See what our customers have to say about us</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 text-neutral-50/85" fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+                <button
+                        hx-get="{% url 'core/register' %}"
+                        hx-target="#root"
+                        class="text-nowrap bg-blue-900/95 rounded-xl px-4 py-2 shadow-lg border border-blue-950/75 border-2 text-neutral-50 font-bold hover:bg-blue-800/95 transition transition-duration-150">
+                    Learn More
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="flex flex-col justify-center items-center text-center h-screen bg-gradient-to-bl from-[#040B23] to-[#102C89] text-neutral-50/85">
+        <div class="flex justify-center">
+            <div class="rounded-full border-4 border-[#F5820F] bg-[#D9D9D9] w-32 h-32">
+                <img src="https://media.newyorker.com/photos/59095c606552fa0be682daff/master/pass/Burnstein-Tony-Soprano.jpg"
+                     alt="Tony Soprano"
+                     class="w-full h-full object-cover rounded-full"
+                >
+            </div>
+        </div>
+        <blockquote class="italic text-5xl font-black mt-8">"Probably the best <br> AI tool I've ever used to <br> detect frauds"
+        </blockquote>
+        <p class="ml-96 text-sm text-center italic mt-4">— Anthony "Tony" John Soprano</p>
+        <div class="pt-12">
+            <button
+                    hx-get="{% url 'core/register' %}"
+                    hx-target="#root"
+                    class="text-nowrap bg-orange-500/95 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-neutral-50 font-bold hover:bg-orange-400/95 transition transition-duration-150">
+                Sign Up Now
+            </button>
+        </div>
+    </section>
+
 {% endblock %}

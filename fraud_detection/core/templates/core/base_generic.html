@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Made by: Omid -->
 <head>
     <meta charset="UTF-8">
     {% block title %}
-    <title>Fraud Detection</title>
+        <title>Fraud Detection</title>
     {% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
           rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"
+            integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+            crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     {% block custom_script %}
@@ -28,14 +29,15 @@
         }
     </script>
 </head>
-<body class="font-sans leading-normal tracking-normal">
+<body class="font-sans leading-normal tracking-normal overflow-auto">
 
-    <!-- Main Content -->
-    <div id="root" class="bg-[#F0F5FC] h-dvh">
-        {% block content %}
-        <!-- Content will be injected here -->
-        {% endblock %}
-    </div>
-
+<!-- Navbar -->
+{% include 'core/nav_bar.html' %}
+<!-- Main Content -->
+<div id="root" class="h-screen">
+{% block content %}
+    <!-- Content will be injected here -->
+{% endblock %}
+</div>
 </body>
 </html>

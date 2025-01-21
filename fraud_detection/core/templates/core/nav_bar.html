@@ -1,41 +1,38 @@
-<!-- Made by: Omid -->
-
-<div class="flex items-center justify-between px-4 py-2 bg-[#102c89] text-white">
+<div class="flex items-center justify-between px-4 py-2 bg-blue-900 text-white fixed w-screen h-16 top-0">
     <h1 hx-get="{% url 'core/index' %}" hx-target="#root" class="text-lg font-bold hover:cursor-pointer hover:text-[#586BAC]">Fraud Detection</h1>
     <div class="space-x-4">
         {% if user.is_authenticated %}
-            <!-- TODO: Add a link to the dector page (replace index) -->
-            <button 
+            <button
                 hx-get="{% url 'core/detection_page' %}"
                 hx-target="#root"
-                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                     Detector
             </button>
             <!-- If user is logged in -->
             <button 
                 hx-get="{% url 'core/profile' %}"
                 hx-target="#root"
-                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                     My Profile
             </button>
             <form action="{% url 'core/logout' %}" method="post" class="inline">
                 {% csrf_token %}
                 <button type="submit"
-                    class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                         Log Out
                 </button>
             </form>
             {% if user.is_superuser %}
                 <a 
                     href="{% url 'admin:index' %}" 
-                    class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                         Admin page
                 </a>
             {% endif %}
             {% if user.is_staff or user.is_superuser %}
                 <a
                     href="{% url 'dashboard/index' %}"
-                    class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                    class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                         Dashboard
                 </a>
             {% endif %}
@@ -44,13 +41,13 @@
             <button 
                 hx-get="{% url 'core/register' %}"
                 hx-target="#root"
-                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                     Sign Up
             </button>
             <button 
                 hx-get="{% url 'core/login' %}"
                 hx-target="#root" 
-                class="px-4 py-2 bg-[#102c89] rounded hover:bg-[#586BAC] transition-colors">
+                class="px-4 py-2 bg-blue-900 rounded hover:bg-blue-950/25 transition-colors">
                     Sign In
             </button>
         {% endif %}
