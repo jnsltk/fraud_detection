@@ -2,34 +2,46 @@
 
 {% block content %}
 
-<div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white">
-    <h1 class="text-4xl font-bold text-center mb-4 ml-10">Welcome back to Fraud Detection</h1>
-    <form action="{% url 'core/post_login' %}" method="post" class="flex flex-col items-center space-y-6">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="flex flex-col items-start w-full">
-                <!-- Label (white text) -->
-                <label for="{{ field.id_for_label }}" class="text-lg font-medium text-white">
-                    {{ field.label }}:
-                </label>
-                <input
-                    id="{{ field.id_for_label }}"
-                    name="{{ field.name }}"
-                    type="{{ field.field.widget.input_type }}"
-                    value="{{ field.value|default:'' }}"
-                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black"
-                />
-                <!-- Display Validation Errors -->
-                {% if field.errors %}
-                    <p class="text-red-600 text-sm">{{ field.errors|join:", " }}</p>
-                {% endif %}
-            </div>
-        {% endfor %}
-        {% if error_message %}<p class="text-red-600 text-lg"><strong>{{ error_message }}</strong></p>{% endif %}
-        <button type="submit" class="px-4 py-2 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
-            Sign in
-        </button>
-    </form>
-</div>
+    <div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen">
+        <div class="h-3/5 w-1/3 rounded-xl border bg-white p-12 shadow-xl">
+            <h1 class="mb-4 text-4xl font-bold text-center">Welcome back</h1>
+            <form action="{% url 'core/post_login' %}" method="post"
+                  class="relative flex flex-col items-center space-y-6">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="relative flex w-full flex-col items-start">
+                        <label for="{{ field.id_for_label }}"
+                               class="mb-2 block text-sm font-normal uppercase tracking-wider text-neutral-500">
+                            {{ field.label }}:
+                        </label>
+                        <input
+                                id="{{ field.id_for_label }}"
+                                name="{{ field.name }}"
+                                type="{{ field.field.widget.input_type }}"
+                                value="{{ field.value|default:'' }}"
+                                class="mb-4 w-full rounded-xl border border-stone-400 bg-stone-200 p-3 font-mono text-neutral-500"
+                        />
+                        <!-- Display Validation Errors -->
+                        {% if field.errors %}
+                            <p class="absolute top-20 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% if error_message %}
+                    <p class="absolute top-52 mt-2 text-lg text-red-600 text-wrap"><strong>{{ error_message }}</strong>
+                    </p>{% endif %}
+                <div class="pt-8 w-full flex gap-6 justify-center">
+                    <a href="/"
+                       class="text-nowrap bg-stone-300 rounded-xl px-4 py-2 shadow-lg border border-stone-400/50 border-2 text-sm text-neutral-500 font-bold hover:bg-stone-400/85 transition duration-150">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                            class="rounded-xl border-2 border border-amber-800/50 px-4 py-2 text-sm font-bold text-neutral-50 shadow-lg transition text-nowrap bg-orange-500/85 transition-duration-150 hover:bg-orange-400/85">
+                        Sign in
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}

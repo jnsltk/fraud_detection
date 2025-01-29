@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="max-w-4xl mx-8">
-        <div class="mb-8 mt-8 md:mt-0 items-center justify-between flex">
-            <span class="block text-2xl md:text-4xl font-bold">Manage models</span>
+    <div class="mx-8 max-w-4xl">
+        <div class="mt-8 mb-8 flex items-center justify-between md:mt-0">
+            <span class="block text-2xl font-bold md:text-4xl">Manage models</span>
             <button hx-get="{% url 'train_model_form' %}" hx-target="#dialog"
-                    class="text-nowrap bg-orange-500/85 rounded-xl px-4 py-2 shadow-lg border border-amber-800/50 border-2 text-sm text-neutral-50 font-bold hover:bg-orange-400/85 transition transition-duration-150">
+                    class="rounded-xl border-2 border border-amber-800/50 px-4 py-2 text-sm font-bold text-neutral-50 shadow-lg transition text-nowrap bg-orange-500/85 transition-duration-150 hover:bg-orange-400/85">
                 Train new model
             </button>
         </div>
@@ -20,7 +20,7 @@
             train new models
             on any of the available datasets. If you’d like to upload a new dataset, select the ‘Upload Data’ option
             from the sidebar.</p>
-        <div class="bg-white shadow-xl rounded-xl border p-8 mb-12 min-w-min text-nowrap">
+        <div class="mb-12 min-w-min rounded-xl border bg-white p-8 shadow-xl text-nowrap">
             {% include 'dashboard/model_table.html' %}
         </div>
     </div>
