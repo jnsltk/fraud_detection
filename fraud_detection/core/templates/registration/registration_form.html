@@ -2,37 +2,48 @@
 
 {% block content %}
 
-<div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen text-white">
-    <h1 class="text-4xl font-bold text-center mb-4 ml-10">Welcome to Fraud Detection</h1>
-    <form action="{% url 'core/post_register' %}" method="post" class="flex flex-col items-center space-y-6">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="flex flex-col items-start w-full">
-                <!-- Label (white text) -->
-                <label for="{{ field.id_for_label }}" class="text-lg font-medium text-white">
-                    {% if field.label == 'Password confirmation' %}
-                    Confirm Password:
-                    {% else %}
-                    {{ field.label }}:
-                    {% endif %}
-                </label>
-                <input
-                    id="{{ field.id_for_label }}"
-                    name="{{ field.name }}"
-                    type="{{ field.field.widget.input_type }}"
-                    value="{{ field.value|default:'' }}"
-                    class="px-4 py-2 rounded-lg border-2 border-blue-800 text-lg text-black"
-                />
-                <!-- Display Validation Errors -->
-                {% if field.errors %}
-                    <p class="text-red-600 text-sm">{{ field.errors|join:", " }}</p>
-                {% endif %}
-            </div>
-        {% endfor %}
-        <button type="submit" class="px-4 py-2 bg-[#F5820F] rounded hover:bg-red-600 transition-colors">
-            Sign up
-        </button>
-    </form>
-</div>
+    <div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen">
+        <div class="h-3/5 w-1/2 rounded-xl border bg-white p-12 shadow-xl">
+            <h1 class="mb-8 text-center text-4xl font-bold">Welcome!</h1>
+            <form action="{% url 'core/post_register' %}" method="post">
+                <div class="flex items-center justify-center flex-wrap gap-6">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="flex flex-col items-start w-5/12 relative mb-2">
+                            <!-- Label (white text) -->
+                            <label for="{{ field.id_for_label }}"
+                                   class="mb-2 block text-sm font-normal uppercase tracking-wider text-neutral-500">
+                                {% if field.label == 'Password confirmation' %}
+                                    Confirm Password:
+                                {% else %}
+                                    {{ field.label }}:
+                                {% endif %}
+                            </label>
+                            <input
+                                    id="{{ field.id_for_label }}"
+                                    name="{{ field.name }}"
+                                    type="{{ field.field.widget.input_type }}"
+                                    value="{{ field.value|default:'' }}"
+                                    class="mb-4 w-full rounded-xl border border-stone-400 bg-stone-200 p-3 font-mono text-neutral-500"
+                            />
+                            <!-- Display Validation Errors -->
+                            {% if field.errors %}
+                                <p class="absolute top-20 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="flex w-full justify-center gap-6 pt-10">
+                    <a href="/"
+                       class="rounded-xl border-2 border border-stone-400/50 bg-stone-300 px-4 py-2 text-sm font-bold text-neutral-500 shadow-lg transition duration-150 text-nowrap hover:bg-stone-400/85">
+                        Cancel
+                    </a>
+                    <button type="submit" class="rounded-xl border-2 border border-amber-800/50 px-4 py-2 text-sm font-bold text-neutral-50 shadow-lg transition text-nowrap bg-orange-500/85 transition-duration-150 hover:bg-orange-400/85">
+                        Sign up
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}
