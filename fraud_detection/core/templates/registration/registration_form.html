@@ -2,14 +2,15 @@
 
 {% block content %}
 
-    <div class="flex flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen">
-        <div class="h-3/5 w-1/2 rounded-xl border bg-white p-12 shadow-xl">
-            <h1 class="mb-8 text-center text-4xl font-bold">Welcome!</h1>
+    <div class="flex px-8 flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen">
+        <div class="mt-12 w-full rounded-xl border bg-white p-8 shadow-xl md:mt-0 md:w-1/2 md:p-12">
+            <h1 class="mb-4 text-4xl font-bold">Welcome!</h1>
+            <p class="mb-8">To register to use our services, please enter a username and your email address.</p>
             <form action="{% url 'core/post_register' %}" method="post">
-                <div class="flex items-center justify-center flex-wrap gap-6">
+                <div class="flex flex-wrap items-center md:gap-[5%] md:justify-center">
                     {% csrf_token %}
                     {% for field in form %}
-                        <div class="flex flex-col items-start w-5/12 relative mb-2">
+                        <div class="relative mb-2 flex w-full flex-col items-start min-w-52 md:w-[47.5%]">
                             <!-- Label (white text) -->
                             <label for="{{ field.id_for_label }}"
                                    class="mb-2 block text-sm font-normal uppercase tracking-wider text-neutral-500">
@@ -33,12 +34,13 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class="flex w-full justify-center gap-6 pt-10">
+                <div class="flex w-full justify-end gap-6 pt-10">
                     <a href="/"
                        class="rounded-xl border-2 border border-stone-400/50 bg-stone-300 px-4 py-2 text-sm font-bold text-neutral-500 shadow-lg transition duration-150 text-nowrap hover:bg-stone-400/85">
                         Cancel
                     </a>
-                    <button type="submit" class="rounded-xl border-2 border border-amber-800/50 px-4 py-2 text-sm font-bold text-neutral-50 shadow-lg transition text-nowrap bg-orange-500/85 transition-duration-150 hover:bg-orange-400/85">
+                    <button type="submit"
+                            class="rounded-xl border-2 border border-amber-800/50 px-4 py-2 text-sm font-bold text-neutral-50 shadow-lg transition text-nowrap bg-orange-500/85 transition-duration-150 hover:bg-orange-400/85">
                         Sign up
                     </button>
                 </div>
