@@ -3,7 +3,8 @@
 {% block content %}
     <section class="flex-col flex justify-end bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-5/6 mt-16">
         <div class="mx-4 md:mx-24">
-            <h1 class="mb-8 text-5xl font-black text-neutral-50/85 md:mb-24 md:text-7xl">We detect<br> transaction fraud</h1>
+            <h1 class="mb-8 text-5xl font-black text-neutral-50/85 md:mb-24 md:text-7xl">We detect<br> transaction fraud
+            </h1>
             <div class="mb-12 flex flex-col justify-between gap-8 md:mb-20 md:flex-row md:items-center md:gap-0">
                 <button
                         hx-get="{% url 'core/detection_page' %}"
@@ -17,28 +18,33 @@
     </section>
 
     <section class="bg-gradient-to-br from-[#f5820f] to-[#f53f0f] flex flex-col justify-end h-5/6">
-        <div class="md:mx-24">
-            <h2 class="mb-24 text-right text-7xl font-black text-neutral-50/85">State-of-the-art AI <br>to fight the baddies</h2>
-            <div class="mb-20 flex items-center justify-between">
+        <div class="mx-4 md:mx-24">
+            <h2 class="mb-24 text-right text-5xl font-black text-neutral-50/85 md:text-7xl">State-of-the-art AI <br>to
+                fight the baddies</h2>
+            <div class="mb-20 flex flex-col justify-between gap-8 md:flex-row md:items-center md:gap-0">
                 <div class="flex items-center">
-                    <p class="text-left text-xl font-bold text-neutral-50/85">See what our customers have to say about us</p>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-6 w-6 text-neutral-50/85" fill="none"
-                         viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
+                    <p class="text-left text-xl font-bold text-neutral-50/85">See what our customers have to say about
+                        us
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 inline h-6 w-6 text-neutral-50/85"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </p>
                 </div>
                 <button
                         hx-get="{% url 'core/register' %}"
                         hx-target="#root"
-                        class="rounded-xl border-2 border bg-blue-900/95 px-4 py-2 font-bold text-neutral-50 shadow-lg transition text-nowrap border-blue-950/75 transition-duration-150 hover:bg-blue-800/95">
+                        class="rounded-xl border-2 border bg-blue-900/95 px-4 py-2 font-bold text-neutral-50 shadow-lg transition max-w-32 text-nowrap border-blue-950/75 transition-duration-150 hover:bg-blue-800/95">
                     Learn More
                 </button>
             </div>
         </div>
     </section>
 
-    <section class="flex flex-col justify-center items-center text-center h-screen bg-gradient-to-bl from-[#040B23] to-[#102C89] text-neutral-50/85">
+    <section
+            class="flex flex-col justify-center items-center text-center h-screen bg-gradient-to-bl from-[#040B23] to-[#102C89] text-neutral-50/85">
         <div class="flex justify-center">
             <div class="rounded-full border-4 border-[#F5820F] bg-[#D9D9D9] w-32 h-32">
                 <img src="https://media.newyorker.com/photos/59095c606552fa0be682daff/master/pass/Burnstein-Tony-Soprano.jpg"
@@ -47,9 +53,10 @@
                 >
             </div>
         </div>
-        <blockquote class="mt-8 text-5xl font-black italic">"Probably the best <br> AI tool I've ever used to <br> detect frauds"
+        <blockquote class="mt-8 text-3xl md:text-5xl font-black italic">"Probably the best <br> AI tool I've ever used to <br>
+            detect frauds"
         </blockquote>
-        <p class="mt-4 ml-96 text-center text-sm italic">— Anthony "Tony" John Soprano</p>
+        <p class="mt-4 ml-12 md:ml-96 text-center text-sm italic">— Anthony "Tony" John Soprano</p>
         <div class="pt-12">
             <button
                     hx-get="{% url 'core/register' %}"

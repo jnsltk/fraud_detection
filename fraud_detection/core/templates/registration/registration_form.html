@@ -2,8 +2,8 @@
 
 {% block content %}
 
-    <div class="flex px-8 flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen">
-        <div class="mt-12 w-full rounded-xl border bg-white p-8 shadow-xl md:mt-0 md:w-1/2 md:p-12">
+    <div class="flex px-4 flex-col justify-center items-center bg-gradient-to-bl from-[#f53f0f] to-[#102c89] h-screen w-screen">
+        <div class="mt-12 w-full rounded-xl border bg-white p-8 shadow-xl md:mt-0 md:w-3/5 md:p-12">
             <h1 class="mb-4 text-4xl font-bold">Welcome!</h1>
             <p class="mb-8">To register to use our services, please enter a username and your email address.</p>
             <form action="{% url 'core/post_register' %}" method="post">
