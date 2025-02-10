@@ -1,59 +1,95 @@
+{% block custom_script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('menu-toggle');
+            const menu = document.getElementById('menu');
+
+            menuToggle.addEventListener('click', function () {
+                menu.classList.toggle('hidden');
+            });
+        });
+    </script>
+{% endblock %}
+
 <div class="fixed top-0 flex h-16 w-screen items-center justify-between bg-blue-900 px-4 py-2 text-white">
     <h1 hx-get="{% url 'core/index' %}" hx-target="#root"
-        class="text-lg font-bold hover:cursor-pointer hover:text-[#586BAC]">Fraud Detection</h1>
-    <div class="space-x-4">
-        {% if user.is_authenticated %}
-            <button
-                    hx-get="{% url 'core/detection_page' %}"
-                    hx-target="#root"
-                    class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                Detector
-            </button>
-            <!-- If user is logged in -->
-            <button
-                    hx-get="{% url 'core/profile' %}"
-                    hx-target="#root"
-                    class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                My Profile
-            </button>
-            <form action="{% url 'core/logout' %}" method="post" class="inline">
-                {% csrf_token %}
-                <button type="submit"
-                        class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                    Log Out
-                </button>
-            </form>
-            {% if user.is_superuser %}
-                <form action="{% url 'admin:index' %}" method="get" class="inline">
+        class="text-lg text-neutral-50/85 font-bold hover:cursor-pointer hover:text-neutral-50/50 transition-colors duration-150">fraud_detection</h1>
+    <div id="menu"
+         class="absolute top-16 left-0 hidden w-full bg-blue-900 px-4 pb-8 md:static  md:block md:p-0">
+        <ul class="flex flex-col md:flex-row md:gap-4 md:items-center md:justify-end text-neutral-50/85">
+            {% if user.is_authenticated %}
+                <li>
                     <button
-                            type="submit"
+                            hx-get="{% url 'core/detection_page' %}"
+                            hx-target="#root"
                             class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                        Admin page
+                        Detector
                     </button>
-                </form>            {% endif %}
-            {% if user.is_staff or user.is_superuser %}
-                <form action="{% url 'dashboard/index' %}" method="get" class="inline">
+                </li>
+                <!-- If user is logged in -->
+                <li>
                     <button
-                            type="submit"
+                            hx-get="{% url 'core/profile' %}"
+                            hx-target="#root"
                             class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                        Dashboard
+                        My Profile
                     </button>
-                </form>
+                </li>
+                <li>
+                    <form action="{% url 'core/logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
+                            Log Out
+                        </button>
+                    </form>
+                </li>
+                {% if user.is_superuser %}
+                    <li>
+                        <form action="{% url 'admin:index' %}" method="get" class="inline">
+                            <button
+                                    type="submit"
+                                    class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
+                                Admin page
+                            </button>
+                        </form>
+                    </li>
+                {% endif %}
+                {% if user.is_staff or user.is_superuser %}
+                    <li>
+                        <form action="{% url 'dashboard/index' %}" method="get" class="inline">
+                            <button
+                                    type="submit"
+                                    class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
+                                Dashboard
+                            </button>
+                        </form>
+                    </li>
+                {% endif %}
+            {% else %}
+                <!-- If user is not logged in -->
+                <li>
+                    <button
+                            hx-get="{% url 'core/register' %}"
+                            hx-target="#root"
+                            class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
+                        Sign Up
+                    </button>
+                </li>
+                <li>
+                    <button
+                            hx-get="{% url 'core/login' %}"
+                            hx-target="#root"
+                            class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
+                        Sign In
+                    </button>
+                </li>
             {% endif %}
-        {% else %}
-            <!-- If user is not logged in -->
-            <button
-                    hx-get="{% url 'core/register' %}"
-                    hx-target="#root"
-                    class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                Sign Up
-            </button>
-            <button
-                    hx-get="{% url 'core/login' %}"
-                    hx-target="#root"
-                    class="rounded bg-blue-900 px-4 py-2 transition-colors hover:bg-blue-950/25">
-                Sign In
-            </button>
-        {% endif %}
+        </ul>
     </div>
+    <button id="menu-toggle" class="text-white focus:outline-none md:hidden">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
 </div>

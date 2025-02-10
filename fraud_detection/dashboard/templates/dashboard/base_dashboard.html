@@ -38,40 +38,34 @@
     </script>
 </head>
 <body class="bg-slate-100 font-sans leading-normal tracking-normal" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-<div class="md:hidden bg-blue-900 px-6 py-4 flex items-center justify-between">
+<div class="flex items-center justify-between bg-blue-900 px-6 py-4 md:hidden">
     <button id="menu-toggle" class="text-white focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
     </button>
-    <span class="text-white font-bold text-xl">fraud_detection</span>
+    <span class="text-xl font-bold text-white">fraud_detection</span>
 </div>
 
-<div class="flex flex-col md:flex-row h-screen">
+<div class="relative flex h-screen flex-col md:flex-row">
     <!-- Sidebar -->
     <div id="sidebar"
-         class="bg-blue-900 w-full md:w-1/4 p-6 md:p-8 flex flex-col justify-between h-full hidden md:flex">
-        <div class="text-white mb-12 hidden md:block md:text-left">
-            <span class="block text-2xl font-bold tracking-tight mb-6">fraud_detection</span>
+         class="absolute top-0 flex hidden h-full w-full flex-col justify-between bg-blue-900 p-6 md:relative md:flex md:w-1/4 md:p-8">
+        <div class="mb-12 hidden text-white md:block md:text-left">
+            <span class="mb-6 block text-2xl font-bold tracking-tight">fraud_detection</span>
         </div>
         {% block sidebar %}
-            <ul class="flex-grow space-y-4 -mx-4 text-white font-bold">
+            <ul class="-mx-4 flex-grow font-bold text-white space-y-4">
                 <li><a href="{% url 'dashboard/index' %}"
-                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Dashboard Overview</a></li>
+                       class="block rounded-md px-4 py-3 transition duration-150 hover:bg-blue-200/40">Dashboard Overview</a></li>
                 <li><a href="{% url 'dashboard/manage_models' %}"
-                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Manage Models</a>
+                       class="block rounded-md px-4 py-3 transition duration-150 hover:bg-blue-200/40">Manage Models</a>
                 </li>
                 <li><a href="{% url 'import_csv_to_db' %}"
-                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Upload
+                       class="block rounded-md px-4 py-3 transition duration-150 hover:bg-blue-200/40">Upload
                     Data</a></li>
-                <!-- Not implemented yet
-                <li><a href="" class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Usage
-                    Statistics</a></li>
-                <li><a href=""
-                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Settings</a></li>
-                       -->
                 <li><a href="{% url 'core/index' %}"
-                       class="block py-3 px-4 hover:bg-blue-200/40 rounded-md transition duration-150">Back to Home
+                       class="block rounded-md px-4 py-3 transition duration-150 hover:bg-blue-200/40">Back to Home
                     Page</a></li>
             </ul>
         {% endblock %}
@@ -79,7 +73,7 @@
             <form id="logout-form" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit"
-                        class="text-amber-500 font-bold hover:text-red-500 transition duration-150 mt-2">
+                        class="mt-2 font-bold text-amber-500 transition duration-150 hover:text-red-500">
                     Logout
                 </button>
             </form>
@@ -88,13 +82,13 @@
 
     <div class="flex-grow overflow-auto">
         <!-- Top bar -->
-        <div class="px-8 py-7 items-center justify-between hidden md:flex">
+        <div class="hidden items-center justify-between px-8 py-7 md:flex">
             {% block breadcrumbs %}
             {% endblock %}
             <div class="flex items-center gap-5">
                 <span class="block font-bold">{{ user.first_name }} {{ user.last_name }}</span>
                 <img alt="User profile picture" src="https://thispersondoesnotexist.com/"
-                     class="bg-blue-900 h-12 w-12 rounded-full border-4 border-amber-500 object cover">
+                     class="h-12 w-12 rounded-full border-4 border-amber-500 bg-blue-900 object cover">
             </div>
         </div>
 
